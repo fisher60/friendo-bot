@@ -1,0 +1,9 @@
+version: "3.7"
+
+services: 
+    bot:
+        build:
+            context: .
+            dockerfile: DockerFile
+        tty: true
+        env_file: bot.env

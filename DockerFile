@@ -1,0 +1,12 @@
+FROM python:3.8-slim
+
+RUN mkdir /app
+
+COPY . /app/
+COPY requirements.txt /app/requirements.txt
+RUN pip install -r /app/requirements.txt
+
+WORKDIR /app/
+
+ENTRYPOINT [ "python3" ]
+CMD ["-m", "bot"]
