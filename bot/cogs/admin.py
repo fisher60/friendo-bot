@@ -4,7 +4,7 @@ from bot.settings import BASE_DIR
 from discord.ext.commands import Bot, Cog, command, check
 
 
-def is_admin() -> bool:
+def is_admin():
     """
         returns whether or not the user invoking a command is an admin
     """
@@ -30,7 +30,7 @@ class AdminCommands(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
     
-    @command()
+    @command(brief="Kills your friend")
     @is_admin()
     async def shutdown(self, ctx):
         msg = f"Mr. Stark, I don't feel so good. . ."

@@ -13,5 +13,5 @@ class Greetings(Cog):
 
 
 def setup(bot: Bot) -> None:
-    """Load the Help cog."""
+    """Load the Greetings cog."""
     bot.add_cog(Greetings(bot))

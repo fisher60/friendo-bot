@@ -27,10 +27,14 @@ class Utilities(Cog):
         self.bot = bot
         self.index = 0
         self.drink_tasks = {}
+        self.reminder_tasks = {}
 
-    async def reminder_wrapper(self, time, period, ctx, msg="Reminder!"):
+    async def reminder_wrapper(self, time, period, ctx, msg="Reminder!", task_type="reminder", reason=None):
 
-        self.drink_tasks[ctx.author.id] += 1
+        if task_type == "drink":
+            self.drink_tasks[ctx.author.id] += 1
+        elif task_type == "reminder":
+            self.reminder_tasks[ctx.author.id] += 1
 
 
         @tasks.loop(count=1)
@@ -46,23 +50,31 @@ class Utilities(Cog):
 
         @create_reminder.after_loop
         async def after_create_reminder():
-            self.drink_tasks[ctx.author.id] -= 1
+            if task_type == "drink":
+                self.drink_tasks[ctx.author.id] -= 1
+            elif task_type == "reminder":
+                msg = f"{ctx.author.mention}, Reminder for: {reason if reason else ''}"
+                self.reminder_tasks[ctx.author.id] -= 1
             await ctx.send(msg)
 
         create_reminder.start()
 
-    @command()
+    @command(brief="Returns Friendo's Version")
     async def version(self, ctx):
         msg = f"Version is {settings.VERSION}"
         await ctx.send(msg)
         return msg
 
-    @command()
-    async def reminder(self, ctx, time, period="minutes"):
-        await self.reminder_wrapper(ctx=ctx, time=time, period=period)
+    @command(brief="[number] [unit (seconds/minutes/hours)] [reason for reminder]")
+    async def reminder(self, ctx, time, period="minutes", *, reason=None):
+        if ctx.author.id not in self.reminder_tasks:
+            self.reminder_tasks[ctx.author.id] = 0
+        if self.reminder_tasks[ctx.author.id] < 1:
+            await self.reminder_wrapper(ctx=ctx, time=time, period=period, task_type="reminder", reason=reason)
+            await ctx.send(f"{ctx.author.mention} I will set a reminder for you in {time} {period}")
         return
 
-    @command()
+    @command(brief="Starts a 10 minute drink session to stay hydrated")
     async def drink(self, ctx):
         print(self.drink_tasks)
         if ctx.author.id not in self.drink_tasks:
@@ -70,13 +82,19 @@ class Utilities(Cog):
         if self.drink_tasks[ctx.author.id] < 1:
             await ctx.send(f"{ctx.author.mention} I got you, mate.")
             base_msg = f"OY! {ctx.author.mention}, drink some water, mate."
-            await self.reminder_wrapper(ctx=ctx, time=1, period="minutes", msg=base_msg)
-            await self.reminder_wrapper(ctx=ctx, time=2, period="minutes", msg=base_msg + "\n\nYou can run this command and have another if you'd like.")
+            await self.reminder_wrapper(ctx=ctx, time=5, period="minutes", msg=base_msg, task_type="drink")
+            await self.reminder_wrapper(
+                ctx=ctx,
+                time=10,
+                period="minutes",
+                msg=base_msg + "\n\nYou can run this command and have another if you'd like.",
+                task_type="drink"
+            )
         else:
             msg = f"{ctx.author.mention} You are already drinking!"
             await ctx.send(msg)
 
 
 def setup(bot: Bot) -> None:
-    """Load the Help cog."""
+    """Load the Utilities cog."""
     bot.add_cog(Utilities(bot))
