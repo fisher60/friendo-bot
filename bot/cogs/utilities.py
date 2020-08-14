@@ -20,21 +20,6 @@ def convert_time(time, period):
         pass
     return result
 
-# def convert_time(time, period):
-#     result = None
-#     try:
-#         time = int(time)
-#         if "sec" in period:
-#             result = datetime.timedelta(seconds=time)
-#         elif "min" in period:
-#             result = datetime.timedelta(seconds=time * 60)
-#         elif "hour" in period:
-#             result = datetime.timedelta(seconds=time * (60**2))
-#     except ValueError:
-#         pass
-#     return datetime.datetime.now() + result
-
-
 
 class Utilities(Cog):
     def __init__(self, bot: Bot):
@@ -60,10 +45,6 @@ class Utilities(Cog):
 
         create_reminder.start()
 
-    # async def create_reminder(self, ctx, time, period, msg="Reminder!"):
-    #     await sleep_until(convert_time(time, period), await ctx.send(msg))
-
-
     @command()
     async def version(self, ctx):
         msg = f"Version is {settings.VERSION}"
@@ -74,6 +55,13 @@ class Utilities(Cog):
     async def reminder(self, ctx, time, period="minutes"):
         await self.reminder_wrapper(ctx=ctx, time=time, period=period)
         return
+
+    @command()
+    async def drink(self, ctx):
+        await ctx.send(f"{ctx.author.mention} I got you, mate.")
+        base_msg = f"OY! {ctx.author.mention}, drink some water, mate."
+        await self.reminder_wrapper(ctx=ctx, time=5, period="minutes", msg=base_msg)
+        await self.reminder_wrapper(ctx=ctx, time=10, period="minutes", msg=base_msg + "\nYou can have another if you'd like.")
 
 
 def setup(bot: Bot) -> None:

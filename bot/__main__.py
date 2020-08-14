@@ -18,4 +18,7 @@ if __name__ == "__main__":
     bot.load_extension("bot.cogs.greetings")
     bot.load_extension("bot.cogs.utilities")
 
+    # load in Admin commands
+    bot.load_extension("bot.cogs.admin")
+
     bot.run(settings.TOKEN)
