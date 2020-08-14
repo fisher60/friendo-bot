@@ -31,33 +31,32 @@ class Utilities(Cog):
 
     async def reminder_wrapper(self, time, period, ctx, msg="Reminder!", task_type="reminder", reason=None):
 
+        seconds = convert_time(time, period)
+
         if task_type == "drink":
             self.drink_tasks[ctx.author.id] += 1
         elif task_type == "reminder":
             self.reminder_tasks[ctx.author.id] += 1
 
-
         @tasks.loop(count=1)
         async def create_reminder():
-            seconds = convert_time(time, period)
-            if not seconds:
-                msg = "Please enter a valid time and period (i.e .reminder 5 minutes)"
-                await ctx.send(msg)
-                return msg
-            else:
-                await sleep(seconds)
-            return
+            await sleep(seconds)
 
         @create_reminder.after_loop
         async def after_create_reminder():
+            completion_message = msg
             if task_type == "drink":
                 self.drink_tasks[ctx.author.id] -= 1
             elif task_type == "reminder":
-                msg = f"{ctx.author.mention}, Reminder for: {reason if reason else ''}"
+                completion_message = f"{ctx.author.mention}, Reminder for: {reason if reason else ''}"
                 self.reminder_tasks[ctx.author.id] -= 1
-            await ctx.send(msg)
+            await ctx.send(completion_message)
 
-        create_reminder.start()
+        if seconds:
+            create_reminder.start()
+        else:
+            msg = "Please enter a valid time and period (i.e .reminder 5 minutes)"
+            await ctx.send(msg)
 
     @command(brief="Returns Friendo's Version")
     async def version(self, ctx):
@@ -71,7 +70,8 @@ class Utilities(Cog):
             self.reminder_tasks[ctx.author.id] = 0
         if self.reminder_tasks[ctx.author.id] < 1:
             await self.reminder_wrapper(ctx=ctx, time=time, period=period, task_type="reminder", reason=reason)
-            await ctx.send(f"{ctx.author.mention} I will set a reminder for you in {time} {period}")
+            if period in ["second", "seconds", "minute", "minutes", "hour", "hours"]:
+                await ctx.send(f"{ctx.author.mention} I will set a reminder for you in {time} {period}")
         return
 
     @command(brief="Starts a 10 minute drink session to stay hydrated")
@@ -82,13 +82,21 @@ class Utilities(Cog):
         if self.drink_tasks[ctx.author.id] < 1:
             await ctx.send(f"{ctx.author.mention} I got you, mate.")
             base_msg = f"OY! {ctx.author.mention}, drink some water, mate."
-            await self.reminder_wrapper(ctx=ctx, time=5, period="minutes", msg=base_msg, task_type="drink")
+            await self.reminder_wrapper(
+                ctx=ctx,
+                time=5,
+                period="minutes",
+                msg=base_msg,
+                task_type="drink",
+                reason="drinking"
+            )
             await self.reminder_wrapper(
                 ctx=ctx,
                 time=10,
                 period="minutes",
                 msg=base_msg + "\n\nYou can run this command and have another if you'd like.",
-                task_type="drink"
+                task_type="drink",
+                reason="drinking"
             )
         else:
             msg = f"{ctx.author.mention} You are already drinking!"
