@@ -22,11 +22,16 @@ def convert_time(time, period):
 
 
 class Utilities(Cog):
+
     def __init__(self, bot: Bot):
         self.bot = bot
         self.index = 0
+        self.drink_tasks = {}
 
     async def reminder_wrapper(self, time, period, ctx, msg="Reminder!"):
+
+        self.drink_tasks[ctx.author.id] += 1
+
 
         @tasks.loop(count=1)
         async def create_reminder():
@@ -41,6 +46,7 @@ class Utilities(Cog):
 
         @create_reminder.after_loop
         async def after_create_reminder():
+            self.drink_tasks[ctx.author.id] -= 1
             await ctx.send(msg)
 
         create_reminder.start()
@@ -58,10 +64,17 @@ class Utilities(Cog):
 
     @command()
     async def drink(self, ctx):
-        await ctx.send(f"{ctx.author.mention} I got you, mate.")
-        base_msg = f"OY! {ctx.author.mention}, drink some water, mate."
-        await self.reminder_wrapper(ctx=ctx, time=5, period="minutes", msg=base_msg)
-        await self.reminder_wrapper(ctx=ctx, time=10, period="minutes", msg=base_msg + "\nYou can have another if you'd like.")
+        print(self.drink_tasks)
+        if ctx.author.id not in self.drink_tasks:
+            self.drink_tasks[ctx.author.id] = 0
+        if self.drink_tasks[ctx.author.id] < 1:
+            await ctx.send(f"{ctx.author.mention} I got you, mate.")
+            base_msg = f"OY! {ctx.author.mention}, drink some water, mate."
+            await self.reminder_wrapper(ctx=ctx, time=1, period="minutes", msg=base_msg)
+            await self.reminder_wrapper(ctx=ctx, time=2, period="minutes", msg=base_msg + "\n\nYou can run this command and have another if you'd like.")
+        else:
+            msg = f"{ctx.author.mention} You are already drinking!"
+            await ctx.send(msg)
 
 
 def setup(bot: Bot) -> None:
