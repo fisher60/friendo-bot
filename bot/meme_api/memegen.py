@@ -1,7 +1,7 @@
 import requests
 import json
 import os
-from bot.settings import BASE_DIR
+from bot.settings import BASE_DIR, MEME_USERNAME, MEME_PASSWORD
 
 
 class Meme:
@@ -14,8 +14,8 @@ class Meme:
         with open(self.meme_dir, "r") as m:
             self.meme_dict = json.load(m)["data"]["memes"]
 
-        self.user_name = os.environ.get("meme_username")
-        self.password = os.environ.get("meme_password")
+        self.user_name = MEME_USERNAME
+        self.password = MEME_PASSWORD
 
     def generate_meme(self, *, name, text=None):
         PARAMS = {"username": self.user_name, "password": self.password}
@@ -55,10 +55,10 @@ class Meme:
         for x in self.meme_dict:
             name = x["name"]
             for each in x["name"].split(" "):
-                if each.lower() in search_words:
+                if any(word in each.lower() for word in search_words):
                     final_dict[name] = x["box_count"]
 
         if len(final_dict) > 0:
-            return "\n".join([f'Name: {x}, Text Boxes: {final_dict[x]}' for x in final_dict.keys()])
+            return "\n".join([f'Name: {x}, Text Boxes: {final_dict[x]}' for x in final_dict.keys()][:10])
         else:
             return None
