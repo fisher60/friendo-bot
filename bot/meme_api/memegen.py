@@ -35,7 +35,7 @@ class Meme:
         if r["success"]:
             return r["data"]["url"]
         else:
-            return f'ERROR: {r["error_message"]}'
+            return None
 
     def get_all_memes(self):
         r = requests.get(url=self.get_memes_url)
@@ -58,4 +58,7 @@ class Meme:
                 if each.lower() in search_words:
                     final_dict[name] = x["box_count"]
 
-        return "\n".join([f'Name: {x}, Text Boxes: {final_dict[x]}' for x in final_dict.keys()])
+        if len(final_dict) > 0:
+            return "\n".join([f'Name: {x}, Text Boxes: {final_dict[x]}' for x in final_dict.keys()])
+        else:
+            return None

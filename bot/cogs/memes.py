@@ -1,3 +1,4 @@
+from asyncio import sleep
 from discord.ext.commands import Bot, Cog, command
 from bot.meme_api import memegen
 
@@ -13,11 +14,28 @@ class Memes(Cog):
     async def meme(self, ctx, arg1, *, args):
         args = args.split("; ")
         this_meme = memegen.Meme()
+        response = None
+
         if arg1 == "create":
             name, text = args[0], args[1:]
-            await ctx.send(this_meme.generate_meme(name=name, text=text))
+            result = this_meme.generate_meme(name=name, text=text)
+            if result:
+                await ctx.send(result)
+            else:
+                response = await ctx.send("Meme could not be created")
+                await ctx.message.delete(delay=8)
+                await response.delete(delay=8)
+
         elif arg1 == "search":
-            await ctx.send(this_meme.search_meme_list(args))
+            result = this_meme.search_meme_list(args)
+            if result:
+                response = await ctx.send(result)
+                await response.delete(delay=30)
+            else:
+                response = await ctx.send("No results for that search")
+                await ctx.message.delete(delay=8)
+                await response.delete(delay=8)
+
         return 'test success'
 
 
