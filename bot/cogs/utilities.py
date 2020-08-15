@@ -81,7 +81,7 @@ class Utilities(Cog):
             self.drink_tasks[ctx.author.id] = 0
         if self.drink_tasks[ctx.author.id] < 1:
             await ctx.send(f"{ctx.author.mention} I got you, mate.")
-            base_msg = f"OY! {ctx.author.mention}, drink some water, mate."
+            base_msg = f"OY! {ctx.author.mention} drink some water, mate."
             await self.reminder_wrapper(
                 ctx=ctx,
                 time=5,
@@ -101,6 +101,11 @@ class Utilities(Cog):
         else:
             msg = f"{ctx.author.mention} You are already drinking!"
             await ctx.send(msg)
+
+    @command()
+    async def ping(self, ctx):
+        await ctx.send(f'Ping is {round(self.bot.latency * 1000)}ms')
+        return self.bot.latency
 
 
 def setup(bot: Bot) -> None:
