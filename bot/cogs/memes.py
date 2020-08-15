@@ -31,6 +31,7 @@ class Memes(Cog):
             result = this_meme.search_meme_list(args)
             if result:
                 response = await ctx.send(result)
+                await ctx.message.delete(delay=30)
                 await response.delete(delay=30)
             else:
                 response = await ctx.send("No results for that search")

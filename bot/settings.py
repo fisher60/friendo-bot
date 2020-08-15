@@ -6,6 +6,6 @@ CLIENT_ID = os.environ.get("CLIENT_ID")
 
 COMMAND_PREFIX = "."
 
-VERSION = "1.2.2"
+VERSION = "1.2.3"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
