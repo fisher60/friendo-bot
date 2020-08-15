@@ -20,6 +20,7 @@ class Memes(Cog):
             name, text = args[0], args[1:]
             result = this_meme.generate_meme(name=name, text=text)
             if result:
+                await ctx.message.delete()
                 await ctx.send(result)
             else:
                 response = await ctx.send("Meme could not be created")
