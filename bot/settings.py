@@ -2,11 +2,9 @@ import os
 
 TOKEN = os.environ.get("FRIENDO_TOKEN")
 
-CLIENT_ID = os.environ.get("CLIENT_ID")
+MEME_USERNAME = os.environ.get("MEME_USERNAME")
 
-MEME_USERNAME = os.environ.get("meme_username")
-
-MEME_PASSWORD = os.environ.get("meme_password")
+MEME_PASSWORD = os.environ.get("MEME_PASSWORD")
 
 COMMAND_PREFIX = "."
 
