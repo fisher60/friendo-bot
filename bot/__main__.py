@@ -1,7 +1,6 @@
-import discord
-import asyncio
 from . import settings
 from .bot import Bot
+from bot.meme_api import memegen
 
 
 if __name__ == "__main__":
@@ -14,9 +13,14 @@ if __name__ == "__main__":
         print(bot.user.id)
         print('------')
 
+    memegen.Meme().get_all_memes()
+
     # load in basic commands
     bot.load_extension("bot.cogs.greetings")
     bot.load_extension("bot.cogs.utilities")
+
+    # load in Meme commands
+    bot.load_extension("bot.cogs.memes")
 
     # load in Admin commands
     bot.load_extension("bot.cogs.admin")
