@@ -1,6 +1,6 @@
 venv/
 .idea/
 __pycache__/
+meme_api/json/
 *.env
 *.bat
-meme_list.json
