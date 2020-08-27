@@ -18,19 +18,21 @@ class Meme:
         self.password = MEME_PASSWORD
 
     def generate_meme(self, *, name, text=None):
-        PARAMS = {"username": self.user_name, "password": self.password}
-        for meme in self.meme_dict:
-            if meme["name"].lower() == name.lower():
-                PARAMS["template_id"] = meme["id"]
-            if text is not None:
-                if len(text) <= meme["box_count"]:
-                    for count, each in enumerate(text):
-                        this_box = "text" + str(count)
-                        PARAMS[this_box] = each
-                else:
-                    return "Too many text entries"
+        data = {"username": self.user_name, "password": self.password}
 
-        r = requests.get(url=self.gen_meme_url, params=PARAMS).json()
+        if text is not None:
+
+            for meme in self.meme_dict:
+                if meme["name"].lower() == name.lower():
+                    data["template_id"] = meme["id"]
+
+                    if len(text) <= meme["box_count"]:
+                        for count, each in enumerate(text):
+                            data[f"boxes[{count}][text]"] = each
+                    else:
+                        return f"Too many text boxes for {meme['name']} with count {meme['box_count']}"
+
+        r = requests.post(url=self.gen_meme_url, data=data).json()
 
         if r["success"]:
             return r["data"]["url"]

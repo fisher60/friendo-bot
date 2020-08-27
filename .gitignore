@@ -1,5 +1,6 @@
 venv/
 .idea/
 __pycache__/
+meme_api/json/
 *.env
 *.bat
