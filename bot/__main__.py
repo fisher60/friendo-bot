@@ -13,7 +13,7 @@ if __name__ == "__main__":
         print(bot.user.id)
         print('------')
 
-    memegen.Meme().get_all_memes()
+    memegen.Meme()
 
     # load in basic commands
     bot.load_extension("bot.cogs.greetings")

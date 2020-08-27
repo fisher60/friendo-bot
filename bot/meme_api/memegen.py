@@ -6,10 +6,15 @@ from bot.settings import BASE_DIR, MEME_USERNAME, MEME_PASSWORD
 
 class Meme:
     meme_dir = f"{BASE_DIR}/meme_api/json/meme_list.json"
+    updated = False
 
     def __init__(self):
         self.gen_meme_url = "https://api.imgflip.com/caption_image"
         self.get_memes_url = "https://api.imgflip.com/get_memes"
+
+        if not self.updated:
+            self.get_all_memes()
+            self.updated = True
 
         with open(self.meme_dir, "r") as m:
             self.meme_dict = json.load(m)["data"]["memes"]
@@ -46,7 +51,7 @@ class Meme:
         if r["success"]:
             print("updating meme list...")
 
-            with open(self.meme_dir, "w") as f:
+            with open(self.meme_dir, "w+") as f:
                 json.dump(r, f)
         else:
             print("Failed to update, aborting...")
