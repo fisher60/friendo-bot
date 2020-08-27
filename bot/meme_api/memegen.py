@@ -51,7 +51,7 @@ class Meme:
         if r["success"]:
             print("updating meme list...")
 
-            with open(self.meme_dir, "w") as f:
+            with open(self.meme_dir, "w+") as f:
                 json.dump(r, f)
         else:
             print("Failed to update, aborting...")
