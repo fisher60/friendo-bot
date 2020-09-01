@@ -26,9 +26,10 @@ class Utilities(Cog):
 
     def __init__(self, bot: Bot):
         self.bot = bot
-        self.index = 0
+
         self.drink_tasks = {}
         self.reminder_tasks = {}
+        self.reminder_limit = 1
 
     async def reminder_wrapper(
         self, time, period, ctx, msg="Reminder!", task_type="reminder", reason=None
@@ -62,13 +63,15 @@ class Utilities(Cog):
                 completion_message = (
                     f"{ctx.author.mention}, Reminder for: {reason if reason else ''}"
                 )
+            if self.reminder_tasks[ctx.author.id] > 0:
                 self.reminder_tasks[ctx.author.id] -= 1
-            await ctx.send(completion_message)
+                await ctx.send(completion_message)
 
         if seconds:
             create_reminder.start()
         else:
             msg = "Please enter a valid time and period (i.e .reminder 5 minutes)"
+            self.reminder_tasks[ctx.author.id] -= 1
             await ctx.send(msg)
 
     @command(brief="Returns Friendo's Version")
@@ -81,17 +84,24 @@ class Utilities(Cog):
     async def reminder(self, ctx, time, period="minutes", *, reason=None):
         """creates a reminder for the user"""
 
+        reason = reason if reason else "nothing"
+
         if ctx.author.id not in self.reminder_tasks:
             self.reminder_tasks[ctx.author.id] = 0
-        if self.reminder_tasks[ctx.author.id] < 1:
+        if self.reminder_tasks[ctx.author.id] < self.reminder_limit:
             await self.reminder_wrapper(
                 ctx=ctx, time=time, period=period, task_type="reminder", reason=reason
             )
+
             if period in ["second", "seconds", "minute", "minutes", "hour", "hours"]:
-                await ctx.send(
-                    f"{ctx.author.mention} I will set a reminder for you in {time} {period}"
-                )
-        return
+                if self.reminder_tasks[ctx.author.id] > 0:
+                    await ctx.send(
+                        f"{ctx.author.mention} I will remind you about {reason} in {time} {period}"
+                    )
+        else:
+            await ctx.send(
+                f"{ctx.author.mention} you may only have {self.reminder_limit} at a time."
+            )
 
     @command(brief="Starts a 10 minute drink session to stay hydrated")
     async def drink(self, ctx):
