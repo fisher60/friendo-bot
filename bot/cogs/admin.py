@@ -13,7 +13,7 @@ def is_admin():
         with open(f"{BASE_DIR}/save_data.JSON", "r") as data:
             save_data = json.load(data)
         return str(ctx.message.author.id) in save_data["admins"]
-    
+
     return check(predicate)
 
 
@@ -29,7 +29,7 @@ def id_from_mention(messagecontent: str):
 class AdminCommands(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
-    
+
     @command(brief="Kills your friend")
     @is_admin()
     async def shutdown(self, ctx):
@@ -55,9 +55,6 @@ class AdminCommands(Cog):
                 msg = f"{ctx.author.mention}, {user} added to admins"
 
         await ctx.send(msg)
-
-        
-
 
 
 def setup(bot: Bot) -> None:
