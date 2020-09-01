@@ -1,22 +1,30 @@
-from asyncio import sleep
 from discord.ext.commands import Bot, Cog, command
 from bot.meme_api import memegen
 
 
 class Memes(Cog):
+    """Commands for using the Meme Generator."""
+
     def __init__(self, bot: Bot):
         self.bot = bot
 
-    @command(brief="[command] [*args]", description=".meme search [keywords] to search for available memes\n."
-                                                    ".meme create [meme name from meme search]; [text]; [text]; ...\n"
-                                                    "----each [text] should be the text to enter into a text box, "
-                                                    "do not exceed the max number of text boxes")
+    @command(
+        brief="[command] [*args]",
+        description=".meme search [keywords] to search for available memes\n."
+        ".meme create [meme name from meme search]; [text]; [text]; ...\n"
+        "----each [text] should be the text to enter into a text box, "
+        "do not exceed the max number of text boxes",
+    )
     async def meme(self, ctx, arg1, *, args):
+        """The main command, used to parse and process the command arguments"""
+
         args = args.split("; ")
         this_meme = memegen.Meme()
         response = None
 
         if arg1 == "create":
+            # Creates a new meme
+
             name, text = args[0], args[1:]
             result = this_meme.generate_meme(name=name, text=text)
             if result:
@@ -27,6 +35,8 @@ class Memes(Cog):
                 await response.delete(delay=8)
 
         elif arg1 == "search":
+            # searches the cached meme_list for keywords and returns matching meme names
+
             result = this_meme.search_meme_list(args)
             if result:
                 response = await ctx.send(result)
@@ -37,7 +47,7 @@ class Memes(Cog):
                 await ctx.message.delete(delay=8)
                 await response.delete(delay=8)
 
-        return 'test success'
+        return "test success"
 
 
 def setup(bot: Bot) -> None:
