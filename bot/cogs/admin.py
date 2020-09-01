@@ -5,9 +5,7 @@ from discord.ext.commands import Bot, Cog, command, check
 
 
 def is_admin():
-    """
-        returns whether or not the user invoking a command is an admin
-    """
+    """Return whether or not the user invoking a command is an admin."""
 
     def predicate(ctx):
         with open(f"{BASE_DIR}/save_data.JSON", "r") as data:
@@ -17,9 +15,11 @@ def is_admin():
     return check(predicate)
 
 
-def id_from_mention(messagecontent: str):
+def id_from_mention(message_content: str):
+    """Return a user id from an @mention in a message."""
+
     pattern = r'\d{18}'
-    id = re.search(pattern, messagecontent)
+    id = re.search(pattern, message_content)
     if id is not None:
         return int(id.group())
     else:
@@ -27,6 +27,8 @@ def id_from_mention(messagecontent: str):
 
 
 class AdminCommands(Cog):
+    """Commands for bot and server administration, all require the admin status on the invoking user."""
+
     def __init__(self, bot: Bot):
         self.bot = bot
 
@@ -41,6 +43,8 @@ class AdminCommands(Cog):
     @command(name="createadmin")
     @is_admin()
     async def create_admin(self, ctx, user):
+        """Adds a new user id to the list of admins."""
+
         msg = f"Could not create admin from {user}"
 
         with open(f"{BASE_DIR}/save_data.JSON", "r") as data:

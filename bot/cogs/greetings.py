@@ -2,6 +2,8 @@ from discord.ext.commands import Bot, Cog, command
 
 
 class Greetings(Cog):
+    """Simple aks-reply commands, good for testing or making members feel welcome."""
+
     def __init__(self, bot: Bot):
         self.bot = bot
 
