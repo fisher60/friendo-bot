@@ -31,7 +31,7 @@ the above environment variables must be added to the system).*
 
 2. `pip install pipenv`
 
-3. `pipenv install` to install project dependencies.
+3. `pipenv sync` to install project dependencies.
 
 4. `pipenv shell` to activate virtual environment 
 
