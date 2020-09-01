@@ -56,13 +56,13 @@ class TodoList(Cog):
             await ctx.send(msg)
 
     @command(brief="[todo some todos] [reason]")
-    async def todo_list(self, ctx, reason=None):
+    async def todo_list(self, ctx, text, reason=None):
         """Creates a todo list for the user"""
         if ctx.author.id not in self.todos:
             self.todos[ctx.author.id] = 0
         if self.todos[ctx.author.id] < 1:
             await self.todos_wrapper(
-                ctx=ctx, task_type='todo_list', reason=reason
+                ctx=ctx, text=text, task_type='todo_list', reason=reason
             )
 
 
