@@ -11,3 +11,5 @@ COMMAND_PREFIX = "."
 VERSION = "1.2.5"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+BASE_GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"
