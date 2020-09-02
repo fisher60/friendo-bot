@@ -132,7 +132,7 @@ class Utilities(Cog):
             msg = f"{ctx.author.mention} You are already drinking!"
             await ctx.send(msg)
 
-    @command()
+    @command(brief="Shows the latency between Friendo and the Discord API")
     async def ping(self, ctx):
         await ctx.send(f"Ping is {round(self.bot.latency * 1000)}ms")
         return self.bot.latency
