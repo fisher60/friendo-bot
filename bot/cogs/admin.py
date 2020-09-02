@@ -32,7 +32,7 @@ class AdminCommands(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
     
-    @command(brief="Kills your friend")
+    @command(brief="Kills your robotic friend")
     @is_admin()
     async def shutdown(self, ctx):
         msg = f"Mr. Stark, I don't feel so good. . ."
@@ -40,7 +40,7 @@ class AdminCommands(Cog):
         print("Closing Client...")
         await self.bot.logout()
 
-    @command(name="createadmin")
+    @command(name="createadmin", brief="gives the @mention user admin permissions")
     @is_admin()
     async def create_admin(self, ctx, user):
         """Adds a new user id to the list of admins."""
