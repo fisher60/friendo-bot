@@ -9,7 +9,7 @@ class Memes(Cog):
         self.bot = bot
 
     @command(
-        brief="[command] [*args]",
+        brief="commands for using the meme generator. [command] [*args]",
         description=".meme search [keywords] to search for available memes\n."
         ".meme create [meme name from meme search]; [text]; [text]; ...\n"
         "----each [text] should be the text to enter into a text box, "
