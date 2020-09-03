@@ -1,6 +1,7 @@
 from asyncio import sleep
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command
+import json
 
 
 class TodoList(Cog):
@@ -10,6 +11,7 @@ class TodoList(Cog):
         self.bot = bot
         self.index = 0
         self.todos = {}
+        self.the_todo = []
 
     async def todos_wrapper(
             self, ctx, text, msg="Todo List!", task_type="todo_list", reason=None
@@ -33,11 +35,10 @@ class TodoList(Cog):
             if task_type == 'todo_list':
                 if reason:
                     r = reason.split(',')
-                    the_todo: list = []
                     for num, td in enumerate(r):
-                        the_todo.append(f"{num}. {td}\n")
+                        self.the_todo.append(f"{num}. {td}\n")
                     completion_message = (
-                        f"{ctx.author.mention}, your todo list : {''.join(the_todo) + ' -> Ready!' }"
+                        f"{ctx.author.mention}, your todo list : {''.join(self.the_todo) + ' -> Ready!' }"
                     )
                 else:
                     completion_message = (
@@ -64,6 +65,10 @@ class TodoList(Cog):
             await self.todos_wrapper(
                 ctx=ctx, text=text, task_type='todo_list', reason=reason
             )
+
+    @command(brief="[delete todo some todos] [reason]")
+    async def del_todo_list(self, ctx, text, reason=None):
+        ...
 
 
 def setup(bot: Bot) -> None:
