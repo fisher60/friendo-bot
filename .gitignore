@@ -4,3 +4,4 @@ __pycache__/
 *.env
 *.bat
 meme_list.json
+/bot/save_data_td.JSON
