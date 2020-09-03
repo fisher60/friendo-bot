@@ -43,15 +43,20 @@ class Source(commands.Cog):
         self.bot = bot
 
     @commands.command(name="source", brief="Send a link to Friendo's GitHub repo")
-    async def send_source(self, ctx, arg1):
+    async def send_source(self, ctx, arg1=None):
         src_conv = SourceConverter()
-        try:
-            src_obj = await src_conv.convert(ctx, arg1)
-            embed = Embed(title="Friendo's GitHub Repo", colour=Colour.blue(), description=f"Description: {src_obj.brief}")
+        if arg1:
+            try:
+                src_obj = await src_conv.convert(ctx, arg1)
+                embed = Embed(title="Friendo's GitHub Repo", colour=Colour.blue(), description=f"Description: {src_obj.brief}")
+                embed.add_field(name="Repository", value=f"[Go To GitHub]({settings.BASE_GITHUB_REPO})")
+                await ctx.send(embed=embed)
+            except commands.BadArgument:
+                await ctx.send("That command could not be found.")
+        else:
+            embed = Embed(title="Friendo's GitHub Repo", colour=Colour.blue())
             embed.add_field(name="Repository", value=f"[Go To GitHub]({settings.BASE_GITHUB_REPO})")
             await ctx.send(embed=embed)
-        except commands.BadArgument:
-            await ctx.send("That command could not be found.")
 
 
 def setup(bot: commands.Bot) -> None:
