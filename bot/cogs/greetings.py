@@ -7,7 +7,7 @@ class Greetings(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
-    @command()
+    @command(brief="Say hello")
     async def hello(self, ctx):
         msg = f"Hello! {ctx.author.mention}"
         await ctx.send(msg)

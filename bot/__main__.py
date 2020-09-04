@@ -18,6 +18,7 @@ if __name__ == "__main__":
     # load in basic commands
     bot.load_extension("bot.cogs.greetings")
     bot.load_extension("bot.cogs.utilities")
+    bot.load_extension("bot.cogs.source")
 
     # load in Meme commands
     bot.load_extension("bot.cogs.memes")
