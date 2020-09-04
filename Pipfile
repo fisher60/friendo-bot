@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "==2.6.0"
+pre-commit = "*"
 
 [packages]
 "discord.py" = "==1.4.1"
