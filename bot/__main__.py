@@ -8,10 +8,10 @@ if __name__ == "__main__":
 
     @bot.event
     async def on_ready():
-        print('Logged in as')
+        print("Logged in as")
         print(bot.user.name)
         print(bot.user.id)
-        print('------')
+        print("------")
 
     memegen.Meme()
 
@@ -26,4 +26,6 @@ if __name__ == "__main__":
     # load in Admin commands
     bot.load_extension("bot.cogs.admin")
 
+    # load in Fun commands
+    bot.load_extension("bot.cogs.fun")
     bot.run(settings.TOKEN)
