@@ -1,4 +1,5 @@
 from discord.ext.commands import Bot, Cog, command
+from random import choice
 
 
 class Fun(Cog):
@@ -27,6 +28,21 @@ class Fun(Cog):
 
         await ctx.send(new)
         return new
+
+    @command(
+        brief="simulates a coin toss",
+        description="gives an output of heads or tails like a coin",
+        name="flip",
+    )
+    async def coin_toss(self, ctx, toss):
+        x = ["heads", "tails"]
+
+        if toss == choice(x):
+            msg = f"{ctx.author.mention} wins!"
+        else:
+            msg = f"{ctx.author.mention} loses!"
+
+        await ctx.send(msg)
 
 
 def setup(bot: Bot) -> None:

@@ -66,6 +66,10 @@ class Meme:
                     final_dict[name] = x["box_count"]
 
         if len(final_dict) > 0:
-            return "\n".join([f'Name: {x}, Text Boxes: {final_dict[x]}' for x in final_dict.keys()][:10])
+            return "\n".join(
+                [f"Name: {x}, Text Boxes: {final_dict[x]}" for x in final_dict.keys()][
+                    :10
+                ]
+            )
         else:
             return None

@@ -4,7 +4,13 @@ from typing import Union
 from bot import settings
 
 
-SourceType = Union[commands.HelpCommand, commands.Command, commands.Cog, str, commands.ExtensionNotLoaded]
+SourceType = Union[
+    commands.HelpCommand,
+    commands.Command,
+    commands.Cog,
+    str,
+    commands.ExtensionNotLoaded,
+]
 
 
 class SourceConverter(commands.Converter):
@@ -48,14 +54,23 @@ class Source(commands.Cog):
         if arg1:
             try:
                 src_obj = await src_conv.convert(ctx, arg1)
-                embed = Embed(title="Friendo's GitHub Repo", colour=Colour.blue(), description=f"Description: {src_obj.brief}")
-                embed.add_field(name="Repository", value=f"[Go To GitHub]({settings.BASE_GITHUB_REPO})")
+                embed = Embed(
+                    title="Friendo's GitHub Repo",
+                    colour=Colour.blue(),
+                    description=f"Description: {src_obj.brief}",
+                )
+                embed.add_field(
+                    name="Repository",
+                    value=f"[Go To GitHub]({settings.BASE_GITHUB_REPO})",
+                )
                 await ctx.send(embed=embed)
             except commands.BadArgument:
                 await ctx.send("That command could not be found.")
         else:
             embed = Embed(title="Friendo's GitHub Repo", colour=Colour.blue())
-            embed.add_field(name="Repository", value=f"[Go To GitHub]({settings.BASE_GITHUB_REPO})")
+            embed.add_field(
+                name="Repository", value=f"[Go To GitHub]({settings.BASE_GITHUB_REPO})"
+            )
             await ctx.send(embed=embed)
 
 
