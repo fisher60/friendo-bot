@@ -25,15 +25,20 @@ MEME_PASSWORD = <your imgflip api password>
 
 ## Dev Installation
 *You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv 
-the above environment variables must be added to the system).*
+the above environment variables must be added to the system/a .env file).*
 
 1. `git clone -b "feature-branch-name" <url>` this repo
 
 2. `pip install pipenv`
 
-3. `pipenv sync` to install project dependencies.
+3. Set up environment variables, this can be done by adding a file named `.env` 
+(make sure the file name is exactly `.env`) to the root directory with the variables from the above `bot.env` example,
+ or add the same environment variables to the system (`.env` is the recommended 
+approach).
 
-4. `pipenv shell` to activate virtual environment 
+4. `pipenv sync` to install project dependencies.
 
-5. run `python -m bot` to start the bot
+5. `pipenv shell` to activate virtual environment 
+
+6. run `python -m bot` to start the bot
 
