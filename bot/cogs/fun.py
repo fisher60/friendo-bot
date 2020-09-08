@@ -35,9 +35,9 @@ class Fun(Cog):
         name="flip",
     )
     async def coin_toss(self, ctx, toss):
-        x = ["heads", "tails"]
+        outcomes = ["heads", "tails"]
 
-        if toss == choice(x):
+        if toss == choice(outcomes):
             msg = f"{ctx.author.mention} wins!"
         else:
             msg = f"{ctx.author.mention} loses!"
