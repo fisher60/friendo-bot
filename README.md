@@ -24,20 +24,28 @@ MEME_PASSWORD = <your imgflip api password>
 ```
 
 ## Dev Installation
-*You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv
+* You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv
 the above environment variables must be added to the system).*
 
-1. `git clone -b "feature-branch-name" <url>` this repository.
+```bash
+# Clone the repository on the develop branch
+$ git clone -b "develop" https://github.com/fisher60/Friendo_Bot.git
 
-2. `pip install pipenv` to install `pipenv`
+# Navigate to the repository directory
+$ cd Friendo_Bot
 
-3. `pipenv sync --dev` to install project and development dependencies.
+# Install pipenv through pip or your package manager
+$ pip install pipenv
 
-4. `pipenv shell` to activate the virtual environment.
+# Install the development and project dependencies
+$ pipenv sync --dev
 
-5. `pipenv run pre-commit install` to install pre-commit hooks.
+# Install pre-commit hooks
+$ pipenv run pre-commit install
 
-5.1 `pipenv run pre-commit run --all-files` to run hooks for all files.
+# Optionally: run pre-commit hooks to initialize them
+$ pipenv run pre-commit run --all-files
 
-6. run `python -m bot` to start the bot.
-
+# Run the bot
+$ pipenv run python -m bot
+```
