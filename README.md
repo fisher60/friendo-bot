@@ -24,16 +24,20 @@ MEME_PASSWORD = <your imgflip api password>
 ```
 
 ## Dev Installation
-*You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv 
+*You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv
 the above environment variables must be added to the system).*
 
-1. `git clone -b "feature-branch-name" <url>` this repo
+1. `git clone -b "feature-branch-name" <url>` this repository.
 
-2. `pip install pipenv`
+2. `pip install pipenv` to install `pipenv`
 
-3. `pipenv sync` to install project dependencies.
+3. `pipenv sync --dev` to install project and development dependencies.
 
-4. `pipenv shell` to activate virtual environment 
+4. `pipenv shell` to activate the virtual environment.
 
-5. run `python -m bot` to start the bot
+5. `pipenv run pre-commit install` to install pre-commit hooks.
+
+5.1 `pipenv run pre-commit run --all-files` to run hooks for all files.
+
+6. run `python -m bot` to start the bot.
 
