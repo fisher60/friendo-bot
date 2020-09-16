@@ -46,6 +46,9 @@ $ pipenv run pre-commit install
 # Optionally: run pre-commit hooks to initialize them
 $ pipenv run pre-commit run --all-files
 
+# Enter the pipenv shell
+$ pipenv shell
+
 # Run the bot
 $ pipenv run python -m bot
 ```
