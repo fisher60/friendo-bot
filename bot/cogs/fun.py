@@ -43,6 +43,29 @@ class Fun(Cog):
             msg = f"{ctx.author.mention} loses!"
 
         await ctx.send(msg)
+        
+    @command(
+        brief="works like a 8ball",
+        description="gives an output of various answers",
+        name="8ball",
+    )
+    async def _8ball(self, ctx, *, question):
+        responses = [
+        'It is certain',
+        'Yes, definately',
+        'Without a doubt',
+        'Thats for sure',
+        'Most likely',
+        'Umm, try again',
+        'Didnt quite get that',
+        'Concentrate and try again',
+        'Not likely at all',
+        'My reply is no',
+        'Obviously not',
+        'No...',
+        'My sources say no']
+    await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
+        
 
 
 def setup(bot: Bot) -> None:
