@@ -1,3 +1,4 @@
+from discord import Embed, Colour
 from discord.ext.commands import Bot, Cog, command
 from random import choice
 
@@ -43,29 +44,40 @@ class Fun(Cog):
             msg = f"{ctx.author.mention} loses!"
 
         await ctx.send(msg)
-        
+
     @command(
-        brief="works like a 8ball",
-        description="gives an output of various answers",
+        brief="Ask any question to the 8ball",
+        description="accepts a question and gives you an 8ball answer",
         name="8ball",
     )
-    async def _8ball(self, ctx, *, question):
+    async def eight_ball(self, ctx, *, question=None):
         responses = [
-        'It is certain',
-        'Yes, definately',
-        'Without a doubt',
-        'Thats for sure',
-        'Most likely',
-        'Umm, try again',
-        'Didnt quite get that',
-        'Concentrate and try again',
-        'Not likely at all',
-        'My reply is no',
-        'Obviously not',
-        'No...',
-        'My sources say no']
-    await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
-        
+            "It is certain",
+            "Yes, definately",
+            "Without a doubt",
+            "Thats for sure",
+            "Most likely",
+            "Umm, try again",
+            "Didnt quite get that",
+            "Concentrate and try again",
+            "Not likely at all",
+            "My reply is no",
+            "Obviously not",
+            "No...",
+            "My sources say no",
+        ]
+
+        if question:
+            await ctx.send(f"Question: {question}\nAnswer: {choice(responses)}")
+
+        # Send help if question == None
+        else:
+            embed = Embed(
+                title="8ball",
+                colour=Colour.blue(),
+                description=f"Usage: `.8ball will this command work?`",
+            )
+            await ctx.send(embed=embed)
 
 
 def setup(bot: Bot) -> None:
