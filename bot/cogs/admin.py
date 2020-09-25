@@ -11,14 +11,14 @@ def is_admin():
         with open(f"{BASE_DIR}/save_data.JSON", "r") as data:
             save_data = json.load(data)
         return str(ctx.message.author.id) in save_data["admins"]
-    
+
     return check(predicate)
 
 
 def id_from_mention(message_content: str):
     """Return a user id from an @mention in a message."""
 
-    pattern = r'\d{18}'
+    pattern = r"\d{18}"
     id = re.search(pattern, message_content)
     if id is not None:
         return int(id.group())
@@ -31,7 +31,7 @@ class AdminCommands(Cog):
 
     def __init__(self, bot: Bot):
         self.bot = bot
-    
+
     @command(brief="Kills your robotic friend")
     @is_admin()
     async def shutdown(self, ctx):

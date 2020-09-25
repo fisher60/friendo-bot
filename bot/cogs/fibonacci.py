@@ -1,6 +1,3 @@
-import asyncio
-from asyncio import sleep
-from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command
 
 
@@ -18,11 +15,17 @@ class Fibonacci(Cog):
 
     @command(brief="Calculates the fibonacci sequence given by an input")
     async def fib(self, ctx, num):
-        try:
-            f = fibo_send(int(num))
-            await ctx.send(f"Fibonacci sequence:\n{f}")
-        except ValueError:
-            await ctx.send("Not a number. Input should be like: `.fib 10`")
+
+        if len(num) < 20:
+            try:
+                f = fibo_send(int(num))
+                await ctx.send(f"Fibonacci sequence:\n{f}")
+            except ValueError:
+                await ctx.send("Not a number. Input should be like: `.fib 10`")
+        else:
+            await ctx.send(
+                "Try a shorter number, do you think I am made of processing time!?"
+            )
 
 
 def setup(bot: Bot) -> None:
