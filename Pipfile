@@ -10,6 +10,12 @@ pre-commit = "*"
 [packages]
 "discord.py" = "==1.4.1"
 requests = "==2.24.0"
+opencv-python = "*"
+scikit-image = "*"
+aiofiles = "*"
 
 [requires]
 python_version = "3.8"
+
+[scripts]
+start = "python -m bot"
