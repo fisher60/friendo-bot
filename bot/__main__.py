@@ -1,6 +1,7 @@
 from . import settings
 from .bot import Bot
 from bot.meme_api import memegen
+from .start import clean_image_cache
 
 
 if __name__ == "__main__":
@@ -31,4 +32,8 @@ if __name__ == "__main__":
 
     # load in Fun commands
     bot.load_extension("bot.cogs.fun")
+
+    # Scripts launched before the bot starts
+    clean_image_cache()
+
     bot.run(settings.TOKEN)
