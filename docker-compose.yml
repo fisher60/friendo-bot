@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.7"
 
 services:
     bot:
@@ -6,4 +6,4 @@ services:
             context: .
             dockerfile: DockerFile
         tty: true
-        env_file: .env
+        env_file: bot.env
