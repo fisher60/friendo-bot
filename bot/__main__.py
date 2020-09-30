@@ -4,6 +4,7 @@ Launches the bot, starts the asyncio loop when called.
 from bot.meme_api import memegen
 from . import settings
 from .bot import Bot
+from .start import clean_image_cache
 
 
 if __name__ == "__main__":
@@ -26,6 +27,9 @@ if __name__ == "__main__":
     bot.load_extension("bot.cogs.utilities")
     bot.load_extension("bot.cogs.source")
 
+    # load in image segmentation commands
+    bot.load_extension("bot.cogs.image_segmentation")
+
     # load in Meme commands
     bot.load_extension("bot.cogs.memes")
 
@@ -34,4 +38,8 @@ if __name__ == "__main__":
 
     # load in Fun commands
     bot.load_extension("bot.cogs.fun")
+
+    # Scripts launched before the bot starts
+    clean_image_cache()
+
     bot.run(settings.TOKEN)

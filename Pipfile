@@ -12,6 +12,12 @@ pre-commit = "*"
 requests = "==2.24.0"
 pipenv = "*"
 python-dotenv = "*"
+opencv-python = "*"
+scikit-image = "*"
+aiofiles = "*"
 
 [requires]
 python_version = "3.8"
+
+[scripts]
+start = "python -m bot"
