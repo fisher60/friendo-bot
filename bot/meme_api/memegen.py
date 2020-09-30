@@ -1,6 +1,6 @@
+"""Pulls meme templates from imgfip api and creates memes"""
 import requests
 import json
-import os
 from bot.settings import BASE_DIR, MEME_USERNAME, MEME_PASSWORD
 
 
@@ -23,6 +23,7 @@ class Meme:
         self.password = MEME_PASSWORD
 
     def generate_meme(self, *, name, text=None):
+        """Creates a meme given the name of a template."""
         data = {"username": self.user_name, "password": self.password}
 
         if text is not None:
@@ -37,33 +38,34 @@ class Meme:
                     else:
                         return f"Too many text boxes for {meme['name']} with count {meme['box_count']}"
 
-        r = requests.post(url=self.gen_meme_url, data=data).json()
+        resp = requests.post(url=self.gen_meme_url, data=data).json()
 
-        if r["success"]:
-            return r["data"]["url"]
-        else:
-            return None
+        if resp["success"]:
+            return resp["data"]["url"]
+        return None
 
     def get_all_memes(self):
-        r = requests.get(url=self.get_memes_url)
-        r = r.json()
+        """Gets the names of all available meme templates."""
+        resp = requests.get(url=self.get_memes_url)
+        resp = resp.json()
 
-        if r["success"]:
+        if resp["success"]:
             print("updating meme list...")
 
             with open(self.meme_dir, "w+") as f:
-                json.dump(r, f)
+                json.dump(resp, f)
         else:
             print("Failed to update, aborting...")
 
     def search_meme_list(self, search_words: list):
+        """Checks if the input search_words matches any available meme templates."""
         final_dict = {}
 
-        for x in self.meme_dict:
-            name = x["name"]
-            for each in x["name"].split(" "):
+        for meme in self.meme_dict:
+            name = meme["name"]
+            for each in meme["name"].split(" "):
                 if any(word in each.lower() for word in search_words):
-                    final_dict[name] = x["box_count"]
+                    final_dict[name] = meme["box_count"]
 
         if len(final_dict) > 0:
             return "\n".join(
@@ -71,5 +73,4 @@ class Meme:
                     :10
                 ]
             )
-        else:
-            return None
+        return None

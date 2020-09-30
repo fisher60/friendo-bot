@@ -1,3 +1,5 @@
+"""Constants for the bot."""
+
 import os
 
 TOKEN = os.environ.get("FRIENDO_TOKEN")
