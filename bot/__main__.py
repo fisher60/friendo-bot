@@ -26,6 +26,9 @@ if __name__ == "__main__":
     bot.load_extension("bot.cogs.utilities")
     bot.load_extension("bot.cogs.source")
 
+    # load in image segmentation commands
+    bot.load_extension("bot.cogs.image_segmentation")
+
     # load in Meme commands
     bot.load_extension("bot.cogs.memes")
 
