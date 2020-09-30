@@ -4,3 +4,4 @@ __pycache__/
 *.env
 *.bat
 meme_list.json
+.vscode/
