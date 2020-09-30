@@ -1,4 +1,5 @@
 """Pulls meme templates from imgfip api and creates memes"""
+
 import requests
 import json
 from bot.settings import BASE_DIR, MEME_USERNAME, MEME_PASSWORD
@@ -10,7 +11,7 @@ class Meme:
 
     def __init__(self):
         self.gen_meme_url = "https://api.imgflip.com/caption_image"
-        self.get_memes_url = "https://api.imgflip.com/get_memes"
+        self.get_all_memes_url = "https://api.imgflip.com/get_memes"
 
         if not self.updated:
             self.get_all_memes()
@@ -22,11 +23,17 @@ class Meme:
         self.user_name = MEME_USERNAME
         self.password = MEME_PASSWORD
 
+    @staticmethod
+    def check_response(resp):
+        if resp["success"]:
+            return resp["data"]["url"]
+        return None
+
     def generate_meme(self, *, name, text=None):
         """Creates a meme given the name of a template."""
         data = {"username": self.user_name, "password": self.password}
 
-        if text is not None:
+        if text:
 
             for meme in self.meme_dict:
                 if meme["name"].lower() == name.lower():
@@ -39,14 +46,11 @@ class Meme:
                         return f"Too many text boxes for {meme['name']} with count {meme['box_count']}"
 
         resp = requests.post(url=self.gen_meme_url, data=data).json()
-
-        if resp["success"]:
-            return resp["data"]["url"]
-        return None
+        return self.check_response(resp)
 
     def get_all_memes(self):
         """Gets the names of all available meme templates."""
-        resp = requests.get(url=self.get_memes_url)
+        resp = requests.get(url=self.get_all_memes_url)
         resp = resp.json()
 
         if resp["success"]:
@@ -55,7 +59,7 @@ class Meme:
             with open(self.meme_dir, "w+") as f:
                 json.dump(resp, f)
         else:
-            print("Failed to update, aborting...")
+            print("Failed to update meme list, aborting...")
 
     def search_meme_list(self, search_words: list):
         """Checks if the input search_words matches any available meme templates."""
@@ -64,6 +68,8 @@ class Meme:
         for meme in self.meme_dict:
             name = meme["name"]
             for each in meme["name"].split(" "):
+
+                # Check if any word in he search words matches in a meme name, lazy search
                 if any(word in each.lower() for word in search_words):
                     final_dict[name] = meme["box_count"]
 

@@ -139,6 +139,7 @@ disable=print-statement,
         deprecated-sys-function,
         exception-escape,
         comprehension-escape,
+        too-many-branches,
         C0114,
         C0116,
         C0115,
@@ -147,6 +148,7 @@ disable=print-statement,
         C0301,
         C0201,
         R1705,
+        R0801,
         R0913,
         W0612,
         W0212,
@@ -433,10 +435,10 @@ ignore-comments=yes
 ignore-docstrings=yes
 
 # Ignore imports when computing similarities.
-ignore-imports=no
+ignore-imports=yes
 
 # Minimum lines number of a similarity.
-min-similarity-lines=4
+min-similarity-lines=8
 
 
 [MISCELLANEOUS]
