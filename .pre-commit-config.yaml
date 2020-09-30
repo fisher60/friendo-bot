@@ -11,12 +11,4 @@ repos:
         args:
         - bot
         language_version: python3
-  - repo: local
-    hooks:
-      - id: pylint
-        args:
-        - bot
-        name: pylint
-        entry: pylint
-        language: system
-        types: [python]
+

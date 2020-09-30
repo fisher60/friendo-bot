@@ -11,6 +11,7 @@ pre-commit = "*"
 "discord.py" = "==1.4.1"
 requests = "==2.24.0"
 pipenv = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
