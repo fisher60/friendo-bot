@@ -1,8 +1,13 @@
-import discord
+"""Bot class functionality"""
+
 from discord.ext import commands
 
 
 class Bot(commands.Bot):
+    """
+    Base Class for the discord bot
+    """
+
     name = "Friendo"
 
     def __init__(self, *args, **kwargs):

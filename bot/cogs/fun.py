@@ -1,6 +1,10 @@
+"""
+Commands that do not serve a useful function aside from being fun.
+"""
+
+from random import choice
 from discord import Embed, Colour
 from discord.ext.commands import Bot, Cog, command
-from random import choice
 
 
 class Fun(Cog):
@@ -15,6 +19,7 @@ class Fun(Cog):
         name="tosponge",
     )
     async def to_sponge(self, ctx, *, phrase):
+        """Converts input string to alternating case."""
         count = 0
         new = ""
         for i in phrase:
@@ -36,6 +41,8 @@ class Fun(Cog):
         name="flip",
     )
     async def coin_toss(self, ctx, toss):
+        """Determines whether or not a user won a coin toss."""
+
         outcomes = ["heads", "tails"]
 
         if toss == choice(outcomes):
@@ -51,6 +58,8 @@ class Fun(Cog):
         name="8ball",
     )
     async def eight_ball(self, ctx, *, question=None):
+        """Returns an 8ball response to a user's question."""
+
         responses = [
             "It is certain",
             "Yes, definately",
@@ -75,7 +84,7 @@ class Fun(Cog):
             embed = Embed(
                 title="8ball",
                 colour=Colour.blue(),
-                description=f"Usage: `.8ball will this command work?`",
+                description="Usage: `.8ball will this command work?`",
             )
             await ctx.send(embed=embed)
 

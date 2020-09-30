@@ -1,6 +1,9 @@
+"""
+Launches the bot, starts the asyncio loop when called.
+"""
+from bot.meme_api import memegen
 from . import settings
 from .bot import Bot
-from bot.meme_api import memegen
 
 
 if __name__ == "__main__":
@@ -8,6 +11,9 @@ if __name__ == "__main__":
 
     @bot.event
     async def on_ready():
+        """
+        Runs when the bot is connected.
+        """
         print("Logged in as")
         print(bot.user.name)
         print(bot.user.id)

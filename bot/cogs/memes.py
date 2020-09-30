@@ -1,3 +1,4 @@
+"""Commands for using the meme generator module"""
 from discord.ext.commands import Bot, Cog, command
 from bot.meme_api import memegen
 

@@ -24,7 +24,7 @@ MEME_PASSWORD = <your imgflip api password>
 ```
 
 ## Dev Installation
-* You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv 
+* You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv
 the above environment variables must be added to the system/a .env file).*
 
 ```bash
