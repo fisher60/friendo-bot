@@ -39,6 +39,9 @@ if __name__ == "__main__":
     # load in Fun commands
     bot.load_extension("bot.cogs.fun")
 
+    # load in Events commands
+    bot.load_extension("bot.cogs.events")
+
     # Scripts launched before the bot starts
     clean_image_cache()
 
