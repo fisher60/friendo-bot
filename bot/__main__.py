@@ -25,4 +25,7 @@ if __name__ == "__main__":
     # load in Fun commands
     bot.load_extension("bot.cogs.fun")
 
+    # load in Event command
+    bot.load_extension("bot.cogs.events")
+
     bot.run(settings.TOKEN)
