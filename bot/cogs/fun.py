@@ -98,9 +98,9 @@ class Fun(Cog):
         response = response.lower()
         options = ['rock', 'paper', 'scissors']
         bot_choice = random.choice(options)
-        win = ctx.send("I win... I hope you arent angry?.😂")
-        lose = ctx.send("I lose.. 😶")
-        choose = ctx.send(f'I choose {bot_choice}')
+        win = "I win... I hope you arent angry?.😂"
+        lose = "I lose.. 😶"
+        choose = f'I choose {bot_choice}'
         
         if response not in options:
             await ctx.send("Please choose between rock, paper or scissors")
@@ -108,16 +108,16 @@ class Fun(Cog):
             await ctx.send(f"I choose {bot_choice}\nOh, we got a tie")
             
         elif response == 'rock':
-            await choose
-            await (win) if bot_choice == 'paper' else await (lose)   
+            await ctx.send(choose)
+            await ctx.send(win) if bot_choice == 'paper' else await ctx.send(lose)   
             
         elif response == 'paper':
-            await choose
-            await (win) if bot_choice == 'scissors' else await (lose)   
+            await ctx.send(choose)
+            await ctx.send(win) if bot_choice == 'scissors' else await ctx.send(lose)   
        
         elif response == 'scissors':
-            await choose
-            await (win) if bot_choice == 'rock' else await (lose)
+            await ctx.send(choose)
+            await ctx.send(win) if bot_choice == 'rock' else await ctx.send(lose)
         # I forgot to do this last time sorry
         else:
             embed = Embed(
