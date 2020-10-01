@@ -40,8 +40,8 @@ class Meme:
 
         async with self.bot.session.post(self.gen_meme_url, data=data) as resp:
             if resp.status == 200:
-                return True
-            return False
+                _json = await resp.json()
+                return _json["data"]["url"]
 
     async def get_all_memes(self):
         """Gets the names of all available meme templates."""
