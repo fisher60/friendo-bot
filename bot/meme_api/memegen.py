@@ -46,7 +46,7 @@ class Meme:
     async def get_all_memes(self):
         """Gets the names of all available meme templates."""
         async with self.bot.session.get(self.get_all_memes_url) as resp:
-            if resp.stauts == 200:
+            if resp.status == 200:
                 print("updating meme list...")
 
                 with open(MEME_DIR, "w+") as f:
