@@ -17,6 +17,6 @@ repos:
         args:
         - bot
         name: pylint
-        entry: pylint
+        entry: pipenv run pylint
         language: system
         types: [python]
