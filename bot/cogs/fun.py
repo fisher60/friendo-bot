@@ -37,7 +37,7 @@ class Fun(Cog):
 
     @command(
         brief="simulates a coin toss",
-        description="gives an output of heads or tails like a coin",
+        description="accepts a string value of heads or tails and tells you if you win or lose the call, ie .flip heads",
         name="flip",
     )
     async def coin_toss(self, ctx, toss):
