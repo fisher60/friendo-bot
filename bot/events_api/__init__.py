@@ -18,5 +18,4 @@ class Event:
                 event_json = await res.json()
                 return event_json["_embedded"]["events"]
             else:
-                print("hey its not working")
                 return 0

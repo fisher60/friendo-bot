@@ -20,20 +20,30 @@ class Events(Cog):
 
     @group()
     async def events(self, ctx):
-        await ctx.send("Events:")
+        pass
 
     @events.command()
     async def show(self, ctx, artist):
         result = await self.this_event.show_events(artist)
+        output = f"**Event:** \n```md\n**{result[0]['name']}**```\n**Venues**\n"
         for event in result:
             if event:
-                name = (
-                    event["_embedded"]["venues"][0]["name"]
+                event_date = event["dates"]["start"]["localDate"]
+                event_venue = (
+                    event["_embedded"]["venues"][0]
                     if "name" in event["_embedded"]["venues"][0]
                     else None
                 )
-                if name:
-                    await ctx.send(name)
+                if event_venue:
+                    output = (
+                        output
+                        + (
+                            f"```ini\n[{event_venue['name']}]\nLocation: {event_venue['city']['name']}\nLocal-time: {event_date}```"
+                        )
+                        + "\n"
+                    )
+        # output += "```"
+        await ctx.send(output)
 
 
 def setup(bot: Bot) -> None:
