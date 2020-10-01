@@ -11,11 +11,12 @@ class Memes(Cog):
         self.this_meme = memegen.Meme(bot)
 
     @command(
-        brief="commands for using the meme generator. [command] [*args]",
-        description=".meme search [keywords] to search for available memes\n."
-        ".meme create [meme name from meme search]; [text]; [text]; ...\n"
-        "----each [text] should be the text to enter into a text box, "
-        "do not exceed the max number of text boxes",
+        brief="meme generator commands. Usage: `.meme [command] [*args]`",
+        description="`.meme search [keywords]` to keyword search for related memes\n"
+                    "`.meme create [valid meme name]; [text]; [text]; ...` to create a new meme\n"
+                    "find a valid meme name with `meme search` before using `meme create`\n"
+                    "supply more arguments to add text boxes in the meme\n"
+                    "exceeding the max text boxes will cause generation to fail",
     )
     async def meme(self, ctx, arg1, *, args):
         """The main command, used to parse and process the command arguments"""
