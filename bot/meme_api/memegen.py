@@ -49,8 +49,10 @@ class Meme:
             if resp.status == 200:
                 print("updating meme list...")
 
+                _json = await resp.json()
+
                 with open(MEME_DIR, "w+") as f:
-                    json.dump(resp, f)
+                    json.dump(_json, f)
             else:
                 print("Failed to update meme list, aborting...")
 
