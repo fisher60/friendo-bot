@@ -87,6 +87,40 @@ class Fun(Cog):
                 description="Usage: `.8ball will this command work?`",
             )
             await ctx.send(embed=embed)
+            
+    @command(
+        brief="Play a game of rock paper scissors",
+        description="Enter an option between rock, paper, scissor after .play",
+        aliases= ["play", "Play", "RPS"],
+    )
+    async def rps(ctx, *, response=None):
+        if isinstance(response, str):
+            response = response.lower()
+        options = ['rock', 'paper', 'scissors']
+        bot_choice = random.choice(options)
+        if response == bot_choice:
+            await ctx.send(f"I choose {bot_choice}\nOh, we got a tie")
+        elif response == 'rock':
+            await ctx.send(f'I choose {bot_choice}')
+            if bot_choice == 'paper':
+                await ctx.send("I win... I hope you arent angry?...")
+            else:
+                await ctx.send("I lose....")
+        elif response == 'paper':
+            await ctx.send(f'I choose {bot_choice}')
+            if bot_choice == 'scissors':    
+                await ctx.send("I win... I hope you arent angry?...")
+            else:
+                await ctx.send("I lose....")
+        elif response in ('scissors', 'scissor'):
+            await ctx.send(f'I choose {bot_choice}')
+            if bot_choice == 'rock':
+                await ctx.send("I win... I hope you arent angry?...")
+            else:
+                await ctx.send("I lose....")
+
+        else:
+            await ctx.send("Please choose between rock, paper or scissors")
 
 
 def setup(bot: Bot) -> None:
