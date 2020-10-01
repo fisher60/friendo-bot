@@ -13,6 +13,8 @@ COMMAND_PREFIX = "."
 
 VERSION = "1.2.8"
 
+NAME = "Friendo"
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 IMG_CACHE = Path(BASE_DIR, "image_cache")
