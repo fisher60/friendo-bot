@@ -17,7 +17,7 @@ class Fun(Cog):
     async def to_sponge(self, ctx, *, phrase):
         count = 0
         new = ""
-        for i in phrase:
+        for i in phrase.lower():
             if i == " ":
                 new += i
             else:
