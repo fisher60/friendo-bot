@@ -28,3 +28,9 @@ class Bot(commands.Bot):
         print(self.user.name)
         print(self.user.id)
         print("------")
+
+    async def logout(self) -> None:
+        """Making sure connections are closed properly."""
+        await self.session.close()
+
+        return await super().logout()
