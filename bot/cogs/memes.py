@@ -8,6 +8,7 @@ class Memes(Cog):
 
     def __init__(self, bot: Bot):
         self.bot = bot
+        self.this_meme = memegen.Meme(bot)
 
     @command(
         brief="commands for using the meme generator. [command] [*args]",
@@ -20,14 +21,12 @@ class Memes(Cog):
         """The main command, used to parse and process the command arguments"""
 
         args = args.split("; ")
-        this_meme = memegen.Meme()
-        response = None
 
         if arg1 == "create":
             # Creates a new meme
 
             name, text = args[0], args[1:]
-            result = this_meme.generate_meme(name=name, text=text)
+            result = await self.this_meme.generate_meme(name=name, text=text)
             if result:
                 await ctx.send(result)
             else:
@@ -38,7 +37,7 @@ class Memes(Cog):
         elif arg1 == "search":
             # searches the cached meme_list for keywords and returns matching meme names
 
-            result = this_meme.search_meme_list(args)
+            result = self.this_meme.search_meme_list(args)
             if result:
                 response = await ctx.send(result)
                 await ctx.message.delete(delay=30)
