@@ -22,7 +22,7 @@ class Fun(Cog):
         """Converts input string to alternating case."""
         count = 0
         new = ""
-        for i in phrase:
+        for i in phrase.lower():
             if i == " ":
                 new += i
             else:
@@ -37,7 +37,7 @@ class Fun(Cog):
 
     @command(
         brief="simulates a coin toss",
-        description="gives an output of heads or tails like a coin",
+        description="accepts a string value of heads or tails and tells you if you win or lose the call, ie .flip heads",
         name="flip",
     )
     async def coin_toss(self, ctx, toss):
