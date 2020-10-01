@@ -93,34 +93,39 @@ class Fun(Cog):
         description="Enter an option between rock, paper, scissor after .play",
         aliases= ["play", "Play", "RPS"],
     )
-    async def rps(ctx, *, response=None):
-        if isinstance(response, str):
-            response = response.lower()
+    async def rps(self, ctx, *, response=None):
+        """Returns strings based on winning/losing/tie"""
+        response = response.lower()
         options = ['rock', 'paper', 'scissors']
         bot_choice = random.choice(options)
-        if response == bot_choice:
-            await ctx.send(f"I choose {bot_choice}\nOh, we got a tie")
-        elif response == 'rock':
-            await ctx.send(f'I choose {bot_choice}')
-            if bot_choice == 'paper':
-                await ctx.send("I win... I hope you arent angry?...")
-            else:
-                await ctx.send("I lose....")
-        elif response == 'paper':
-            await ctx.send(f'I choose {bot_choice}')
-            if bot_choice == 'scissors':    
-                await ctx.send("I win... I hope you arent angry?...")
-            else:
-                await ctx.send("I lose....")
-        elif response in ('scissors', 'scissor'):
-            await ctx.send(f'I choose {bot_choice}')
-            if bot_choice == 'rock':
-                await ctx.send("I win... I hope you arent angry?...")
-            else:
-                await ctx.send("I lose....")
-
-        else:
+        win = ctx.send("I win... I hope you arent angry?.😂")
+        lose = ctx.send("I lose.. 😶")
+        choose = ctx.send(f'I choose {bot_choice}')
+        
+        if response not in options:
             await ctx.send("Please choose between rock, paper or scissors")
+        elif response == bot_choice:
+            await ctx.send(f"I choose {bot_choice}\nOh, we got a tie")
+            
+        elif response == 'rock':
+            await choose
+            await (win) if bot_choice == 'paper' else await (lose)   
+            
+        elif response == 'paper':
+            await choose
+            await (win) if bot_choice == 'scissors' else await (lose)   
+       
+        elif response == 'scissors':
+            await choose
+            await (win) if bot_choice == 'rock' else await (lose)
+        # I forgot to do this last time sorry
+        else:
+            embed = Embed(
+                title="Rock, Paper, Scissor",
+                colour=Colour.red(),
+                description="Usage: `.rps rock/paper/scissors`",
+            )
+            await ctx.send(embed=embed)
 
 
 def setup(bot: Bot) -> None:
