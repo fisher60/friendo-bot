@@ -82,7 +82,7 @@ class Fun(Cog):
             await ctx.send(embed=embed)
 
     @command(
-        brief="Play blackjack with the AstroBot",
+        brief="Play blackjack with the Friendo Bot",
         description="Play one round of blackjack against the computer",
         aliases=("bj",)
     )
