@@ -22,7 +22,7 @@ class Fun(Cog):
         """Converts input string to alternating case."""
         count = 0
         new = ""
-        for i in phrase:
+        for i in phrase.lower():
             if i == " ":
                 new += i
             else:
