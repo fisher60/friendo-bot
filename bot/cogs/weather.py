@@ -13,7 +13,7 @@ class WeatherCog(commands.Cog):
         self.bot = bot
 
     #Weather command, takes in an arg of city name
-    @commands.command()
+    @commands.command(brief="Takes in a city name and returns the weather for that location")
     async def weather(self,ctx, *,args):
       embed=discord.Embed(title='Weather!')
 
