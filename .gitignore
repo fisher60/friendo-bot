@@ -1,6 +1,8 @@
 venv/
 .idea/
 __pycache__/
+image_cache/
 *.env
 *.bat
 meme_list.json
+.vscode/

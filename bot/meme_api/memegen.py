@@ -1,31 +1,32 @@
-import requests
 import json
-import os
-from bot.settings import BASE_DIR, MEME_USERNAME, MEME_PASSWORD
+
+from bot.settings import BASE_DIR, MEME_PASSWORD, MEME_USERNAME
+
+MEME_DIR = f"{BASE_DIR}/meme_api/json/meme_list.json"
 
 
 class Meme:
-    meme_dir = f"{BASE_DIR}/meme_api/json/meme_list.json"
-    updated = False
+    """Pulls meme templates from imgfip api and creates memes."""
 
-    def __init__(self):
+    def __init__(self, bot):
+        self.bot = bot
+
         self.gen_meme_url = "https://api.imgflip.com/caption_image"
-        self.get_memes_url = "https://api.imgflip.com/get_memes"
+        self.get_all_memes_url = "https://api.imgflip.com/get_memes"
 
-        if not self.updated:
-            self.get_all_memes()
-            self.updated = True
+        self.bot.loop.run_until_complete(self.get_all_memes())
 
-        with open(self.meme_dir, "r") as m:
+        with open(MEME_DIR, "r") as m:
             self.meme_dict = json.load(m)["data"]["memes"]
 
         self.user_name = MEME_USERNAME
         self.password = MEME_PASSWORD
 
-    def generate_meme(self, *, name, text=None):
+    async def generate_meme(self, *, name, text=None):
+        """Creates a meme given the name of a template."""
         data = {"username": self.user_name, "password": self.password}
 
-        if text is not None:
+        if text:
 
             for meme in self.meme_dict:
                 if meme["name"].lower() == name.lower():
@@ -37,39 +38,35 @@ class Meme:
                     else:
                         return f"Too many text boxes for {meme['name']} with count {meme['box_count']}"
 
-        r = requests.post(url=self.gen_meme_url, data=data).json()
+        async with self.bot.session.post(self.gen_meme_url, data=data) as resp:
+            if resp.status == 200:
+                _json = await resp.json()
+                return _json["data"]["url"]
 
-        if r["success"]:
-            return r["data"]["url"]
-        else:
-            return None
+    async def get_all_memes(self):
+        """Gets the names of all available meme templates."""
+        async with self.bot.session.get(self.get_all_memes_url) as resp:
+            if resp.status == 200:
+                print("updating meme list...")
 
-    def get_all_memes(self):
-        r = requests.get(url=self.get_memes_url)
-        r = r.json()
+                _json = await resp.json()
 
-        if r["success"]:
-            print("updating meme list...")
-
-            with open(self.meme_dir, "w+") as f:
-                json.dump(r, f)
-        else:
-            print("Failed to update, aborting...")
+                with open(MEME_DIR, "w+") as f:
+                    json.dump(_json, f)
+            else:
+                print("Failed to update meme list, aborting...")
 
     def search_meme_list(self, search_words: list):
+        """Checks if the input search_words matches any available meme templates."""
         final_dict = {}
 
-        for x in self.meme_dict:
-            name = x["name"]
-            for each in x["name"].split(" "):
+        for meme in self.meme_dict:
+            name = meme["name"]
+            for each in meme["name"].split(" "):
+
+                # Check if any word in he search words matches in a meme name, lazy search
                 if any(word in each.lower() for word in search_words):
-                    final_dict[name] = x["box_count"]
+                    final_dict[name] = meme["box_count"]
 
         if len(final_dict) > 0:
-            return "\n".join(
-                [f"Name: {x}, Text Boxes: {final_dict[x]}" for x in final_dict.keys()][
-                    :10
-                ]
-            )
-        else:
-            return None
+            return "\n".join([f"Name: {x}, Text Boxes: {final_dict[x]}" for x in final_dict.keys()][:10])

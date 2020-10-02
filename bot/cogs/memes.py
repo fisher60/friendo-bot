@@ -1,3 +1,4 @@
+"""Commands for using the meme generator module"""
 from discord.ext.commands import Bot, Cog, command
 from bot.meme_api import memegen
 
@@ -7,26 +8,26 @@ class Memes(Cog):
 
     def __init__(self, bot: Bot):
         self.bot = bot
+        self.this_meme = memegen.Meme(bot)
 
     @command(
-        brief="commands for using the meme generator. [command] [*args]",
-        description=".meme search [keywords] to search for available memes\n."
-        ".meme create [meme name from meme search]; [text]; [text]; ...\n"
-        "----each [text] should be the text to enter into a text box, "
-        "do not exceed the max number of text boxes",
+        brief="meme generator commands. Usage: `.meme [command] [*args]`",
+        description="`.meme search [keywords]` to keyword search for related memes\n"
+                    "`.meme create [valid meme name]; [text]; [text]; ...` to create a new meme\n"
+                    "find a valid meme name with `meme search` before using `meme create`\n"
+                    "supply more arguments to add text boxes in the meme\n"
+                    "exceeding the max text boxes will cause generation to fail",
     )
     async def meme(self, ctx, arg1, *, args):
         """The main command, used to parse and process the command arguments"""
 
         args = args.split("; ")
-        this_meme = memegen.Meme()
-        response = None
 
         if arg1 == "create":
             # Creates a new meme
 
             name, text = args[0], args[1:]
-            result = this_meme.generate_meme(name=name, text=text)
+            result = await self.this_meme.generate_meme(name=name, text=text)
             if result:
                 await ctx.send(result)
             else:
@@ -37,7 +38,7 @@ class Memes(Cog):
         elif arg1 == "search":
             # searches the cached meme_list for keywords and returns matching meme names
 
-            result = this_meme.search_meme_list(args)
+            result = self.this_meme.search_meme_list(args)
             if result:
                 response = await ctx.send(result)
                 await ctx.message.delete(delay=30)
