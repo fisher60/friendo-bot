@@ -9,9 +9,12 @@ MEME_USERNAME = os.environ.get("MEME_USERNAME")
 
 MEME_PASSWORD = os.environ.get("MEME_PASSWORD")
 
+# event api key
+EVENT_API_KEY = os.environ.get("EVENT_API_KEY")
+
 COMMAND_PREFIX = "."
 
-VERSION = "1.2.8"
+VERSION = "1.2."
 
 NAME = "Friendo"
 

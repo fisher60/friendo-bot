@@ -156,6 +156,9 @@ disable=print-statement,
         W0611,
         W1309,
         w0622,
+        E0611,
+        C1801,
+        R1710,
 
 
 # Enable the message, report, category or checker with the given id(s). You can
