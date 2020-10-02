@@ -20,75 +20,75 @@ class TriviaCog(commands.Cog):
         self.bot = bot
 
     #This batch of commands grab from the category based on their name
-    @commands.command()
+    @commands.command(name="history", brief="grabs a question from the history category and allows you to answer")
     async def history(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 23
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
-    async def books(self,ctx):
+    @commands.command(name="book", brief="grabs a question from the books category and allows you to answer",aliases=['books', 'literature'])
+    async def book(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 10
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
+    @commands.command(name="entertainment", brief="grabs a question from the entertainment categories and allows you to answer")
     async def entertainment(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = random.randrange(10, 16)
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
+    @commands.command(name="theatre", brief="grabs a question from the theatre category and allows you to answer")
     async def theatre(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 13
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
+    @commands.command(name="film", brief="grabs a question from the film category and allows you to answer",aliases=['films'])
     async def film(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 11
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
+    @commands.command(name="trivia", brief="grabs a question from a random category and allows you to answer")
     async def trivia(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = random.randrange(9, 32)
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
-    async def computers(self,ctx):
+    @commands.command(name="computer", brief="grabs a question from the computer category and allows you to answer",aliases=['computers', 'tech'])
+    async def computer(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 18
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
-    async def cartoons(self,ctx):
+    @commands.command(name="cartoon", brief="grabs a question from the cartoon category and allows you to answer",aliases=['cartoons', 'anime'])
+    async def cartoon(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 32
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
-    async def animals(self,ctx):
+    @commands.command(name="animal", brief="grabs a question from the animal category and allows you to answer",aliases=['animals'])
+    async def animal(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 27
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
-    async def boardgames(self,ctx):
+    @commands.command(name="books", brief="grabs a question from the boardgame category and allows you to answer",aliases=['boardgames'])
+    async def boardgame(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 16
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-    @commands.command()
-    async def videogames(self,ctx):
+    @commands.command(name="videgame", brief="grabs a question from the videogame category and allows you to answer",aliases=['videogames'])
+    async def videogame(self,ctx):
         global userAnswers
         id = str(ctx.message.author.id)
         quizVar = 15
         embed = generate_embed(id,quizVar)
         
         await ctx.send(embed=embed)
-    @commands.command()
+    @commands.command(name="tv", brief="grabs a question from the tv category and allows you to answer",aliases=['television'])
     async def tv(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 14
@@ -129,7 +129,7 @@ class TriviaCog(commands.Cog):
         'user not in array'
         
     #This command prints an embed listing the categories avaliable
-    @commands.command()
+    @commands.command(name="categories", brief="returns an embed listing the trivia categories")
     async def categories(self,ctx):
         embed=discord.Embed(title="Trivia Bot Categories")
         embed.add_field(name="-trivia", value="Gives a question from a random category", inline=False)
