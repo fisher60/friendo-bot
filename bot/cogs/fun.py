@@ -105,6 +105,45 @@ class Fun(Cog):
                 description="Usage: `.8ball will this command work?`",
             )
             await ctx.send(embed=embed)
+            
+    @command(
+        brief="Play a game of rock paper scissors",
+        description="Enter an option between rock, paper, scissor after .play",
+        aliases= ["play", "Play", "RPS"],
+    )
+    async def rps(self, ctx, *, response=None):
+        """Returns strings based on winning/losing/tie"""
+        response = response.lower()
+        options = ['rock', 'paper', 'scissors']
+        bot_choice = random.choice(options)
+        win = "I win... I hope you arent angry?.😂"
+        lose = "I lose.. 😶"
+        choose = f'I choose {bot_choice}'
+        
+        if response not in options:
+            await ctx.send("Please choose between rock, paper or scissors")
+        elif response == bot_choice:
+            await ctx.send(f"I choose {bot_choice}\nOh, we got a tie")
+            
+        elif response == 'rock':
+            await ctx.send(choose)
+            await ctx.send(win) if bot_choice == 'paper' else await ctx.send(lose)   
+            
+        elif response == 'paper':
+            await ctx.send(choose)
+            await ctx.send(win) if bot_choice == 'scissors' else await ctx.send(lose)   
+       
+        elif response == 'scissors':
+            await ctx.send(choose)
+            await ctx.send(win) if bot_choice == 'rock' else await ctx.send(lose)
+        # I forgot to do this last time sorry
+        else:
+            embed = Embed(
+                title="Rock, Paper, Scissor",
+                colour=Colour.red(),
+                description="Usage: `.rps rock/paper/scissors`",
+            )
+            await ctx.send(embed=embed)
 
     @command(brief="uwuify any text you like", name="uwu")
     async def uwu(self, ctx, *text):
