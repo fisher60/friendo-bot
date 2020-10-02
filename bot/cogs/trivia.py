@@ -1,3 +1,4 @@
+"""Commands for the events module"""
 import discord
 from discord.ext import commands
 import json
@@ -12,88 +13,73 @@ userAnswers = {}
 
 
 class TriviaCog(commands.Cog):
+    """
+        Commands for the Trivia Questions 
+    """
     def __init__(self, bot):
         self.bot = bot
 
+    #This batch of commands grab from the category based on their name
     @commands.command()
     async def history(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 23
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
     @commands.command()
     async def books(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 10
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
     @commands.command()
     async def entertainment(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = random.randrange(10, 16)
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
     @commands.command()
     async def theatre(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 13
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-        
     @commands.command()
     async def film(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 11
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
-
     @commands.command()
     async def trivia(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = random.randrange(9, 32)
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
     @commands.command()
     async def computers(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 18
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
     @commands.command()
     async def cartoons(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 32
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
     @commands.command()
     async def animals(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 27
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
     @commands.command()
     async def boardgames(self,ctx):
         id = str(ctx.message.author.id)
         quizVar = 16
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
     @commands.command()
     async def videogames(self,ctx):
         global userAnswers
@@ -102,8 +88,6 @@ class TriviaCog(commands.Cog):
         embed = generate_embed(id,quizVar)
         
         await ctx.send(embed=embed)
-
-
     @commands.command()
     async def tv(self,ctx):
         id = str(ctx.message.author.id)
@@ -111,6 +95,8 @@ class TriviaCog(commands.Cog):
         embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
 
+        
+    #listens for user input of an answer, checks if the user has an answer waiting followed by if the user input is a valid answer. 
     @commands.Cog.listener()
     async def on_message(self, message):
       id = str(message.author.id)
@@ -142,7 +128,7 @@ class TriviaCog(commands.Cog):
       except:
         'user not in array'
         
-
+    #This command prints an embed listing the categories avaliable
     @commands.command()
     async def categories(self,ctx):
         embed=discord.Embed(title="Trivia Bot Categories")
@@ -162,6 +148,8 @@ class TriviaCog(commands.Cog):
 
 
 def generate_embed(id,quizVar):
+        """Generates an embed to send from the data gotten in url_request, takes in a User ID to set the correct answer to and a quizVar for the category number"""
+        
         data = [6]
         data = url_request(quizVar)
         userAnswers[id] = int(data[7])
@@ -179,6 +167,7 @@ def generate_embed(id,quizVar):
         return embed
 
 def url_request(value : int):
+    """takes in a value for the category of the question and returns an array with the info for the question"""
     global tokenID
     url = 'https://opentdb.com/api.php?amount=1&category='+str(value) +'&type=multiple&token='+tokenID
 
@@ -246,4 +235,5 @@ def url_request(value : int):
 
 
 def setup(bot):
+    """Load the bot Cog"""
     bot.add_cog(TriviaCog(bot))
