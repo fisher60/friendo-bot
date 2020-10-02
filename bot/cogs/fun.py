@@ -4,7 +4,9 @@ Commands that do not serve a useful function aside from being fun.
 import functools
 import re
 import string
-from random import choice
+from itertools import product
+from random import choice, shuffle
+from typing import List
 
 from discord import Embed, Colour
 from discord.ext.commands import Bot, Cog, command
@@ -78,9 +80,9 @@ class Fun(Cog):
 
         responses = [
             "It is certain",
-            "Yes, definately",
+            "Yes, definitely",
             "Without a doubt",
-            "Thats for sure",
+            "That's for sure",
             "Most likely",
             "Umm, try again",
             "Didnt quite get that",
@@ -121,6 +123,102 @@ class Fun(Cog):
         if converted_text:
             converted_text = f">>> {converted_text.lstrip('> ')}"
         await ctx.send(content=converted_text)
+
+    @command(
+        brief="Play blackjack with the Friendo Bot",
+        description="Play one round of blackjack against the computer",
+        aliases=("bj",),
+    )
+    async def blackjack(self, ctx):
+        """simple blackjack game"""
+
+        def display_hand(hand: List[str]) -> str:
+            return f"{' '.join(hand)}, value: {hand_value(hand)}"
+
+        def hand_value(hand: List[str]) -> int:
+            """helper function to calculate the value of a hand"""
+
+            convert = {str(i): i for i in range(2, 11)}
+            convert.update({"A": 1, "J": 10, "Q": 10, "K": 10})
+
+            value = 0
+            has_ace = False
+
+            # add up the normal cards and deal with aces at the end
+            for card in hand:
+                value += convert[card[:-1]]
+                if card[:-1] == "A":
+                    has_ace = True
+
+            if value + 10 <= 21 and has_ace:
+                value += 10
+
+            return value
+
+        VALUES = ["A", *map(str, range(2, 11)), "J", "Q", "K"]
+        SUITS = ["D", "H", "S", "C"]
+
+        # should be impossible to exhaust the entire list, so we can pop cards to emulate dealing
+        cards = ["".join(c) for c in product(VALUES, SUITS)]
+        shuffle(cards)
+
+        player_hand = [cards.pop() for _ in range(2)]
+        computer_hand = [cards.pop() for _ in range(2)]
+
+        if hand_value(player_hand) == 21:
+            await ctx.send("BLACKJACK! you WIN!")
+        else:
+            await ctx.send(
+                f"your cards: {display_hand(player_hand)}\n"
+                f"computer's cards: {display_hand(computer_hand[1:])}"
+            )
+
+            not_standing = True
+            while not_standing:
+                # player's turn
+                await ctx.send("Type hit or stand")
+                message = await self.bot.wait_for(
+                    "message", check=lambda m: m.content.lower() in ("hit", "stand")
+                )
+
+                if message.content == "hit":
+                    new_card = cards.pop()
+                    player_hand.append(new_card)
+                    await ctx.send(
+                        f"your new card: {new_card}, hand score: {hand_value(player_hand)}"
+                    )
+                else:
+                    await ctx.send(f"final hand: {display_hand(player_hand)}")
+                    not_standing = False
+
+                if hand_value(player_hand) > 21:
+                    await ctx.send(f"BUST, you LOSE! hand: {display_hand(player_hand)}")
+                    break
+            else:
+                # dealer's turn, only runs if player didn't bust
+                while hand_value(computer_hand) < 17:
+                    computer_hand.append(cards.pop())
+                    if hand_value(computer_hand) > 21:
+                        await ctx.send(
+                            f"Dealer BUST, you WIN! computer's hand: {display_hand(computer_hand)}"
+                        )
+                        break
+                else:
+                    await ctx.send(
+                        f"Dealer stood\n"
+                        f"your hand: {display_hand(player_hand)}\n"
+                        f"computer's hand: {display_hand(computer_hand)}"
+                    )
+
+                    player_hand_value = hand_value(player_hand)
+                    computer_hand_value = hand_value(computer_hand)
+
+                    if player_hand_value < computer_hand_value:
+                        await ctx.send("you LOSE!")
+                    elif player_hand_value > computer_hand_value:
+                        await ctx.send("you WIN!")
+                    else:
+                        await ctx.send("PUSH!")
 
 
 def _replace_many(
