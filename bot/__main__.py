@@ -21,8 +21,17 @@ if __name__ == "__main__":
 
     # load in Admin commands
     bot.load_extension("bot.cogs.admin")
+    
+    #load in Trivia commands
+    bot.load_extension("bot.cogs.trivia")
+    
+    #load in weather command
+    bot.load_extension("bot.cogs.weather")
 
     # load in Fun commands
     bot.load_extension("bot.cogs.fun")
 
     bot.run(settings.TOKEN)
+    
+ 
+    
