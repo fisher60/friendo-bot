@@ -21,14 +21,14 @@ class TriviaCog(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def history(ctx):
+    async def history(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = 23
         data = url_request(quizVar)
         userAnswers[id] = int(data[7])
-        _saveA()
+
         #print(userAnswers[id])
         embed=discord.Embed(title='TRIVIA')
 
@@ -44,16 +44,16 @@ class TriviaCog(commands.Cog):
 
 
     @commands.command()
-    async def books(ctx):
+    async def books(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.self.bot.get_user(int(id))
         data = [6]
         quizVar = 10
         data = url_request(quizVar)
         userAnswers[id] = int(data[7])
-        _saveA()
+        
         #print(userAnswers[id])
-         embed=discord.Embed(title='TRIVIA')
+        embed=discord.Embed(title='TRIVIA')
 
         embed.add_field(name='Category:',value=data[0],inline=True)
         embed.add_field(name='Difficulty',value=data[1],inline=True)
@@ -66,15 +66,15 @@ class TriviaCog(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def entertainment(ctx):
+    async def entertainment(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = random.randrange(10, 16)
         #print(quizVar)
         data = url_request(quizVar)
         userAnswers[id] = int(data[7])
-        _saveA()
+        
         #print(userAnswers[id])
         embed=discord.Embed(title='TRIVIA')
 
@@ -90,15 +90,15 @@ class TriviaCog(commands.Cog):
 
 
     @commands.command()
-    async def theatre(ctx):
+    async def theatre(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = 13
         #print(quizVar)
         data = url_request(quizVar)
         userAnswers[id] = int(data[7])
-        _saveA()
+        
         #print(userAnswers[id])
         embed=discord.Embed(title='TRIVIA')
 
@@ -112,16 +112,16 @@ class TriviaCog(commands.Cog):
         embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
         await ctx.send(embed=embed)
         
-        @bot.command()
-    async def film(ctx):
+    @commands.command()
+    async def film(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = 11
         #print(quizVar)
         data = url_request(quizVar)
         userAnswers[id] = int(data[7])
-        _saveA()
+        
         #print(userAnswers[id])
         embed=discord.Embed(title='TRIVIA')
 
@@ -138,15 +138,15 @@ class TriviaCog(commands.Cog):
 
 
     @commands.command()
-    async def trivia(ctx):
+    async def trivia(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = random.randrange(9, 32)
         #print(quizVar)
         data = url_request(quizVar)
         userAnswers[id] = int(data[7])
-        _saveA()
+        
         #print(userAnswers[id])
         embed=discord.Embed(title='TRIVIA')
 
@@ -162,9 +162,9 @@ class TriviaCog(commands.Cog):
 
 
     @commands.command()
-    async def computers(ctx):
+    async def computers(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = 18
         #print(quizVar)
@@ -186,9 +186,9 @@ class TriviaCog(commands.Cog):
 
 
     @commands.command()
-    async def cartoons(ctx):
+    async def cartoons(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = 32
         #print(quizVar)
@@ -210,9 +210,9 @@ class TriviaCog(commands.Cog):
 
 
     @commands.command()
-    async def animals(ctx):
+    async def animals(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = 27
         print(quizVar)
@@ -234,9 +234,9 @@ class TriviaCog(commands.Cog):
 
 
     @commands.command()
-    async def boardgames(ctx):
+    async def boardgames(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = 16
         print(quizVar)
@@ -258,10 +258,10 @@ class TriviaCog(commands.Cog):
 
 
     @commands.command()
-    async def videogames(ctx):
+    async def videogames(self,ctx):
         global userAnswers
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = 15
         #print(quizVar)
@@ -283,9 +283,9 @@ class TriviaCog(commands.Cog):
 
 
     @commands.command()
-    async def tv(ctx):
+    async def tv(self,ctx):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         data = [6]
         quizVar = 14
         #print(quizVar)
@@ -311,7 +311,7 @@ class TriviaCog(commands.Cog):
     @commands.command()
     async def answer(ctx,*,args):
         id = str(ctx.message.author.id)
-        user = bot.get_user(int(id))
+        user = self.bot.get_user(int(id))
         correct = userAnswers[id]
         if correct == 1:
           correct = 'A'
@@ -362,13 +362,88 @@ class TriviaCog(commands.Cog):
     embed.add_field(name="-tv", value="Gives a question from the television category", inline=False)
 
     @commands.command()
-    async def categories(ctx):
+    async def categories(self,ctx):
         id = str(ctx.message.author.id)
         global embed
         await ctx.send(embed=embed)
+
+def url_request(value : int):
+    global tokenID
+    url = 'https://opentdb.com/api.php?amount=1&category='+str(value) +'&type=multiple&token='+tokenID
+
+    data = [6]
+    response = urllib.request.urlopen(url)
+    data = json.load(response)
+    print('Data is:')
+    print(data)
+    responsecode = data['response_code']
+    if str(responsecode) == '4':
+      url2 = 'https://opentdb.com/api_token.php?command=reset&token='+tokenID
+      response2 = urllib.request.urlopen(url2)
+      data2 = json.load(response2)
+    elif str(responsecode)== '3':
+        url2 = 'https://opentdb.com/api_token.php?command=request'
+        response2=urllib.request.urlopen(url2)
+        data2 = json.load(response2)
+        tokenID=data2['token']
+        print(tokenID)
+        data = url_request(value)
+        return data
+    else:   
+        print(data['response_code'])
+        question = data['results']
+        for f in question:
+            data[0] = f['category']
+            data[1] = f['difficulty']
+            correctAnswer = f['correct_answer']
+            answers = f['incorrect_answers']
+            data[2] = f['question']
+
+        answers.append(correctAnswer)
+
+        random.shuffle(answers)
+
+
+        global correct 
+        correct = correctAnswer
+
+        global difficulty
+        difficulty = difficult
+
+        answers[0] = answers[0].replace("&#039;","'")
+        answers[1] = answers[1].replace("&#039;","'")
+        answers[2] = answers[2].replace("&#039;","'")
+        answers[3] = answers[3].replace("&#039;","'")
+
+        if answers[0] == correct:
+          correct = 1
+        if answers[1] == correct:
+          correct = 2
+        if answers[2] == correct:
+          correct = 3
+        if answers[3] == correct:
+          correct = 4
+
+        answers[0]=answers[0].replace('&amp;','&')
+        answers[1]=answers[1].replace('&amp;','&')
+        answers[2]=answers[2].replace('&amp;','&')
+        answers[3]=answers[3].replace('&amp;','&')
+
+
+        data[3]=answers[0]
+        data[4]=answers[1]
+        data[5]=answers[2]
+        data[6]=answers[3]
+        data[7]=correct
+
+
+        data[2]=data[2].replace('&quot;','"')
+        data[2]=data[2].replace('&#039;',"'")
+
+        return data
 
 
 # The setup fucntion below is neccesarry. Remember we give bot.add_cog() the name of the class in this case MembersCog.
 # When we load the cog, we use the name of the file.
 def setup(bot):
-    bot.add_cog(MembersCog(bot))
+    bot.add_cog(TriviaCog(bot))
