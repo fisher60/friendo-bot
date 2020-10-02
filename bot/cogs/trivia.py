@@ -1,5 +1,9 @@
 import discord
 from discord.ext import commands
+import os
+import json
+import urllib.request
+import random
 
 correct = 'wrong'
 difficulty = 'easy'
