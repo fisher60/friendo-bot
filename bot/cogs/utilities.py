@@ -1,5 +1,6 @@
 """Commands that provide some sort of service to a user."""
 from asyncio import sleep
+import subprocess
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command
 from bot import settings
@@ -59,6 +60,8 @@ class Utilities(Cog):
 
             completion_message = msg
             if task_type == "drink":
+                if self.drink_tasks[ctx.author.id] > 0:
+                    await ctx.send(completion_message)
                 self.drink_tasks[ctx.author.id] -= 1
             elif task_type == "reminder":
                 completion_message = (
@@ -77,9 +80,14 @@ class Utilities(Cog):
 
     @command(brief="Returns Friendo's Version")
     async def version(self, ctx):
+        enhancement/versioning
+        commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip().decode('ascii')
+        msg = f"Version is {settings.VERSION}{commit_hash[-4:]}"
+
         """Sends the current version of the bot."""
 
         msg = f"Version is {settings.VERSION}"
+        develop
         await ctx.send(msg)
         return msg
 
