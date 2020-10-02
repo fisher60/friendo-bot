@@ -1,9 +1,11 @@
 """Commands that provide some sort of service to a user."""
 from asyncio import sleep
 import subprocess
+import random
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command
 from bot import settings
+from quotesList import quotes
 
 
 def convert_time(time, period) -> int:
@@ -151,7 +153,13 @@ class Utilities(Cog):
         """Sends the ping between the bot and the discord API."""
         await ctx.send(f"Ping is {round(self.bot.latency * 1000)}ms")
         return self.bot.latency
-
+    
+    @command(brief="Shows good quotes")
+    async def quotes(self, ctx):
+        """Sends a random quote from the list in the quotesList file"""
+        embed_quote = discord.Embed(title=random.choice(quotes), color=discord.Color.green())
+        await ctx.send(embed=embed_quote)
+       
 
 def setup(bot: Bot) -> None:
     """Load the Utilities cog."""
