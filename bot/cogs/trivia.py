@@ -1,298 +1,159 @@
+"""Commands for the events module"""
 import discord
 from discord.ext import commands
-import os
 import json
 import urllib.request
 import random
 
-correct = 'wrong'
-difficulty = 'easy'
-category = 'null'
 answers = []
-difficult = 'null'
-tokenID= '1234'
+tokenID= ''
 
 amounts = {}
 userAnswers = {}
 
 
 class TriviaCog(commands.Cog):
+    """
+        Commands for the Trivia Questions 
+    """
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    #This batch of commands grab from the category based on their name
+    @commands.command(name="history", brief="grabs a question from the history category and allows you to answer")
     async def history(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = 23
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-
-        #print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
-    @commands.command()
-    async def books(self,ctx):
+    @commands.command(name="book", brief="grabs a question from the books category and allows you to answer",aliases=['books', 'literature'])
+    async def book(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.self.bot.get_user(int(id))
-        data = [6]
         quizVar = 10
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-        
-        #print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-    @commands.command()
+    @commands.command(name="entertainment", brief="grabs a question from the entertainment categories and allows you to answer")
     async def entertainment(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = random.randrange(10, 16)
-        #print(quizVar)
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-        
-        #print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
-    @commands.command()
+    @commands.command(name="theatre", brief="grabs a question from the theatre category and allows you to answer")
     async def theatre(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = 13
-        #print(quizVar)
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-        
-        #print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-        
-    @commands.command()
+    @commands.command(name="film", brief="grabs a question from the film category and allows you to answer",aliases=['films'])
     async def film(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = 11
-        #print(quizVar)
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-        
-        #print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
-
-    @commands.command()
+    @commands.command(name="trivia", brief="grabs a question from a random category and allows you to answer")
     async def trivia(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = random.randrange(9, 32)
-        #print(quizVar)
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-        
-        #print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
-    @commands.command()
-    async def computers(self,ctx):
+    @commands.command(name="computer", brief="grabs a question from the computer category and allows you to answer",aliases=['computers', 'tech'])
+    async def computer(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = 18
-        #print(quizVar)
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-        
-        #print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
-    @commands.command()
-    async def cartoons(self,ctx):
+    @commands.command(name="cartoon", brief="grabs a question from the cartoon category and allows you to answer",aliases=['cartoons', 'anime'])
+    async def cartoon(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = 32
-        #print(quizVar)
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-        
-        #print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
-    @commands.command()
-    async def animals(self,ctx):
+    @commands.command(name="animal", brief="grabs a question from the animal category and allows you to answer",aliases=['animals'])
+    async def animal(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = 27
-        print(quizVar)
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-        
-        print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
-    @commands.command()
-    async def boardgames(self,ctx):
+    @commands.command(name="books", brief="grabs a question from the boardgame category and allows you to answer",aliases=['boardgames'])
+    async def boardgame(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = 16
-        print(quizVar)
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
-        
-        print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
+        embed= generate_embed(id,quizVar)
         await ctx.send(embed=embed)
-
-
-    @commands.command()
-    async def videogames(self,ctx):
+    @commands.command(name="videgame", brief="grabs a question from the videogame category and allows you to answer",aliases=['videogames'])
+    async def videogame(self,ctx):
         global userAnswers
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = 15
-        #print(quizVar)
-        data = url_request(quizVar)
-        userAnswers[id] = int(data[7])
+        embed = generate_embed(id,quizVar)
         
-        #print(userAnswers[id])
-        embed=discord.Embed(title='TRIVIA')
-
-        embed.add_field(name='Category:',value=data[0],inline=True)
-        embed.add_field(name='Difficulty',value=data[1],inline=True)
-        embed.add_field(name='Question',value=data[2],inline=False)
-        embed.add_field(name='A: '+data[3],value='______',inline=False)
-        embed.add_field(name='B: '+data[4],value='______ ',inline=False)
-        embed.add_field(name='C: '+data[5],value='______ ',inline=False)
-        embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
         await ctx.send(embed=embed)
-
-
-    @commands.command()
+    @commands.command(name="tv", brief="grabs a question from the tv category and allows you to answer",aliases=['television'])
     async def tv(self,ctx):
         id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        data = [6]
         quizVar = 14
-        #print(quizVar)
+        embed= generate_embed(id,quizVar)
+        await ctx.send(embed=embed)
+
+        
+    #listens for user input of an answer, checks if the user has an answer waiting followed by if the user input is a valid answer. 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+      id = str(message.author.id)
+      ctx = message.channel
+      user_answer = message.content.lower()
+      try:
+        if userAnswers[id] != 0:
+          if user_answer in ['a','b','c','d']:
+              correct = userAnswers[id]
+              if correct == 1:
+                correct = 'a'
+              elif correct == 2:
+                correct = 'b'
+              elif correct == 3:
+                correct = 'c'
+              elif correct == 4:
+                correct = 'd'
+              embed=discord.Embed(title="Answer")
+
+              if user_answer == correct:
+                values = "You, you got the right answer!"
+                embed.add_field(name="CORRECT!", value=values, inline=False)
+              else:
+                values = "Correct answer was: "+str(correct)
+                embed.add_field(name="INCORRECT!", value=values,inline=False)
+              userAnswers[id]=0
+              await ctx.send(embed=embed)
+              
+      except:
+        'user not in array'
+        
+    #This command prints an embed listing the categories avaliable
+    @commands.command(name="categories", brief="returns an embed listing the trivia categories")
+    async def categories(self,ctx):
+        embed=discord.Embed(title="Trivia Bot Categories")
+        embed.add_field(name="-trivia", value="Gives a question from a random category", inline=False)
+        embed.add_field(name="-history", value="Gives a history question", inline=False)
+        embed.add_field(name="-books", value="Gives a book question", inline=False)
+        embed.add_field(name="-film", value="Gives a film question", inline=False)
+        embed.add_field(name="-entertainment", value="Gives a question from the film category", inline=False)
+        embed.add_field(name="-theatre", value="Gives a question from the theatre category", inline=False)
+        embed.add_field(name="-animals", value="Gives a question from the animal category", inline=False)
+        embed.add_field(name="-videogames", value="Gives a question from the video games category", inline=False)
+        embed.add_field(name="-computers", value="Gives a question from the computer category", inline=False)
+        embed.add_field(name="-cartoons", value="Gives a question from the cartoons category", inline=False)
+        embed.add_field(name="-boardgames", value="Gives a question from the boardgames category", inline=False)
+        embed.add_field(name="-tv", value="Gives a question from the television category", inline=False)
+        await ctx.send(embed=embed)
+
+
+def generate_embed(id,quizVar):
+        """Generates an embed to send from the data gotten in url_request, takes in a User ID to set the correct answer to and a quizVar for the category number"""
+        
+        data = [6]
         data = url_request(quizVar)
         userAnswers[id] = int(data[7])
         
-        #print(userAnswers[id])
         embed=discord.Embed(title='TRIVIA')
 
         embed.add_field(name='Category:',value=data[0],inline=True)
@@ -302,80 +163,17 @@ class TriviaCog(commands.Cog):
         embed.add_field(name='B: '+data[4],value='______ ',inline=False)
         embed.add_field(name='C: '+data[5],value='______ ',inline=False)
         embed.add_field(name='D: '+data[6],value='______ ',inline=False)
-        embed.set_footer(text =  'Reply -answer (a,b,c or d) to answer')
-        await ctx.send(embed=embed)
-
-
-
-
-    @commands.command()
-    async def answer(ctx,*,args):
-        id = str(ctx.message.author.id)
-        user = self.bot.get_user(int(id))
-        correct = userAnswers[id]
-        if correct == 1:
-          correct = 'A'
-        elif correct == 2:
-          correct = 'B'
-        elif correct == 3:
-          correct = 'C'
-        elif correct == 4:
-          correct = 'D'
-        elif correct ==0:
-          correct = 'https://media1.tenor.com/images/255df1d886da07cd869f7425a6b73014/tenor.gif?itemid=11397484'
-
-        if args == 'a':
-          args = 'A'
-        elif args == 'b':
-          args = 'B'
-        elif args == 'c':
-          args = 'C'
-        elif args == 'd':
-          args = 'D'
-
-        embed=discord.Embed(title="Answer")
-        print(correct)
-
-        if args == correct:
-          values = "You, you got the right answer!"
-          embed.add_field(name="CORRECT!", value=values, inline=False)
-          _save()
-        else:
-          values = "Correct answer was: "+str(correct)
-          embed.add_field(name="INCORRECT!", value=values,inline=False)
-
-        await ctx.send(embed=embed)
-        userAnswers[id] = 0
-
-    embed=discord.Embed(title="Trivia Bot Categories")
-    embed.add_field(name="-trivia", value="Gives a question from a random category", inline=False)
-    embed.add_field(name="-history", value="Gives a history question", inline=False)
-    embed.add_field(name="-books", value="Gives a book question", inline=False)
-    embed.add_field(name="-film", value="Gives a film question", inline=False)
-    embed.add_field(name="-entertainment", value="Gives a question from the film category", inline=False)
-    embed.add_field(name="-theatre", value="Gives a question from the theatre category", inline=False)
-    embed.add_field(name="-animals", value="Gives a question from the animal category", inline=False)
-    embed.add_field(name="-videogames", value="Gives a question from the video games category", inline=False)
-    embed.add_field(name="-computers", value="Gives a question from the computer category", inline=False)
-    embed.add_field(name="-cartoons", value="Gives a question from the cartoons category", inline=False)
-    embed.add_field(name="-boardgames", value="Gives a question from the boardgames category", inline=False)
-    embed.add_field(name="-tv", value="Gives a question from the television category", inline=False)
-
-    @commands.command()
-    async def categories(self,ctx):
-        id = str(ctx.message.author.id)
-        global embed
-        await ctx.send(embed=embed)
+        embed.set_footer(text =  'Reply with A,B,C,D to answer')
+        return embed
 
 def url_request(value : int):
+    """takes in a value for the category of the question and returns an array with the info for the question"""
     global tokenID
     url = 'https://opentdb.com/api.php?amount=1&category='+str(value) +'&type=multiple&token='+tokenID
 
     data = [6]
     response = urllib.request.urlopen(url)
     data = json.load(response)
-    print('Data is:')
-    print(data)
     responsecode = data['response_code']
     if str(responsecode) == '4':
       url2 = 'https://opentdb.com/api_token.php?command=reset&token='+tokenID
@@ -386,11 +184,9 @@ def url_request(value : int):
         response2=urllib.request.urlopen(url2)
         data2 = json.load(response2)
         tokenID=data2['token']
-        print(tokenID)
         data = url_request(value)
         return data
     else:   
-        print(data['response_code'])
         question = data['results']
         for f in question:
             data[0] = f['category']
@@ -403,12 +199,7 @@ def url_request(value : int):
 
         random.shuffle(answers)
 
-
-        global correct 
         correct = correctAnswer
-
-        global difficulty
-        difficulty = difficult
 
         answers[0] = answers[0].replace("&#039;","'")
         answers[1] = answers[1].replace("&#039;","'")
@@ -443,7 +234,6 @@ def url_request(value : int):
         return data
 
 
-# The setup fucntion below is neccesarry. Remember we give bot.add_cog() the name of the class in this case MembersCog.
-# When we load the cog, we use the name of the file.
 def setup(bot):
+    """Load the bot Cog"""
     bot.add_cog(TriviaCog(bot))

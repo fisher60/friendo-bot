@@ -7,7 +7,7 @@ to propose any feature at all that could add to this project. Most reasonable pr
 # Fork
 Create your own fork of this repo that you will make your changes on.
 # Creating your feature
-Base your changes off the `develop` branch, it is the most up to date.
+Always base your changes off the `develop` branch, it is the most up to date.
 
 # Pull Request
 Once you are done with your changes, you can open a pull request to our develop branch. You should be able to assign a reviewer, preferably assign the repo owner to review your changes.

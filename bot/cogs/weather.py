@@ -1,3 +1,4 @@
+"""Commands for the weather module"""
 import discord
 from discord.ext import commands
 import json
@@ -7,10 +8,12 @@ import urllib.request
 
 
 class WeatherCog(commands.Cog):
+    """commands for the weather finder"""
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    #Weather command, takes in an arg of city name
+    @commands.command(brief="Takes in a city name and returns the weather for that location")
     async def weather(self,ctx, *,args):
       embed=discord.Embed(title='Weather!')
 
@@ -51,4 +54,5 @@ class WeatherCog(commands.Cog):
 # The setup fucntion below is neccesarry. Remember we give bot.add_cog() the name of the class in this case MembersCog.
 # When we load the cog, we use the name of the file.
 def setup(bot):
+    """sets up the cog"""
     bot.add_cog(WeatherCog(bot))

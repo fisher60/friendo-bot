@@ -1,3 +1,5 @@
+"""Command to get a link to the source repo for this project."""
+
 from discord import Embed, Colour
 from discord.ext import commands
 from typing import Union
@@ -50,6 +52,7 @@ class Source(commands.Cog):
 
     @commands.command(name="source", brief="Send a link to Friendo's GitHub repo")
     async def send_source(self, ctx, arg1=None):
+        """Send the source url in an embed."""
         src_conv = SourceConverter()
         if arg1:
             try:
