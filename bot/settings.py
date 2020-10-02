@@ -11,7 +11,7 @@ MEME_PASSWORD = os.environ.get("MEME_PASSWORD")
 
 COMMAND_PREFIX = "."
 
-VERSION = "1.2.8"
+VERSION = "1.2."
 
 NAME = "Friendo"
 
