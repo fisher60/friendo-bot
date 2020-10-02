@@ -1,7 +1,11 @@
+"""
+Contains all commands relating to admin duties and permissions.
+"""
+
 import json
 import re
-from bot.settings import BASE_DIR
 from discord.ext.commands import Bot, Cog, command, check
+from bot.settings import BASE_DIR
 
 
 def is_admin():
@@ -19,15 +23,16 @@ def id_from_mention(message_content: str):
     """Return a user id from an @mention in a message."""
 
     pattern = r"\d{18}"
-    id = re.search(pattern, message_content)
-    if id is not None:
-        return int(id.group())
-    else:
-        return None
+    get_id = re.search(pattern, message_content)
+    if get_id is not None:
+        return int(get_id.group())
+    return None
 
 
 class AdminCommands(Cog):
-    """Commands for bot and server administration, all require the admin status on the invoking user."""
+    """
+    Commands for bot and server administration, all require the admin status on the invoking user.
+    """
 
     def __init__(self, bot: Bot):
         self.bot = bot
@@ -35,7 +40,9 @@ class AdminCommands(Cog):
     @command(brief="Kills your robotic friend")
     @is_admin()
     async def shutdown(self, ctx):
-        msg = f"Mr. Stark, I don't feel so good. . ."
+        """Cleanly shuts down the bot."""
+
+        msg = "Mr. Stark, I don't feel so good. . ."
         await ctx.send(msg)
         print("Closing Client...")
         await self.bot.logout()

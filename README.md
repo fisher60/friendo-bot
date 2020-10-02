@@ -11,9 +11,11 @@ To get a bot token go to [Discord Developer Portal](https://discord.com/develope
 
 2. Create an [imgflip](https://api.imgflip.com/) api account
 
-3. Create a file `bot.env` in the root project directory and fill it out using the example below
+3. Create a [Ticketmaster](https://developer.ticketmaster.com/products-and-docs/apis/getting-started/) api account
 
-4. `docker-compose up --build -d`
+4. Create a file `bot.env` in the root project directory and fill it out using the example below
+
+5. `docker-compose up --build -d`
 
 ```text
 # bot.env
@@ -21,11 +23,12 @@ To get a bot token go to [Discord Developer Portal](https://discord.com/develope
 FRIENDO_TOKEN = <your token here>
 MEME_USERNAME = <your imgflip api username>
 MEME_PASSWORD = <your imgflip api password>
+EVENT_API_KEY = <your ticketmaster api key>
 ```
 
 ## Dev Installation
-* You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv 
-the above environment variables must be added to the system/a .env file).*
+* You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv
+the above environment variables must be added to the system or a file named `.env`).*
 
 ```bash
 # Clone the repository on the develop branch
