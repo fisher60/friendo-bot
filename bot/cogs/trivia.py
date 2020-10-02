@@ -187,8 +187,6 @@ def url_request(value : int):
     data = [6]
     response = urllib.request.urlopen(url)
     data = json.load(response)
-    print('Data is:')
-    print(data)
     responsecode = data['response_code']
     if str(responsecode) == '4':
       url2 = 'https://opentdb.com/api_token.php?command=reset&token='+tokenID
@@ -199,11 +197,9 @@ def url_request(value : int):
         response2=urllib.request.urlopen(url2)
         data2 = json.load(response2)
         tokenID=data2['token']
-        print(tokenID)
         data = url_request(value)
         return data
     else:   
-        print(data['response_code'])
         question = data['results']
         for f in question:
             data[0] = f['category']
