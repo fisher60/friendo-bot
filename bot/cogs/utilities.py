@@ -80,14 +80,15 @@ class Utilities(Cog):
 
     @command(brief="Returns Friendo's Version")
     async def version(self, ctx):
-        enhancement/versioning
-        commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip().decode('ascii')
+        """Creates a version number from settings.VERSION and most recent commit hash."""
+
+        commit_hash = (
+            subprocess.check_output(["git", "rev-parse", "HEAD"])
+            .strip()
+            .decode("ascii")
+        )
         msg = f"Version is {settings.VERSION}{commit_hash[-4:]}"
 
-        """Sends the current version of the bot."""
-
-        msg = f"Version is {settings.VERSION}"
-        develop
         await ctx.send(msg)
         return msg
 
