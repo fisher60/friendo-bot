@@ -78,7 +78,7 @@ class Utilities(Cog):
     @command(brief="Returns Friendo's Version")
     async def version(self, ctx):
         commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip().decode('ascii')
-        msg = f"Version is {settings.VERSION}.{commit_hash[-4:]}"
+        msg = f"Version is {settings.VERSION}{commit_hash[-4:]}"
         await ctx.send(msg)
         return msg
 
