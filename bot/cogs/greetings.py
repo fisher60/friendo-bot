@@ -1,6 +1,6 @@
 """Commands that greet users, meant as an example/base for writing new cogs."""
-from discord.ext.commands import Bot, Cog, command
 import random
+from discord.ext.commands import Bot, Cog, command
 
 class Greetings(Cog):
     """Simple ask-reply commands, good for testing or making members feel welcome."""
