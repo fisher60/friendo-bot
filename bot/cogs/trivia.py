@@ -5,7 +5,7 @@ import urllib.request
 import random
 
 correct = 'wrong'
-category = 'null'
+category = None
 answers = []
 tokenID= ''
 
