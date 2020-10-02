@@ -151,7 +151,10 @@ class Utilities(Cog):
         """Sends the ping between the bot and the discord API."""
         await ctx.send(f"Ping is {round(self.bot.latency * 1000)}ms")
         return self.bot.latency
-
+    
+    @command(brief="Clears text, default is 5")
+    async def clear(self, ctx, amount=5):
+        await ctx.channel.purge(limit=amount + 1)
 
 def setup(bot: Bot) -> None:
     """Load the Utilities cog."""
