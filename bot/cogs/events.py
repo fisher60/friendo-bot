@@ -35,34 +35,35 @@ class Events(Cog):
         event_venue = ""
         output = ""
         filter_result = ""
-
-        if "_embedded" in result:
-            filter_result = result["_embedded"]["events"]
-            output = (
-                f"**Event:** \n```md\n**{filter_result[0]['name']}**```\n**Venues**\n"
-            )
-            for index, event in enumerate(filter_result):
-                if event:
-                    event_date = event["dates"]["start"]["localDate"]
-                    event_venue = (
-                        event["_embedded"]["venues"][0]
-                        if "name" in event["_embedded"]["venues"][0]
-                        else None
-                    )
-
-                    if event_venue:
-                        event_location = f"{event_venue['city']['name']}, {event_venue['country']['name']}"
-                        # added in seperate blocks, as each instance of message block
-                        # can only hold 2000 characters. Also, it looks better
-                        # this way :D.
-                        output = output + (
-                            f"```ini\n[{event_venue['name']}]\nLocation: {event_location}\nLocal-time: {event_date}\n```"
+        try:
+            if "_embedded" in result:
+                filter_result = result["_embedded"]["events"]
+                output = f"**Event:** \n```md\n**{filter_result[0]['name']}**```\n**Venues**\n"
+                for index, event in enumerate(filter_result):
+                    if event:
+                        event_date = event["dates"]["start"]["localDate"]
+                        event_venue = (
+                            event["_embedded"]["venues"][0]
+                            if "name" in event["_embedded"]["venues"][0]
+                            else None
                         )
 
-        else:
-            output = "```md\nNo results found. Please try again.```"
+                        if event_venue:
+                            event_location = f"{event_venue['city']['name']}, {event_venue['country']['name']}"
+                            # added in seperate blocks, as each instance of message block
+                            # can only hold 2000 characters. Also, it looks better
+                            # this way :D.
+                            output = output + (
+                                f"```ini\n[{event_venue['name']}]\nLocation: {event_location}\nLocal-time: {event_date}\n```"
+                            )
 
-        await ctx.send(output)
+            else:
+                output = "```md\nNo results found. Please try again.```"
+
+            await ctx.send(output)
+
+        except KeyError as err:
+            await ctx.send(f"```No results found. Please try again```")
 
 
 def setup(bot: Bot) -> None:
