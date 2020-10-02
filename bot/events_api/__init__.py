@@ -16,6 +16,6 @@ class Event:
         async with self.bot.session.get(self.event_url) as res:
             if res.status == 200:
                 event_json = await res.json()
-                return event_json["_embedded"]["events"]
+                return event_json
             else:
                 return 0
