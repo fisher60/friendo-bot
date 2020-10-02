@@ -4,8 +4,6 @@ import json
 import urllib.request
 import random
 
-correct = 'wrong'
-category = None
 answers = []
 tokenID= ''
 
