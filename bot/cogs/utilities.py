@@ -59,6 +59,8 @@ class Utilities(Cog):
 
             completion_message = msg
             if task_type == "drink":
+                if self.drink_tasks[ctx.author.id] > 0:
+                    await ctx.send(completion_message)
                 self.drink_tasks[ctx.author.id] -= 1
             elif task_type == "reminder":
                 completion_message = (
