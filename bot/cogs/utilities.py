@@ -163,7 +163,7 @@ class Utilities(Cog):
         await ctx.send(f"Ping is {round(self.bot.latency * 1000)}ms")
         return self.bot.latency
 
-    @command(brief="Shows quotes")
+    @command(brief="Shows quotes", name="quote")
     async def quotes(self, ctx):
         """Chooses between a list of quotes"""
         embed_quote = Embed(title=random.choice(lines), color=Colour.green())
