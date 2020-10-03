@@ -262,7 +262,7 @@ class TodoList(Cog):
                             todo_file_read[str(ctx.author.id)] = {}
                             embed_nuked_todos = Embed(
                                 title=f"NUKED! :exploding_head:",
-                                description=f"Your todo list is now empty. {ctx.author}",
+                                description=f"Your todo list is now empty {ctx.author}.",
                                 color=Colour.dark_purple(),
                             )
                             with open(
