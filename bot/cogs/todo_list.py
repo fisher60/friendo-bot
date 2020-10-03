@@ -142,7 +142,7 @@ class TodoList(Cog):
             if task_type == "todo_list":
                 update_of_todos(ctx=ctx, todos=todos)
                 embed_msg = Embed(
-                    title=f"{ctx.author}, your todo list is ready!",
+                    title=f"@{ctx.author}, your todo list is ready!",
                     color=Colour.green(),
                 )
                 await ctx.send(embed=embed_msg)
@@ -153,13 +153,13 @@ class TodoList(Cog):
                 seek = deletion_of_todos(ctx=ctx, keys_to_delete=todos)
                 if seek:
                     embed_msg = Embed(
-                        title=f"{ctx.author}, todos have been deleted",
+                        title=f"@{ctx.author}, todos have been deleted",
                         description="Please check using `.show_todos`. Woof!",
                     )
                     await ctx.send(embed=embed_msg)
                 else:
                     embed_msg = Embed(
-                        title=f"{ctx.author}, failed to delete.",
+                        title=f"@{ctx.author}, failed to delete.",
                         description="Probably file failed to initialize or you have not created a todo list, "
                         "yet.\nPlease check using `.show_todos`. Woof!",
                     )
@@ -215,7 +215,7 @@ class TodoList(Cog):
                                 ]
                             )
                             embed_show_todos = Embed(
-                                title=f"Your todo list is here, {ctx.author}",
+                                title=f"Your todo list is here, @{ctx.author}",
                                 description=listings,
                                 color=Colour.blurple(),
                             )
@@ -260,10 +260,9 @@ class TodoList(Cog):
                     if str(ctx.author.id) in todo_file_read:
                         if todo_file_read[str(ctx.author.id)]:
                             todo_file_read[str(ctx.author.id)] = {}
-                            print(todo_file_read)
                             embed_nuked_todos = Embed(
                                 title=f"NUKED! :exploding_head:",
-                                description="Your todo list is now empty.",
+                                description=f"Your todo list is now empty. @{ctx.author}",
                                 color=Colour.dark_purple(),
                             )
                             with open(
