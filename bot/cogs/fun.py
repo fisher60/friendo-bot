@@ -34,19 +34,18 @@ class Fun(Cog):
     @command(
         brief="Alternate case of inputted text",
         description="converts a phrase to alternating case",
-        name="tosponge",
     )
-    async def to_sponge(self, ctx, *, phrase):
+    async def spongify(self, ctx, *, phrase):
         """Converts input string to alternating case."""
         count = 0
         new = ""
         for i in phrase.lower():
-            if i == " ":
+            if i in string.punctuation:
                 new += i
             else:
                 if count % 2 == 0:
                     new += i
-                if count % 2 == 1:
+                else:
                     new += i.upper()
                 count += 1
 
