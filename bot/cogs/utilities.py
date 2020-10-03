@@ -1,9 +1,11 @@
 """Commands that provide some sort of service to a user."""
+import random
 from asyncio import sleep
 import subprocess
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command
 from bot import settings
+from listOfQuotes import lines
 
 # Define the time period units user can pass
 VALID_PERIODS = (
@@ -160,6 +162,11 @@ class Utilities(Cog):
         await ctx.send(f"Ping is {round(self.bot.latency * 1000)}ms")
         return self.bot.latency
 
+    @command(brief="Shows quotes")
+    async def quotes(self, ctx):
+        """Chooses between a list of quotes"""
+        embed_quote = discord.Embed(title=random.choice(lines), color=discord.Color.green())
+        await ctx.send(embed=embed_quote)
 
 def setup(bot: Bot) -> None:
     """Load the Utilities cog."""
