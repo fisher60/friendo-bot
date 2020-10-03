@@ -263,6 +263,7 @@ class TodoList(Cog):
                             print(todo_file_read)
                             embed_nuked_todos = Embed(
                                 title=f"NUKED! :exploding_head:",
+                                description="Your todo list is now empty.",
                                 color=Colour.dark_purple(),
                             )
                             with open(
