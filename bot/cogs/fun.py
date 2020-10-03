@@ -5,7 +5,7 @@ import functools
 import re
 import string
 from itertools import product
-from random import choice, shuffle
+from random import choice, shuffle, randint
 from typing import List
 
 from discord import Embed, Colour
@@ -34,19 +34,18 @@ class Fun(Cog):
     @command(
         brief="Alternate case of inputted text",
         description="converts a phrase to alternating case",
-        name="tosponge",
     )
-    async def to_sponge(self, ctx, *, phrase):
+    async def spongify(self, ctx, *, phrase):
         """Converts input string to alternating case."""
         count = 0
         new = ""
         for i in phrase.lower():
-            if i == " ":
+            if i in string.punctuation:
                 new += i
             else:
                 if count % 2 == 0:
                     new += i
-                if count % 2 == 1:
+                else:
                     new += i.upper()
                 count += 1
 
@@ -69,6 +68,24 @@ class Fun(Cog):
             msg = f"{ctx.author.mention} loses!"
 
         await ctx.send(msg)
+
+    @command(
+        brief="simulates a dice roll",
+        description=".dice [quantity] [sides]\n"
+                    "`quantity` - how many to roll\n"
+                    "`sides` - how many sides each die will have"
+    )
+    async def dice(self, ctx, n: int, sides: int) -> None:
+        """simple dice roll"""
+
+        if n == 0:
+            await ctx.send("you must roll at least one die")
+        elif sides < 2:
+            await ctx.send(f"you can't roll a {sides}-sided die")
+        else:
+            result = sum(randint(1, sides) for _ in range(n))
+
+            await ctx.send(f"you rolled {result}")
 
     @command(
         brief="Ask any question to the 8ball",
@@ -261,11 +278,11 @@ class Fun(Cog):
 
 
 def _replace_many(
-    sentence: str,
-    replacements: dict,
-    *,
-    ignore_case: bool = False,
-    match_case: bool = False,
+        sentence: str,
+        replacements: dict,
+        *,
+        ignore_case: bool = False,
+        match_case: bool = False,
 ) -> str:
     """
     Replaces multiple substrings in a string given a mapping of strings.
