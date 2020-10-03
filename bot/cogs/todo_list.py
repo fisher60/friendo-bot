@@ -191,6 +191,8 @@ class TodoList(Cog):
 
     @command(brief="Friendo will present you your todo list.")
     async def show_todos(self, ctx):
+        """Shows the todo list of the user."""
+
         if Path(
             f"{BASE_DIR}/todo_list_data.json"
         ).is_file():  # Checks file if it exists
@@ -240,6 +242,57 @@ class TodoList(Cog):
         else:
             await ctx.send(
                 embed=Embed(title="Todo list file does not exist!", color=Colour.red())
+            )
+
+    @command(brief="Friendo will nuke your whole todo list to emptiness.")
+    async def nuke_todos(self, ctx):
+        """This will delete the whole todo list of a specific user. Good if user has too many todos."""
+
+        if Path(
+            f"{BASE_DIR}/todo_list_data.json"
+        ).is_file():  # Checks file if it exists
+            if (
+                os.stat(f"{BASE_DIR}/todo_list_data.json").st_size > 0
+            ):  # This will check if the file is NOT empty
+
+                with open(f"{BASE_DIR}/todo_list_data.json", "r+") as read:
+                    todo_file_read = json.load(read)
+                    if str(ctx.author.id) in todo_file_read:
+                        if todo_file_read[str(ctx.author.id)]:
+                            todo_file_read[str(ctx.author.id)] = {}
+                            embed_nuked_todos = Embed(
+                                title=f"NUKED! :exploding_head:",
+                                color=Colour.dark_purple(),
+                            )
+                            await ctx.send(embed=embed_nuked_todos)
+                        else:
+                            await ctx.send(
+                                embed=Embed(
+                                    title="You have no existing entries! Grrrr! Nothing to nuke :exploding_head:!",
+                                    color=Colour.red(),
+                                )
+                            )
+                    else:
+                        await ctx.send(
+                            embed=Embed(
+                                title="You have no existing entries! Grrrr! Nothing to nuke :exploding_head:!",
+                                color=Colour.red(),
+                            )
+                        )
+            else:
+                await ctx.send(
+                    embed=Embed(
+                        title="Todo list file empty! Arf! Nothing to nuke :exploding_head:!",
+                        color=Colour.red(),
+                    )
+                )
+
+        else:
+            await ctx.send(
+                embed=Embed(
+                    title="Todo list file does not exist! Nothing to nuke :exploding_head:",
+                    color=Colour.red(),
+                )
             )
 
 
