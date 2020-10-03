@@ -5,7 +5,8 @@ import subprocess
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command
 from bot import settings
-from listOfQuotes import lines
+from bot.cogs.list_of_quotes import lines
+from discord import Embed, Colour
 
 # Define the time period units user can pass
 VALID_PERIODS = (
@@ -165,7 +166,7 @@ class Utilities(Cog):
     @command(brief="Shows quotes")
     async def quotes(self, ctx):
         """Chooses between a list of quotes"""
-        embed_quote = discord.Embed(title=random.choice(lines), color=discord.Color.green())
+        embed_quote = Embed(title=random.choice(lines), color=Colour.green())
         await ctx.send(embed=embed_quote)
 
 def setup(bot: Bot) -> None:
