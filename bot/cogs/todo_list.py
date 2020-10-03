@@ -3,6 +3,7 @@ from pathlib import Path
 from bot.settings import BASE_DIR
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command
+from discord import Embed, Colour
 import json
 import os
 
@@ -102,7 +103,11 @@ class TodoList(Cog):
 
             if task_type == "todo_list":
                 update_of_todos(ctx=ctx, todos=todos)
-                await ctx.send(f"{ctx.author.mention}, your to do list is ready!")
+                embed_msg = Embed(
+                    title=f"{ctx.author}, your todo list is ready!",
+                    color=Colour.green(),
+                )
+                await ctx.send(embed=embed_msg)
 
             self.add_to_todo_list_tasks[ctx.author.id] -= 1
 
@@ -139,16 +144,21 @@ class TodoList(Cog):
                                 ].items()
                             ]
                         )
-                        await ctx.send(
-                            f"Your todo list is ready, {ctx.author.mention}:\n{listings}"
+                        embed_show_todos = Embed(
+                            title=f"Your todo list is here, {ctx.author}",
+                            description=listings,
+                            color=Colour.blurple(),
                         )
+                        await ctx.send(embed=embed_show_todos)
                     else:
-                        await ctx.send("You have no existing entries")
+                        await ctx.send(
+                            embed=Embed(title="You have no existing entries! Grrrr!")
+                        )
             else:
-                await ctx.send("Todo list file empty!")
+                await ctx.send(embed=Embed(title="Todo list file empty! Arf!"))
 
         else:
-            await ctx.send("Todo list file does not exist!")
+            await ctx.send(embed=Embed(title="Todo list file does not exist!"))
 
 
 def setup(bot: Bot) -> None:
