@@ -272,6 +272,10 @@ class TodoList(Cog):
                                     color=Colour.red(),
                                 )
                             )
+                            with open(
+                                f"{BASE_DIR}/todo_list_data.json", "w+"
+                            ) as update:
+                                json.dump(todo_file_read, fp=update)
                     else:
                         await ctx.send(
                             embed=Embed(
