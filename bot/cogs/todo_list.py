@@ -1,11 +1,11 @@
+import json
+import os
 from asyncio import sleep
 from pathlib import Path
 from bot.settings import BASE_DIR
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command
 from discord import Embed, Colour
-import json
-import os
 
 
 def update_of_todos(ctx, todos):
@@ -169,7 +169,10 @@ class TodoList(Cog):
 
         delay_for_completion.start()
 
-    @command(brief="Friendo will create a new todo list for you.")
+    @command(
+        brief="Friendo will create a new todo list for you.",
+        aliases=["todo", "todos", "todolist"],
+    )
     async def todo_list(self, ctx, *, todos=None):
         """Creates a todo list for the user."""
 
@@ -189,7 +192,7 @@ class TodoList(Cog):
         ):  # todos here are keys not long strings.
             await self.todo_list_wrapper(ctx=ctx, task_type="delete_todos", todos=todos)
 
-    @command(brief="Friendo will present you your todo list.")
+    @command(brief="Friendo will present you your todo list.", name="showtodos")
     async def show_todos(self, ctx):
         """Shows the todo list of the user."""
 
@@ -198,35 +201,32 @@ class TodoList(Cog):
         ).is_file():  # Checks file if it exists
             print("File exist")
 
-            if (
-                os.stat(f"{BASE_DIR}/todo_list_data.json").st_size > 0
-            ):  # This will check if the file is NOT empty
+        else:
+            with open(Path(f"{BASE_DIR}/todo_list_data.json"), "w") as f:
+                f.write("{}")
 
-                with open(f"{BASE_DIR}/todo_list_data.json", "r+") as read:
-                    todo_file_read = json.load(read)
-                    if str(ctx.author.id) in todo_file_read:
-                        if todo_file_read[str(ctx.author.id)]:
-                            listings = "".join(
-                                [
-                                    f"{num}: {todo}\n"
-                                    for num, todo in todo_file_read[
-                                        str(ctx.author.id)
-                                    ].items()
-                                ]
-                            )
-                            embed_show_todos = Embed(
-                                title=f"Your todo list is here, {ctx.author}",
-                                description=listings,
-                                color=Colour.blurple(),
-                            )
-                            await ctx.send(embed=embed_show_todos)
-                        else:
-                            await ctx.send(
-                                embed=Embed(
-                                    title="You have no existing entries! Grrrr!",
-                                    color=Colour.red(),
-                                )
-                            )
+        if (
+            os.stat(f"{BASE_DIR}/todo_list_data.json").st_size > 0
+        ):  # This will check if the file is NOT empty
+
+            with open(f"{BASE_DIR}/todo_list_data.json", "r+") as read:
+                todo_file_read = json.load(read)
+                if str(ctx.author.id) in todo_file_read:
+                    if todo_file_read[str(ctx.author.id)]:
+                        listings = "".join(
+                            [
+                                f"{num}: {todo}\n"
+                                for num, todo in todo_file_read[
+                                    str(ctx.author.id)
+                                ].items()
+                            ]
+                        )
+                        embed_show_todos = Embed(
+                            title=f"Your todo list is here, {ctx.author}",
+                            description=listings,
+                            color=Colour.blurple(),
+                        )
+                        await ctx.send(embed=embed_show_todos)
                     else:
                         await ctx.send(
                             embed=Embed(
@@ -234,17 +234,22 @@ class TodoList(Cog):
                                 color=Colour.red(),
                             )
                         )
-            else:
-                await ctx.send(
-                    embed=Embed(title="Todo list file empty! Arf!", color=Colour.red())
-                )
-
+                else:
+                    await ctx.send(
+                        embed=Embed(
+                            title="You have no existing entries! Grrrr!",
+                            color=Colour.red(),
+                        )
+                    )
         else:
             await ctx.send(
-                embed=Embed(title="Todo list file does not exist!", color=Colour.red())
+                embed=Embed(title="Todo list file empty! Arf!", color=Colour.red())
             )
 
-    @command(brief="Friendo will nuke your whole todo list to emptiness.")
+    @command(
+        brief="Friendo will nuke your whole todo list to emptiness.",
+        aliases=["deletetodos", "nuketodos"],
+    )
     async def nuke_todos(self, ctx):
         """This will delete the whole todo list of a specific user. Good if user has too many todos."""
 
