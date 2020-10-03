@@ -260,10 +260,15 @@ class TodoList(Cog):
                     if str(ctx.author.id) in todo_file_read:
                         if todo_file_read[str(ctx.author.id)]:
                             todo_file_read[str(ctx.author.id)] = {}
+                            print(todo_file_read)
                             embed_nuked_todos = Embed(
                                 title=f"NUKED! :exploding_head:",
                                 color=Colour.dark_purple(),
                             )
+                            with open(
+                                f"{BASE_DIR}/todo_list_data.json", "w+"
+                            ) as update:
+                                json.dump(todo_file_read, fp=update)
                             await ctx.send(embed=embed_nuked_todos)
                         else:
                             await ctx.send(
@@ -272,10 +277,6 @@ class TodoList(Cog):
                                     color=Colour.red(),
                                 )
                             )
-                            with open(
-                                f"{BASE_DIR}/todo_list_data.json", "w+"
-                            ) as update:
-                                json.dump(todo_file_read, fp=update)
                     else:
                         await ctx.send(
                             embed=Embed(
