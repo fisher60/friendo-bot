@@ -5,7 +5,7 @@ import functools
 import re
 import string
 from itertools import product
-from random import choice, shuffle
+from random import choice, shuffle, randint
 from typing import List
 
 from discord import Embed, Colour
@@ -34,19 +34,18 @@ class Fun(Cog):
     @command(
         brief="Alternate case of inputted text",
         description="converts a phrase to alternating case",
-        name="tosponge",
     )
-    async def to_sponge(self, ctx, *, phrase):
+    async def spongify(self, ctx, *, phrase):
         """Converts input string to alternating case."""
         count = 0
         new = ""
         for i in phrase.lower():
-            if i == " ":
+            if i in string.punctuation:
                 new += i
             else:
                 if count % 2 == 0:
                     new += i
-                if count % 2 == 1:
+                else:
                     new += i.upper()
                 count += 1
 
@@ -69,6 +68,24 @@ class Fun(Cog):
             msg = f"{ctx.author.mention} loses!"
 
         await ctx.send(msg)
+
+    @command(
+        brief="simulates a dice roll",
+        description=".dice [quantity] [sides]\n"
+                    "`quantity` - how many to roll\n"
+                    "`sides` - how many sides each die will have"
+    )
+    async def dice(self, ctx, n: int, sides: int) -> None:
+        """simple dice roll"""
+
+        if n == 0:
+            await ctx.send("you must roll at least one die")
+        elif sides < 2:
+            await ctx.send(f"you can't roll a {sides}-sided die")
+        else:
+            result = sum(randint(1, sides) for _ in range(n))
+
+            await ctx.send(f"you rolled {result}")
 
     @command(
         brief="Ask any question to the 8ball",
@@ -103,6 +120,45 @@ class Fun(Cog):
                 title="8ball",
                 colour=Colour.blue(),
                 description="Usage: `.8ball will this command work?`",
+            )
+            await ctx.send(embed=embed)
+
+    @command(
+        brief="Play a game of rock paper scissors. Usage: .rps rock",
+        description="Enter an option between rock, paper, scissor after .play",
+        aliases=["play", "Play", "RPS"],
+    )
+    async def rps(self, ctx, *, response=None):
+        """Returns strings based on winning/losing/tie"""
+        response = response.lower()
+        options = ["rock", "paper", "scissors"]
+        bot_choice = choice(options)
+        win = "I win... I hope you arent angry?.😂"
+        lose = "I lose.. 😶"
+        choose = f"I choose {bot_choice}"
+
+        if response not in options:
+            await ctx.send("Please choose between rock, paper or scissors")
+        elif response == bot_choice:
+            await ctx.send(f"I choose {bot_choice}\nOh, we got a tie")
+
+        elif response == "rock":
+            await ctx.send(choose)
+            await ctx.send(win) if bot_choice == "paper" else await ctx.send(lose)
+
+        elif response == "paper":
+            await ctx.send(choose)
+            await ctx.send(win) if bot_choice == "scissors" else await ctx.send(lose)
+
+        elif response == "scissors":
+            await ctx.send(choose)
+            await ctx.send(win) if bot_choice == "rock" else await ctx.send(lose)
+
+        else:
+            embed = Embed(
+                title="Rock, Paper, Scissor",
+                colour=Colour.red(),
+                description="Usage: `.rps rock/paper/scissors`",
             )
             await ctx.send(embed=embed)
 
@@ -222,11 +278,11 @@ class Fun(Cog):
 
 
 def _replace_many(
-    sentence: str,
-    replacements: dict,
-    *,
-    ignore_case: bool = False,
-    match_case: bool = False,
+        sentence: str,
+        replacements: dict,
+        *,
+        ignore_case: bool = False,
+        match_case: bool = False,
 ) -> str:
     """
     Replaces multiple substrings in a string given a mapping of strings.

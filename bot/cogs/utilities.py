@@ -1,26 +1,37 @@
 """Commands that provide some sort of service to a user."""
+import random
 from asyncio import sleep
 import subprocess
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, command
 from bot import settings
+from bot.cogs.list_of_quotes import lines
+from discord import Embed, Colour
+
+# Define the time period units user can pass
+VALID_PERIODS = (
+    "s sec secs second seconds m min mins minute minutes h hour hours".split()
+)
 
 
 def convert_time(time, period) -> int:
     """Converts the given time and period (i.e 10 minutes) to seconds"""
 
-    result = None
     try:
+        # Strip at most one trailing s (if the string is not just "s")
+        # Using rstrip() would let people enter "sss" which would return ""
+        if len(period) > 1 and period[-1] == "s":
+            period = period[:-1]
         time = int(time)
-        if "sec" in period:
-            result = time
-        elif "min" in period:
-            result = time * 60
-        elif "hour" in period:
-            result = time * (60 ** 2)
+        if period in ("s", "sec", "second"):
+            return time
+        if period in ("m", "min", "minute"):
+            return time * 60
+        if period in ("h", "hour"):
+            return time * (60 ** 2)
     except ValueError:
         pass
-    return result
+    return None
 
 
 class Utilities(Cog):
@@ -105,7 +116,7 @@ class Utilities(Cog):
                 ctx=ctx, time=time, period=period, task_type="reminder", reason=reason
             )
 
-            if period in ["second", "seconds", "minute", "minutes", "hour", "hours"]:
+            if period in VALID_PERIODS:
                 if self.reminder_tasks[ctx.author.id] > 0:
                     await ctx.send(
                         f"{ctx.author.mention} I will remind you about {reason} in {time} {period}"
@@ -152,6 +163,11 @@ class Utilities(Cog):
         await ctx.send(f"Ping is {round(self.bot.latency * 1000)}ms")
         return self.bot.latency
 
+    @command(brief="Shows quotes", name="quote")
+    async def quotes(self, ctx):
+        """Chooses between a list of quotes"""
+        embed_quote = Embed(title=random.choice(lines), color=Colour.green())
+        await ctx.send(embed=embed_quote)
 
 def setup(bot: Bot) -> None:
     """Load the Utilities cog."""
