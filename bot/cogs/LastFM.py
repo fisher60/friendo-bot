@@ -52,12 +52,13 @@ class MusicCog(commands.Cog):
 
     @commands.command()
     async def getalbum(self,ctx,*,args):
-      try:
+      #try:
         if ', ' in args:
           args=args.split(', ')
           data= get_album(args[0],args[1])
         else:
           data = get_album(args)
+          print(data)
         embed=discord.Embed(title=data['album']['name']+' by '+data['album']['artist'],url=data['album']['url'])
         embed.add_field(name='Artist',value=data['album']['artist'])
         embed.set_thumbnail(url=data['album']['image'][2]['#text'])
@@ -70,8 +71,8 @@ class MusicCog(commands.Cog):
         except:
           'no summary to send'
         await ctx.send(embed=embed)
-      except:
-        await ctx.send('Invalid search term, try again')
+      #except:
+      #  await ctx.send('Invalid search term, try again')
       
     @commands.command()
     async def getartist(self,ctx,*,args):
@@ -131,8 +132,8 @@ def get_album(album,artist=''):
   if artist=='':
     album = urllib.parse.quote(album)
     data = get_data('album.search&album='+album)
+    album = data['results']['albummatches']['album'][0]['name']
     artist = data['results']['albummatches']['album'][0]['artist']
-    artist = urllib.parse.quote(artist)
     return get_album(album,artist)
   else:
     artist = urllib.parse.quote(artist)
