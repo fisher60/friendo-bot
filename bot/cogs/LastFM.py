@@ -4,7 +4,8 @@ from discord.ext import commands
 import urllib.request, json 
 import urllib
 
-api_key = '386e76f571fd03ac5e56501fe05db36a'
+'''api key needs to be generated from here: https://www.last.fm/api'''
+api_key = 'api key goes here'
 
 
 class MusicCog(commands.Cog):
