@@ -1,4 +1,4 @@
-"""Commands for the events module"""
+"""Commands for the trivia module"""
 import discord
 from discord.ext import commands
 import json
