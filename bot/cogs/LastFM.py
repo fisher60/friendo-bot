@@ -7,6 +7,7 @@ import urllib
 '''api key needs to be generated from here: https://www.last.fm/api'''
 api_key = 'api key goes here'
 
+
 class MusicCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -166,3 +167,8 @@ def top_tracks():
     
 
 def top_artists():
+  data = get_data('chart.gettopartists')['artists']['artist']
+  artists =[]
+  for f in data:
+    artists.append(f)
+  return artists
