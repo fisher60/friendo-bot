@@ -7,7 +7,6 @@ import urllib
 '''api key needs to be generated from here: https://www.last.fm/api'''
 api_key = 'api key goes here'
 
-
 class MusicCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -58,7 +57,6 @@ class MusicCog(commands.Cog):
           data= get_album(args[0],args[1])
         else:
           data = get_album(args)
-          print(data)
         embed=discord.Embed(title=data['album']['name']+' by '+data['album']['artist'],url=data['album']['url'])
         embed.add_field(name='Artist',value=data['album']['artist'])
         embed.set_thumbnail(url=data['album']['image'][2]['#text'])
@@ -147,13 +145,11 @@ def get_artist(artist):
 
 
 def get_track(track,artist=''):
-  track = urllib.parse.quote(track)
   artist = urllib.parse.quote(artist)
+  track =  urllib.parse.quote(track)
   
   if artist != '':
     data =  get_data('track.getinfo','&artist='+artist+'&track='+track)['track']
-    track= urllib.parse.quote(data['name']).lower()
-    artist=urllib.parse.quote(data['artist']['name']).lower()
     return data
   else:
     artist = get_data('track.search&track='+track)['results']['trackmatches']['track'][0]['artist']
