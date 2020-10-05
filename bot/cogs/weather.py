@@ -15,7 +15,7 @@ class WeatherCog(commands.Cog):
     #Weather command, takes in an arg of city name
     @commands.command(brief="Takes in a city name and returns the weather for that location")
     async def weather(self,ctx, *,args):
-      embed=discord.Embed(title='Weather!')
+      embed=discord.Embed(title='Weather in '+args)
 
       args=args.replace(' ','%20')
       imperialURL = "http://api.openweathermap.org/data/2.5/weather?q="+args+ "&appid=00389432347e0b586478c8709f381c00&units=imperial"
