@@ -10,6 +10,7 @@ if __name__ == "__main__":
     bot.remove_command("help")
 
     @bot.command(name="help", help="This will be shown")
+    
     async def help(ctx, *, name=None):
         char_repeat = 20
         embed = discord.Embed(
@@ -115,6 +116,9 @@ if __name__ == "__main__":
 
     # load in Fun commands
     bot.load_extension("bot.cogs.fun")
+
+    # load in randomcase command
+    bot.load_extension("bot.cogs.randomcase")
 
     # load in Event command
     bot.load_extension("bot.cogs.events")
