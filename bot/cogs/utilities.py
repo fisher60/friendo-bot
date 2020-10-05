@@ -3,7 +3,7 @@ import random
 from asyncio import sleep
 import subprocess
 from discord.ext import tasks
-from discord.ext.commands import Bot, Cog, command
+from discord.ext.commands import Bot, Cog, command, group
 from bot import settings
 from bot.cogs.list_of_quotes import lines
 from discord import Embed, Colour
@@ -168,6 +168,36 @@ class Utilities(Cog):
         """Chooses between a list of quotes"""
         embed_quote = Embed(title=random.choice(lines), color=Colour.green())
         await ctx.send(embed=embed_quote)
+
+    @group()
+    async def math(self, ctx):
+        if ctx.invoked_subcommand is None:
+            await ctx.send("""Please enter a command, you can use the command `arith`\
+ for arithmetic, `expo` for exponents, `root` for roots""")
+
+    @math.command(brief="Calculates small operations, usage- `num1 'operator' num2`")
+    async def arith(self, ctx, num1: int, op: str, num2: int):
+        operations = {'+' : f'The sum is **{num1 + num2}**',
+                      '-' : f'The difference is **{num1 - num2}**',
+                      '*' : f'The product is **{num1 * num2}**',
+                      '/' : f'The quotient is **{num1 / num2}**',
+                      '%' : f'The remainder is **{num1 % num2}**',
+                    }
+        await ctx.send(operations[op])
+
+    @math.command(brief="Calculates for exponents, usage- `num ^ exponent`")
+    async def expo(self, ctx, num: int, op: str, exp: int):
+        if op == '^' or op == '**':
+            await ctx.send(f'The result of {num}^{exp} is **{num ** exp}**')
+        else:
+            await ctx.send(f'Please use `^` or `**` to denote exponentians, example- `2 ^ 2`')
+
+    @math.command(brief="Calculates for roots, usage- `root_num '√' or just 'root' num`")
+    async def root(self, ctx, r_num: int, op: str, num: int):
+        if op == '√' or op == 'root':
+            await ctx.send(f'The root will be **{round(num ** (1/r_num), 3)}**')
+        else:
+            await ctx.send(f"Please use '√' or 'root', example- `2 root 36` to get `6`")
 
 def setup(bot: Bot) -> None:
     """Load the Utilities cog."""
