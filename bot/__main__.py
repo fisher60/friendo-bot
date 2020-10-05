@@ -112,6 +112,9 @@ if __name__ == "__main__":
 
     # load in weather command
     bot.load_extension("bot.cogs.weather")
+    
+    #load in music search commands
+    bot.load_extension("bot.cogs.LastFM")
 
     # load in Fun commands
     bot.load_extension("bot.cogs.fun")
