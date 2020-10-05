@@ -14,9 +14,7 @@ class RandomCase(Cog):
         self.bot = bot
 
     @command(brief="Randomize case of string")
-    async def randomcase(
-        self, ctx, *, string=None
-    ):  # Though not pythonic named but I hope owner will consider
+    async def randomcase(self, ctx, *, string=None):
         randomized_string = "".join(
             [random.choice((_.upper(), _.lower())) for _ in string]
         )
