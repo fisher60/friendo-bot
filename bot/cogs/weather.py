@@ -51,11 +51,11 @@ class WeatherCog(commands.Cog):
       embed.set_thumbnail(url=imgUrl)
       embed.add_field(name='Status',value=main+
       '\n'+description,inline=False)
-      embed.add_field(name='Current Temp',value=tempF+'F ('+tempC+'C)',inline=False)
-      embed.add_field(name='Feels Like',value=tempFT+'F ('+tempFC+'C)')
-      embed.add_field(name='High Temp',value=highF+'F ('+highC+'C)')
-      embed.add_field(name='Low Temp',value=lowF+'F ('+lowC+'C)')
-      embed.add_field(name='Wind Speed',value=windM+'MPH ('+windK+'KPH)',inline=False)
+      embed.add_field(name='Current Temp',value=str(tempF)+'F ('+str(tempC)+'C)',inline=False)
+      embed.add_field(name='Feels Like',value=str(tempFT)+'F ('+str(tempFC)+'C)')
+      embed.add_field(name='High Temp',value=str(highF)+'F ('+str(highC)+'C)')
+      embed.add_field(name='Low Temp',value=str(lowF)+'F ('+str(lowC)+'C)')
+      embed.add_field(name='Wind Speed',value=str(windM)+'MPH ('+str(windK)+'KPH)',inline=False)
       
 
       await ctx.send(embed=embed)
