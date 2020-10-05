@@ -101,6 +101,7 @@ class GuessGame(Cog): #(Cog): # Include Cog if it's a part of Cog file in Friend
         GuessGame.check_number = round(random.randint(GuessGame.lower_bound, GuessGame.upper_bound))  # Get random number.
         GuessGame.rounds_number = round(math.log(GuessGame.upper_bound - GuessGame.lower_bound + 1,
                                        2))  # Get random number of rounds. Like 3 rounds or 3 attempts left to guess.
+        GuessGame.count = 0
         await ctx.send(f'Thank you for restarting.  Please `.start` to play again.')
 
 def setup(bot: Bot) -> None:
