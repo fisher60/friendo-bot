@@ -18,17 +18,28 @@ class WeatherCog(commands.Cog):
       embed=discord.Embed(title='Weather!')
 
       args=args.replace(' ','%20')
-      wUrl = "http://api.openweathermap.org/data/2.5/weather?q="+args+ "&appid=00389432347e0b586478c8709f381c00&units=imperial"
-      response = urllib.request.urlopen(wUrl)
-      data = json.load(response)
-      print(data['main'])  
+      imperialURL = "http://api.openweathermap.org/data/2.5/weather?q="+args+ "&appid=00389432347e0b586478c8709f381c00&units=imperial"
+      metricURL = "http://api.openweathermap.org/data/2.5/weather?q="+args+ "&appid=00389432347e0b586478c8709f381c00&units=metric"
+      imperial = urllib.request.urlopen(imperialURL)
+      metric = urllib.request.urlopen(metricURL) 
+      
+      data = json.load(imperial)
+      metric=json.load(metric)
       icon = data['weather']
       weather = data['main']
+      weatherM=metric['main']
 
-      temp = weather['temp']
-      tempT = weather['feels_like']
-      low = weather['temp_min']
-      high = weather['temp_max']
+      tempF = weather['temp']
+      tempFT = weather['feels_like']
+      lowF = weather['temp_min']
+      highF = weather['temp_max']
+      windM = data['wind']['speed']
+      
+      tempC = weatherM['temp']
+      tempCT = weatherM['feels_like']
+      lowC = weatherM['temp_min']
+      highC = weatherM['temp_max']
+      windK = metric['wind']['speed']
 
       for f in icon:
           icon = f['icon']
@@ -36,15 +47,20 @@ class WeatherCog(commands.Cog):
           description = f['description']
 
       imgUrl= 'http://openweathermap.org/img/wn/'+icon+'@4x.png'
-      print(imgUrl)
       args=args.replace('%20',' ')
       embed.set_thumbnail(url=imgUrl)
       embed.add_field(name='Status',value=main+
       '\n'+description,inline=False)
-      embed.add_field(name='Current Temp',value=temp,inline=False)
-      embed.add_field(name='Feels Like',value=tempT)
-      embed.add_field(name='High Temp',value=high)
-      embed.add_field(name='Low Temp',value=low)
+      embed.add_field(name='Current Temp F',value=tempF,inline=False)
+      embed.add_field(name='Feels Like',value=tempFT)
+      embed.add_field(name='High Temp',value=highF)
+      embed.add_field(name='Low Temp',value=lowF)
+      embed.add_field(name='Wind Speed',value=windM,inline=False)
+      embed.add_field(name='Current Temp C',value=tempC,inline=False)
+      embed.add_field(name='Feels Like',value=tempCT)
+      embed.add_field(name='High Temp',value=highC)
+      embed.add_field(name='Low Temp',value=lowC)
+    embed.add_field(name='Wind Speed',value=windK,inline=False)
       
 
       await ctx.send(embed=embed)
