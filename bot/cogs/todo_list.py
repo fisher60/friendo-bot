@@ -154,7 +154,7 @@ class TodoList(Cog):
                 if seek:
                     embed_msg = Embed(
                         title=f"{ctx.author}, todos have been deleted",
-                        description="Please check using `.show_todos`. Woof!",
+                        description="Please check using `.showtodos`. Woof!",
                     )
                     await ctx.send(embed=embed_msg)
                 else:
