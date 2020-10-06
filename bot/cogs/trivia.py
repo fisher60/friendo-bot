@@ -4,11 +4,13 @@ from discord.ext import commands
 import json
 import urllib.request
 import random
+import os
 
 answers = []
 tokenID = ""
 
 amounts = {}
+scores = {}
 userAnswers = {}
 
 
@@ -19,6 +21,14 @@ class TriviaCog(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        global scores
+        if not os.path.exists("scores.txt"):
+          file = open('scores.txt',"w+")
+          file.write('{"auth_id": 0}')
+          file.close()
+        with open('scores.txt') as json_file:
+          scores = json.load(json_file)
+
 
     # This batch of commands grab from the category based on their name
     @commands.command(
@@ -157,6 +167,8 @@ class TriviaCog(commands.Cog):
         user_answer = message.content.lower()
         try:
             if userAnswers[auth_id] != 0:
+                if auth_id not in scores:
+                  scores[auth_id]=0;
                 if user_answer in ["a", "b", "c", "d"]:
                     correct = userAnswers[auth_id]
                     if correct == 1:
@@ -170,6 +182,8 @@ class TriviaCog(commands.Cog):
                     embed = discord.Embed(title="Answer")
 
                     if user_answer == correct:
+                        scores[auth_id]+=10
+                        save()
                         values = "You, you got the right answer!"
                         embed.add_field(name="CORRECT!", value=values, inline=False)
                     else:
@@ -180,6 +194,14 @@ class TriviaCog(commands.Cog):
 
         except:
             "user not in array"
+
+    #This command prints your scores
+    @commands.command()
+    async def getscore(self,ctx):
+      auth_id = str(ctx.message.author.id)
+      if auth_id not in scores:
+        scores[auth_id]=0;
+      await ctx.send(scores[auth_id])
 
     # This command prints an embed listing the categories avaliable
     @commands.command(
@@ -329,6 +351,11 @@ def url_request(value: int):
 
         return data
 
+
+def save():
+  """Saves the user scores to the json file"""
+  with open('scores.txt', 'w') as outfile:
+    json.dump(scores, outfile)
 
 def setup(bot):
     """Load the bot Cog"""
