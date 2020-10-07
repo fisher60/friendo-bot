@@ -218,7 +218,7 @@ class TriviaCog(commands.Cog):
       leaderboard = {}
       for f in scores:
         try:
-          user = self.bot.get_user(int(f))
+          user = await self.bot.fetch_user(int(f))
           leaderboard[user.display_name] = scores[f]
         except:
           "Invalid Author ID"
