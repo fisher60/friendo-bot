@@ -1,14 +1,16 @@
-"""Commands for the events module"""
+"""Commands for the trivia module"""
 import discord
 from discord.ext import commands
 import json
 import urllib.request
 import random
+import os
 
 answers = []
 tokenID = ""
 
 amounts = {}
+scores = {}
 userAnswers = {}
 
 
@@ -19,6 +21,15 @@ class TriviaCog(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        global scores
+        if not os.path.exists("scores.txt"):
+          file = open('scores.txt',"w+")
+          file.write('{"auth_id": 0}')
+          file.close()
+        else:
+            with open('scores.txt') as json_file:
+                scores = json.load(json_file)
+
 
     # This batch of commands grab from the category based on their name
     @commands.command(
@@ -157,6 +168,8 @@ class TriviaCog(commands.Cog):
         user_answer = message.content.lower()
         try:
             if userAnswers[auth_id] != 0:
+                if auth_id not in scores:
+                  scores[auth_id]=0;
                 if user_answer in ["a", "b", "c", "d"]:
                     correct = userAnswers[auth_id]
                     if correct == 1:
@@ -170,8 +183,12 @@ class TriviaCog(commands.Cog):
                     embed = discord.Embed(title="Answer")
 
                     if user_answer == correct:
+                        scores[auth_id]+=10
+                        print(scores[auth_id])
+                        save()
                         values = "You, you got the right answer!"
                         embed.add_field(name="CORRECT!", value=values, inline=False)
+                        embed.set_footer('Your score is: '+scores[auth_id])
                     else:
                         values = "Correct answer was: " + str(correct)
                         embed.add_field(name="INCORRECT!", value=values, inline=False)
@@ -180,6 +197,41 @@ class TriviaCog(commands.Cog):
 
         except:
             "user not in array"
+
+    #This command prints your scores
+    @commands.command(
+        name="score",
+        brief="returns your score",
+    )
+    async def score(self,ctx):
+      auth_id = str(ctx.message.author.id)
+      if auth_id not in scores:
+        scores[auth_id]=0;
+      embed = discord.Embed(title='Your Score',description=str(scores[auth_id])+' points')
+      await ctx.send(embed=embed)
+
+    @commands.command(
+        name="leaderboard",
+        brief="returns bot trivia leaderboard",
+    )
+    async def leaderboard(self,ctx):
+      leaderboard = {}
+      for f in scores:
+        try:
+          user = self.bot.get_user(int(f))
+          leaderboard[user.display_name] = scores[f]
+        except:
+          "Invalid Author ID"
+
+      sortedV = sorted(leaderboard.items(),key = lambda t:t[1])
+      sortedV.reverse()
+      #print(sortedV)
+      embed = discord.Embed(title='Leader Board')
+      count = 1
+      for f in sortedV:
+        embed.add_field(name=f[0],value=f[1],inline=False)
+        count = count+1
+      await ctx.send(embed=embed)
 
     # This command prints an embed listing the categories avaliable
     @commands.command(
@@ -329,6 +381,11 @@ def url_request(value: int):
 
         return data
 
+
+def save():
+  """Saves the user scores to the json file"""
+  with open('scores.txt', 'w') as outfile:
+    json.dump(scores, outfile)
 
 def setup(bot):
     """Load the bot Cog"""
