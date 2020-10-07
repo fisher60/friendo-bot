@@ -57,6 +57,11 @@ if __name__ == "__main__":
                         if command.usage is not None
                         else ""
                     )
+                    
+                    if command.aliases is not None and len(command.aliases) > 0:
+                        field_body += "\n" + (
+                            "Aliases: " + (', '.join(command.aliases))
+                        )
 
                     embed.add_field(
                         name=command.name, value=field_body.strip(), inline=False
