@@ -84,7 +84,7 @@ class CovidStats(Cog):
             else:
                 embed_msg = Embed(
                     title="Data is empty. Maybe you have a typo or the country name does not exist.",
-                    description="Check if youre spelling is correct. Use `.help CovidStats` to see how the commands work.",
+                    description="Check if your spelling is correct. Use `.help CovidStats` to see how the commands work.",
                     color=Colour.red(),
                 )
 
