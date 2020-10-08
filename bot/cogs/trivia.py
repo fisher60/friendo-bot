@@ -5,6 +5,7 @@ import json
 import urllib.request
 import random
 import os
+import html
 
 answers = []
 tokenID = ""
@@ -302,13 +303,13 @@ def generate_embed(auth_id, quiz_var):
 
     embed = discord.Embed(title="TRIVIA")
 
-    embed.add_field(name="Category:", value=data[0], inline=True)
-    embed.add_field(name="Difficulty", value=data[1], inline=True)
-    embed.add_field(name="Question", value=data[2], inline=False)
-    embed.add_field(name="A: " + data[3], value="______", inline=False)
-    embed.add_field(name="B: " + data[4], value="______ ", inline=False)
-    embed.add_field(name="C: " + data[5], value="______ ", inline=False)
-    embed.add_field(name="D: " + data[6], value="______ ", inline=False)
+    embed.add_field(name="Category:", value=html.unescape(data[0]), inline=True)
+    embed.add_field(name="Difficulty", value=html.unescape(data[1]), inline=True)
+    embed.add_field(name="Question", value=html.unescape(data[2]), inline=False)
+    embed.add_field(name="A: " + html.unescape(data[3]), value="______", inline=False)
+    embed.add_field(name="B: " + html.unescape(data[4]), value="______ ", inline=False)
+    embed.add_field(name="C: " + html.unescape(data[5]), value="______ ", inline=False)
+    embed.add_field(name="D: " + html.unescape(data[6]), value="______ ", inline=False)
     embed.set_footer(text="Reply with A,B,C,D to answer")
     return embed
 
