@@ -185,16 +185,15 @@ class TriviaCog(commands.Cog):
 
                     if user_answer == correct:
                         scores[auth_id]+=10
-                        print(scores[auth_id])
                         save()
                         values = "You, you got the right answer!"
-                        embed.add_field(name="CORRECT!", value=values, inline=False)
-                        embed.set_footer('Your score is: '+scores[auth_id])
+                        embed.set_footer(text='Your score is: '+str(scores[auth_id]))
                     else:
                         values = "Correct answer was: " + str(correct)
                         embed.add_field(name="INCORRECT!", value=values, inline=False)
                     userAnswers[auth_id] = 0
                     await ctx.send(embed=embed)
+                    await ctx.send('answered?')
 
         except:
             "user not in array"
@@ -351,12 +350,6 @@ def url_request(value: int):
         random.shuffle(answers)
 
         correct = correct_answer
-
-        answers[0] = answers[0].replace("&#039;", "'")
-        answers[1] = answers[1].replace("&#039;", "'")
-        answers[2] = answers[2].replace("&#039;", "'")
-        answers[3] = answers[3].replace("&#039;", "'")
-
         if answers[0] == correct:
             correct = 1
         if answers[1] == correct:
@@ -377,8 +370,6 @@ def url_request(value: int):
         data[6] = answers[3]
         data[7] = correct
 
-        data[2] = data[2].replace("&quot;", '"')
-        data[2] = data[2].replace("&#039;", "'")
 
         return data
 
