@@ -69,9 +69,15 @@ class CovidStats(Cog):
 
     @command(
         brief="Choose a country's COVID19 stats. `.covid_stats [slug | country code | country name]`",
-        name="covid_stats",
+        aliases=[
+            "covidstats",
+            "covid",
+            "coronavirus",
+            "covid19",
+            "covid-19",
+        ],
     )
-    async def covid_stats(self, ctx, country=None):
+    async def covid_stats(self, ctx, *, country=None):
         """Shows a summary COVID19 stats of a specific country"""
         if country:
             country_stats = await covid_country_stats(country=country)
