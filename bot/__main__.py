@@ -10,7 +10,6 @@ if __name__ == "__main__":
     bot.remove_command("help")
 
     @bot.command(name="help", help="This will be shown")
-    
     async def help(ctx, *, name=None):
         char_repeat = 20
         embed = discord.Embed(
@@ -125,5 +124,8 @@ if __name__ == "__main__":
 
     # load in Todo List command
     bot.load_extension("bot.cogs.todo_list")
+
+    # load covid stats
+    bot.load_extension("bot.cogs.covid_stats")
 
     bot.run(settings.TOKEN)
