@@ -1,8 +1,11 @@
 import json
+import logging
 
 from bot.settings import BASE_DIR, MEME_PASSWORD, MEME_USERNAME
 
 MEME_DIR = f"{BASE_DIR}/meme_api/json/meme_list.json"
+
+logger = logging.getLogger(__name__)
 
 
 class Meme:
@@ -47,14 +50,14 @@ class Meme:
         """Gets the names of all available meme templates."""
         async with self.bot.session.get(self.get_all_memes_url) as resp:
             if resp.status == 200:
-                print("updating meme list...")
+                logger.info("updating meme list...")
 
                 _json = await resp.json()
 
                 with open(MEME_DIR, "w+") as f:
                     json.dump(_json, f)
             else:
-                print("Failed to update meme list, aborting...")
+                logger.info("Failed to update meme list, aborting...")
 
     def search_meme_list(self, search_words: list):
         """Checks if the input search_words matches any available meme templates."""
