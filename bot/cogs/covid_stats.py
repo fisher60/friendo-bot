@@ -1,12 +1,8 @@
-from discord.ext.commands import Bot, Cog, command
-from bot.settings import BASE_DIR
-from discord import Embed, Colour
-from asyncio import sleep
-from discord.ext import tasks
 import aiohttp
-import asyncio
 import json
 import re
+from discord import Embed, Colour
+from discord.ext.commands import Bot, Cog, command
 
 url_summary = "https://api.covid19api.com/summary"  # Source data
 
