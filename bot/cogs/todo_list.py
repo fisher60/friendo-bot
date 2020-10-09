@@ -8,7 +8,7 @@ from discord.ext.commands import Bot, Cog, command
 from discord import Embed, Colour
 
 
-def update_of_todos(ctx, todos):
+async def update_of_todos(ctx, todos):
     """This will create a todo list from todos"""
 
     todos = [t.strip() for t in todos.split(",") if t.strip() != ""]
@@ -73,7 +73,7 @@ def update_of_todos(ctx, todos):
             json.dump(todo_dict, fp=to_write)
 
 
-def deletion_of_todos(
+async def deletion_of_todos(
     ctx, keys_to_delete
 ):  # In this function, todos here refers to keys in the dictionary.
     """This will delete some todos using specified keys"""
@@ -116,20 +116,12 @@ class TodoList(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
-        self.add_to_todo_list_tasks = {}
-        self.delete_from_todo_list_tasks = {}
-
     async def todo_list_wrapper(self, ctx, task_type="todo_list", *, todos=None):
         """Wrapper function for todo list to allow the todos to be created on function call"""
 
-        if task_type == "todo_list":
-            self.add_to_todo_list_tasks[ctx.author.id] += 1
-        elif task_type == "delete_todos":
-            self.delete_from_todo_list_tasks[ctx.author.id] += 1
-
         @tasks.loop(count=1)
         async def delay_for_completion():
-            """Sets a delay for the todo list to complete"""
+            """Sets a pseudodelay for the todo list to complete"""
 
             await sleep(1)
 
@@ -140,21 +132,19 @@ class TodoList(Cog):
             """
 
             if task_type == "todo_list":
-                update_of_todos(ctx=ctx, todos=todos)
+                await update_of_todos(ctx=ctx, todos=todos)
                 embed_msg = Embed(
                     title=f"{ctx.author}, your todo list is ready!",
                     color=Colour.green(),
                 )
                 await ctx.send(embed=embed_msg)
 
-                self.add_to_todo_list_tasks[ctx.author.id] -= 1
-
             elif task_type == "delete_todos":
-                seek = deletion_of_todos(ctx=ctx, keys_to_delete=todos)
+                seek = await deletion_of_todos(ctx=ctx, keys_to_delete=todos)
                 if seek:
                     embed_msg = Embed(
                         title=f"{ctx.author}, todos have been deleted",
-                        description="Please check using `.show_todos`. Woof!",
+                        description="Please check using `.showtodos`. Woof!",
                     )
                     await ctx.send(embed=embed_msg)
                 else:
@@ -165,8 +155,6 @@ class TodoList(Cog):
                     )
                     await ctx.send(embed=embed_msg)
 
-                self.delete_from_todo_list_tasks[ctx.author.id] -= 1
-
         delay_for_completion.start()
 
     @command(
@@ -176,21 +164,13 @@ class TodoList(Cog):
     async def todo_list(self, ctx, *, todos=None):
         """Creates a todo list for the user."""
 
-        if ctx.author.id not in self.add_to_todo_list_tasks:
-            self.add_to_todo_list_tasks[ctx.author.id] = 0
-        if self.add_to_todo_list_tasks[ctx.author.id] < 1:
-            await self.todo_list_wrapper(ctx=ctx, task_type="todo_list", todos=todos)
+        await self.todo_list_wrapper(ctx=ctx, task_type="todo_list", todos=todos)
 
     @command(brief="Friendo deletes todos by specified keys")
     async def delete_todos(self, ctx, *, todos=None):
         """Deletes todos from a todo list for the user."""
 
-        if ctx.author.id not in self.delete_from_todo_list_tasks:
-            self.delete_from_todo_list_tasks[ctx.author.id] = 0
-        if (
-            self.delete_from_todo_list_tasks[ctx.author.id] < 1
-        ):  # todos here are keys not long strings.
-            await self.todo_list_wrapper(ctx=ctx, task_type="delete_todos", todos=todos)
+        await self.todo_list_wrapper(ctx=ctx, task_type="delete_todos", todos=todos)
 
     @command(brief="Friendo will present you your todo list.", name="showtodos")
     async def show_todos(self, ctx):
@@ -199,7 +179,7 @@ class TodoList(Cog):
         if Path(
             f"{BASE_DIR}/todo_list_data.json"
         ).is_file():  # Checks file if it exists
-            print("File exist")
+            print("File exists")
 
         else:
             with open(Path(f"{BASE_DIR}/todo_list_data.json"), "w") as f:

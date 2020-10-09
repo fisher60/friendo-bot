@@ -24,12 +24,36 @@ UWU_WORDS = {
     "you": "yuw",
 }
 
+def get_factorial(num: int):
+    """ Returns the factorial of `num` """
+
+    answer = 1
+    for i in range(num, 0, -1):
+        answer *= i
+    return answer
 
 class Fun(Cog):
     """commands for fun that offer no benefit to users."""
 
     def __init__(self, bot: Bot):
         self.bot = bot
+
+    @command(
+        brief="Send a number and get the factorial of it",
+    )
+    async def factorial(self, ctx, number: int):
+        """
+        Sends the factorial of `number`
+        eg. 10 -> 3628800
+        """
+        if number > 69:
+            await ctx.send("Hey woah don't break me. Give me a number upto 69")
+            return
+
+        result = await ctx.bot.loop.run_in_executor(None, get_factorial, number)
+        await ctx.send(
+            f"The factorial of **{number}** is **{result}** ({number}! = {result})"
+        )
 
     @command(
         brief="Alternate case of inputted text",
@@ -72,8 +96,8 @@ class Fun(Cog):
     @command(
         brief="simulates a dice roll",
         description=".dice [quantity] [sides]\n"
-                    "`quantity` - how many to roll\n"
-                    "`sides` - how many sides each die will have"
+        "`quantity` - how many to roll\n"
+        "`sides` - how many sides each die will have",
     )
     async def dice(self, ctx, n: int, sides: int) -> None:
         """simple dice roll"""
@@ -144,15 +168,15 @@ class Fun(Cog):
 
         elif response == "rock":
             await ctx.send(choose)
-            await ctx.send(win) if bot_choice == "paper" else await ctx.send(lose)
+            await ctx.send(win if bot_choice == "paper" else lose)
 
         elif response == "paper":
             await ctx.send(choose)
-            await ctx.send(win) if bot_choice == "scissors" else await ctx.send(lose)
+            await ctx.send(win if bot_choice == "scissors" else lose)
 
         elif response == "scissors":
             await ctx.send(choose)
-            await ctx.send(win) if bot_choice == "rock" else await ctx.send(lose)
+            await ctx.send(win if bot_choice == "rock" else lose)
 
         else:
             embed = Embed(
@@ -278,11 +302,11 @@ class Fun(Cog):
 
 
 def _replace_many(
-        sentence: str,
-        replacements: dict,
-        *,
-        ignore_case: bool = False,
-        match_case: bool = False,
+    sentence: str,
+    replacements: dict,
+    *,
+    ignore_case: bool = False,
+    match_case: bool = False,
 ) -> str:
     """
     Replaces multiple substrings in a string given a mapping of strings.
