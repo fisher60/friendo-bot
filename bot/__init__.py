@@ -5,11 +5,11 @@ The main bot module, contains all code for the bot application.
 import logging
 import os
 
-from .settings import IMG_CACHE
+from .settings import IMG_CACHE, LOG_FILE_NAME
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-FILE_HANDLER = logging.FileHandler(filename="friendo.log", encoding="utf-8", mode="w")
+logger.setLevel(logging.INFO)
+FILE_HANDLER = logging.FileHandler(filename=LOG_FILE_NAME, encoding="utf-8", mode="w")
 FILE_HANDLER.setFormatter(
     logging.Formatter("%(levelname)s:%(asctime)s:%(name)s: %(message)s")
 )
