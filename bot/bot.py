@@ -3,7 +3,8 @@ import asyncio
 import aiohttp
 from discord.ext import commands
 
-from .settings import NAME
+from .settings import NAME, API_COGS
+from .disable import DisableApi
 
 
 class Bot(commands.Bot):
@@ -34,3 +35,29 @@ class Bot(commands.Bot):
         await self.session.close()
 
         return await super().logout()
+
+    def load_extension(self, name):
+        disable_api = DisableApi()
+        cog_name = name.split(".")[-1]
+        # If no-api is passed disable API_COGS ie. memes and events
+        if disable_api.get_no_api() and cog_name in API_COGS:
+            return
+        disabled_list = disable_api.get_disable()
+        if disabled_list:
+            if cog_name in disabled_list:
+                return
+            # If cog is not disabled, load it
+            else:
+                super().load_extension(name)
+                return
+        enabled_list = disable_api.get_enable()
+        if enabled_list:
+            # If cog is enabled, load it
+            if cog_name in enabled_list:
+                super().load_extension(name)
+                return
+            # Don't load cogs not passed along with enable
+            else:
+                return
+        # load cogs if no argument is passed
+        super().load_extension(name)
