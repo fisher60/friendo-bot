@@ -1,8 +1,8 @@
 """Commands for the song search module"""
 import discord
-from discord.ext import commands
-import urllib.request, json 
 import urllib
+from urllib import request,json
+from discord.ext import commands
 
 '''api key needs to be generated from here: https://www.last.fm/api'''
 api_key = 'api key goes here'
