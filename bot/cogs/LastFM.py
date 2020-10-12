@@ -5,6 +5,7 @@ import json
 from discord.ext import commands
 from bot.settings import MUSIC_TOKEN
 
+
 class MusicCog(commands.Cog):
     """
     Commands for song searching
@@ -13,37 +14,40 @@ class MusicCog(commands.Cog):
         self.bot = bot
 
     @commands.command(
-        name ="getsong",
-        brief ="gets info about a song"
+        name = "getsong",
+        brief = "gets info about a song"
+        description = "takes in song by itself or song followed by artist seperated by ; "
+        aliases = ['song','gets']
     )
     async def getsong(self,ctx,*,args):
-      try:
-        if ', ' in args:
-          args = args.split(', ')
-          data = get_track(args[0],args[1])
-
-        else:
-            data = get_track(args)
-        if len(data)>0:
-            embed = discord.Embed(title=f"{data['name']} by {data['artist']['name']}", url=data['url'])
-            embed.add_field(name='Artist',value=data['artist']['name'])
-            embed.add_field(name='Album',value=data['album']['title'])
-            embed.set_thumbnail(url=data['album']['image'][2]['#text'])
-            await ctx.send(embed=embed)
-        else:
-            await ctx.send("Invalid Search Try Again")
-      except IndexError:
-        await ctx.send("Invalid search term try another")
+          try:
+            if ', ' in args:
+                args = args.split('; ')
+                data = get_track(args[0],args[1])
+            else:
+                data = get_track(args)
+            if len(data)>0:
+                embed = discord.Embed(title=f"{data['name']} by {data['artist']['name']}", url=data['url'])
+                embed.add_field(name='Artist',value=data['artist']['name'])
+                embed.add_field(name='Album',value=data['album']['title'])
+                embed.set_thumbnail(url=data['album']['image'][2]['#text'])
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send("Invalid Search Try Again")
+          except IndexError:
+            await ctx.send("Invalid search term try another")
    
 
     @commands.command(
-      name="getlyrics",
-      brief="a command to get song lyrics"
+      name = "getlyrics",
+      brief = "a command to get song lyrics"
+      description = "takes in song by itself or song followed by artist seperated by ; "
+      aliases = ['lyrics','getl']
     )
     async def get_lyrics(self,ctx,*,args):
       try:
-        if ', ' in args:
-          args = args.split(', ')
+        if ' ; ' in args:
+          args = args.split('; ')
           data = get_track(args[0],args[1])
         else:
           data = get_track(args)
@@ -51,7 +55,7 @@ class MusicCog(commands.Cog):
         artist = urllib.parse.quote(data['artist']['name']).lower()    
         with urllib.request.urlopen('https://api.lyrics.ovh/v1/'+artist+'/'+track) as url:
           lyrics = json.loads(url.read().decode())['lyrics']
-        if not lyrics:
+        if not lyrics or len(lyrics) > 2048:
           lyrics = "Lyrics couldn't be found or are unavaliable at this time"
         embed=discord.Embed(title=f"{data['name']} by {data['artist']['name']}",url = data['url'],description=lyrics)
         embed.add_field(name='Artist',value=data['artist']['name'])
@@ -63,12 +67,14 @@ class MusicCog(commands.Cog):
 
     @commands.command(
       name="getalbum",
-      brief="a command to get info about a album, takes in an album name or album name and artist, formatting for the second is album name, artist with a comma seperating the two"
+      brief="gets info about an album"
+      description = "takes in album by itself or album followed by artist seperated by ; "
+      aliases = ['album','getal']
     )
     async def getalbum(self,ctx,*,args):
       try:
-        if ', ' in args:
-          args = args.split(', ')
+        if '; ' in args:
+          args = args.split('; ')
           data = get_album(args[0],args[1])
         else:
           data = get_album(args)
@@ -77,19 +83,21 @@ class MusicCog(commands.Cog):
         embed.set_thumbnail(url=data['album']['image'][2]['#text'])
         try:
           embed.add_field(name='Release Data',value=data['album']['wiki']['published'],inline=False)
-        except IndexError:
+        except KeyError:
           pass
         try:
           embed.add_field(name='About',value=data['album']['wiki']['summary'].split('<a',1)[0])
-        except IndexError:
+        except KeyError:
           pass
         await ctx.send(embed=embed)
       except IndexError:
         await ctx.send('Invalid search term, try again')
       
     @commands.command(
-      name="getartist",
-      brief="A command that get's info about an artist, takes in an artist name"
+      name = "getartist",
+      brief = "A command that get's info about an artist"
+      description = "Takes in just artist name"
+      aliases = ['artist','getar']
     )
     async def getartist(self,ctx,*,args):
       try:
@@ -100,12 +108,10 @@ class MusicCog(commands.Cog):
           bio = data['bio']['summary'].split('\n',2)[1].split('<a',1)[0]
         embed = discord.Embed(title=data['name'],url=data['url'],description=bio)
         embed.set_thumbnail(url=album_data[0]['image'][2]['#text'])
-        similar = ''
-        top_albums=''
-        for f in album_data[:10]:
-          top_albums=top_albums+f['name']+'\n'
-        for f in data['similar']['artist']:
-          similar = similar+f['name']+'\n'
+        top_albums = "\n".join([x["name"] for x in album_data[:10]])
+        similar = "\n".join([x["name"] for x in data["similar"]["artist"]])
+        if not similar:
+            similar = 'No Similar Artists Avaliable'
         embed.add_field(name='Top Albums',value=top_albums,inline=True)
         embed.add_field(name='Similar Artists',value=similar,inline=True)
         await ctx.send(embed=embed)
@@ -115,6 +121,7 @@ class MusicCog(commands.Cog):
     @commands.command(
       name="topsongs",
       brief="Gets a list of the top songs on the world charts, this command doesn't require any args"
+      aliases = ['songs','tops']
     )
     async def topsongs(self,ctx):
       data = top_tracks()
@@ -128,6 +135,7 @@ class MusicCog(commands.Cog):
     @commands.command(
       name = "topartists",
       brief = "Gets a list of the top artists on the world charts, this command doesn't require any args"
+      aliases = ['artists','topa']
     )
     async def topartists(self,ctx):
       data = top_artists()
@@ -154,7 +162,7 @@ def get_data(method,method2=''):
 def get_album(album,artist=''):
   """returns the json data for a given album, takes in just an album or album and artist"""
 
-  if artist:
+  if not artist:
     album = urllib.parse.quote(album)
     data = get_data('album.search&album='+album)
     album = data['results']['albummatches']['album'][0]['name']
