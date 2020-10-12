@@ -11,7 +11,6 @@ answers = []
 tokenID = ""
 
 amounts = {}
-scores = {}
 userAnswers = {}
 
 
@@ -22,14 +21,13 @@ class TriviaCog(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        global scores
+        self.scores = {}
         if not os.path.exists("scores.txt"):
-          file = open('scores.txt',"w+")
-          file.write('{"auth_id": 0}')
-          file.close()
+          with open('scores.txt',"w+") as file:
+            file.write('{"auth_id": 0}')
         else:
             with open('scores.txt') as json_file:
-                scores = json.load(json_file)
+                self.scores = json.load(json_file)
 
 
     # This batch of commands grab from the category based on their name
@@ -205,9 +203,9 @@ class TriviaCog(commands.Cog):
     )
     async def score(self,ctx):
       auth_id = str(ctx.message.author.id)
-      if auth_id not in scores:
-        scores[auth_id]=0;
-      embed = discord.Embed(title='Your Score',description=str(scores[auth_id])+' points')
+      if auth_id not in self.scores:
+        self.scores[auth_id]=0;
+      embed = discord.Embed(title='Your Score',description=str(self.scores[auth_id])+' points')
       await ctx.send(embed=embed)
 
     @commands.command(
@@ -216,19 +214,16 @@ class TriviaCog(commands.Cog):
     )
     async def leaderboard(self,ctx):
       leaderboard = {}
-      for f in scores:
-        try:
+      for f in self.scores:
           user = await self.bot.fetch_user(int(f))
-          leaderboard[user.display_name] = scores[f]
-        except:
-          "Invalid Author ID"
+          if user != 'none':
+            leaderboard[user.display_name] = self.scores[f]
 
-      sortedV = sorted(leaderboard.items(),key = lambda t:t[1])
-      sortedV.reverse()
-      #print(sortedV)
+
+      sorted_leaderboard = sorted(leaderboard.items(),key = lambda t:t[1],reverse=True)
       embed = discord.Embed(title='Leader Board')
       count = 1
-      for f in sortedV:
+      for f in sorted_leaderboard:
         embed.add_field(name=f[0],value=f[1],inline=False)
         count = count+1
       await ctx.send(embed=embed)
@@ -377,7 +372,7 @@ def url_request(value: int):
 def save():
   """Saves the user scores to the json file"""
   with open('scores.txt', 'w') as outfile:
-    json.dump(scores, outfile)
+    json.dump(self.scores, outfile)
 
 def setup(bot):
     """Load the bot Cog"""
