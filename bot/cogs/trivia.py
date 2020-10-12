@@ -1,9 +1,11 @@
-"""Commands for the events module"""
+"""Commands for the trivia module"""
 import discord
 from discord.ext import commands
 import json
 import urllib.request
 import random
+import os
+import html
 
 answers = []
 tokenID = ""
@@ -19,6 +21,14 @@ class TriviaCog(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.scores = {}
+        if not os.path.exists("scores.txt"):
+          with open('scores.txt',"w+") as file:
+            file.write('{"auth_id": 0}')
+        else:
+            with open('scores.txt') as json_file:
+                self.scores = json.load(json_file)
+
 
     # This batch of commands grab from the category based on their name
     @commands.command(
@@ -155,8 +165,9 @@ class TriviaCog(commands.Cog):
         auth_id = str(message.author.id)
         ctx = message.channel
         user_answer = message.content.lower()
-        try:
-            if userAnswers[auth_id] != 0:
+        if userAnswers[auth_id] != 0:
+                if auth_id not in self.scores:
+                	self.scores[auth_id]=0;
                 if user_answer in ["a", "b", "c", "d"]:
                     correct = userAnswers[auth_id]
                     if correct == 1:
@@ -170,16 +181,47 @@ class TriviaCog(commands.Cog):
                     embed = discord.Embed(title="Answer")
 
                     if user_answer == correct:
+                        self.scores[auth_id]+=10
+                        save(self.scores)
                         values = "You, you got the right answer!"
-                        embed.add_field(name="CORRECT!", value=values, inline=False)
+                        embed.set_footer(text='Your score is: '+str(self.scores[auth_id]))
                     else:
                         values = "Correct answer was: " + str(correct)
                         embed.add_field(name="INCORRECT!", value=values, inline=False)
                     userAnswers[auth_id] = 0
                     await ctx.send(embed=embed)
 
-        except:
-            "user not in array"
+    #This command prints your scores
+    @commands.command(
+        name="score",
+        brief="returns your score",
+    )
+    async def score(self,ctx):
+      auth_id = str(ctx.message.author.id)
+      if auth_id not in self.scores:
+        self.scores[auth_id]=0;
+      embed = discord.Embed(title='Your Score',description=str(self.scores[auth_id])+' points')
+      await ctx.send(embed=embed)
+
+    @commands.command(
+        name="leaderboard",
+        brief="returns bot trivia leaderboard",
+    )
+    async def leaderboard(self,ctx):
+      leaderboard = {}
+      for f in self.scores:
+          user = await self.bot.fetch_user(int(f))
+          if user != 'none':
+            leaderboard[user.display_name] = self.scores[f]
+
+
+      sorted_leaderboard = sorted(leaderboard.items(),key = lambda t:t[1],reverse=True)
+      embed = discord.Embed(title='Leader Board')
+      count = 1
+      for f in sorted_leaderboard:
+        embed.add_field(name=f[0],value=f[1],inline=False)
+        count = count+1
+      await ctx.send(embed=embed)
 
     # This command prints an embed listing the categories avaliable
     @commands.command(
@@ -250,13 +292,13 @@ def generate_embed(auth_id, quiz_var):
 
     embed = discord.Embed(title="TRIVIA")
 
-    embed.add_field(name="Category:", value=data[0], inline=True)
-    embed.add_field(name="Difficulty", value=data[1], inline=True)
-    embed.add_field(name="Question", value=data[2], inline=False)
-    embed.add_field(name="A: " + data[3], value="______", inline=False)
-    embed.add_field(name="B: " + data[4], value="______ ", inline=False)
-    embed.add_field(name="C: " + data[5], value="______ ", inline=False)
-    embed.add_field(name="D: " + data[6], value="______ ", inline=False)
+    embed.add_field(name="Category:", value=html.unescape(data[0]), inline=True)
+    embed.add_field(name="Difficulty", value=html.unescape(data[1]), inline=True)
+    embed.add_field(name="Question", value=html.unescape(data[2]), inline=False)
+    embed.add_field(name="A: " + html.unescape(data[3]), value="______", inline=False)
+    embed.add_field(name="B: " + html.unescape(data[4]), value="______ ", inline=False)
+    embed.add_field(name="C: " + html.unescape(data[5]), value="______ ", inline=False)
+    embed.add_field(name="D: " + html.unescape(data[6]), value="______ ", inline=False)
     embed.set_footer(text="Reply with A,B,C,D to answer")
     return embed
 
@@ -298,12 +340,6 @@ def url_request(value: int):
         random.shuffle(answers)
 
         correct = correct_answer
-
-        answers[0] = answers[0].replace("&#039;", "'")
-        answers[1] = answers[1].replace("&#039;", "'")
-        answers[2] = answers[2].replace("&#039;", "'")
-        answers[3] = answers[3].replace("&#039;", "'")
-
         if answers[0] == correct:
             correct = 1
         if answers[1] == correct:
@@ -324,11 +360,14 @@ def url_request(value: int):
         data[6] = answers[3]
         data[7] = correct
 
-        data[2] = data[2].replace("&quot;", '"')
-        data[2] = data[2].replace("&#039;", "'")
 
         return data
 
+
+def save(scores):
+  """Saves the user scores to the json file"""
+  with open('scores.txt', 'w') as outfile:
+    json.dump(scores, outfile)
 
 def setup(bot):
     """Load the bot Cog"""
