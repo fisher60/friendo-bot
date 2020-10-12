@@ -1,9 +1,9 @@
-"""Commands for the song search module"""
 import discord
 import urllib
 import json
 from discord.ext import commands
-from bot.settings import MUSIC_TOKEN
+MUSIC_TOKEN = '386e76f571fd03ac5e56501fe05db36a'
+
 
 
 class MusicCog(commands.Cog):
@@ -15,8 +15,8 @@ class MusicCog(commands.Cog):
 
     @commands.command(
         name = "getsong",
-        brief = "gets info about a song"
-        description = "takes in song by itself or song followed by artist seperated by ; "
+        brief = "gets info about a song",
+        description =  "takes in song by itself or song followed by artist seperated by ; ",
         aliases = ['song','gets']
     )
     async def getsong(self,ctx,*,args):
@@ -40,8 +40,8 @@ class MusicCog(commands.Cog):
 
     @commands.command(
       name = "getlyrics",
-      brief = "a command to get song lyrics"
-      description = "takes in song by itself or song followed by artist seperated by ; "
+      brief = "a command to get song lyrics",
+      description = "takes in song by itself or song followed by artist seperated by ; ",
       aliases = ['lyrics','getl']
     )
     async def get_lyrics(self,ctx,*,args):
@@ -67,8 +67,8 @@ class MusicCog(commands.Cog):
 
     @commands.command(
       name="getalbum",
-      brief="gets info about an album"
-      description = "takes in album by itself or album followed by artist seperated by ; "
+      brief="gets info about an album",
+      description = "takes in album by itself or album followed by artist seperated by ; ",
       aliases = ['album','getal']
     )
     async def getalbum(self,ctx,*,args):
@@ -95,8 +95,8 @@ class MusicCog(commands.Cog):
       
     @commands.command(
       name = "getartist",
-      brief = "A command that get's info about an artist"
-      description = "Takes in just artist name"
+      brief = "A command that get's info about an artist",
+      description = "Takes in just artist name",
       aliases = ['artist','getar']
     )
     async def getartist(self,ctx,*,args):
@@ -120,30 +120,26 @@ class MusicCog(commands.Cog):
 
     @commands.command(
       name="topsongs",
-      brief="Gets a list of the top songs on the world charts, this command doesn't require any args"
+      brief="Gets a list of the top songs on the world charts",
       aliases = ['songs','tops']
     )
     async def topsongs(self,ctx):
       data = top_tracks()
       embed = discord.Embed(title='Top 10 Tracks',url ='https://www.last.fm/charts')
-      count = 1
-      for f in data[:10]:
-        embed.add_field(name=count,value=f['name']+' by '+f['artist']['name'],inline=False)
-        count+=1
+      for f in enumerate(data[:10],1):
+        embed.add_field(name=f[0],value=f[1]['name']+' by '+f[1]['artist']['name'],inline=False)
       await ctx.send(embed=embed)
     
     @commands.command(
       name = "topartists",
-      brief = "Gets a list of the top artists on the world charts, this command doesn't require any args"
+      brief = "Gets a list of the top artists on the world charts",
       aliases = ['artists','topa']
     )
     async def topartists(self,ctx):
       data = top_artists()
       embed = discord.Embed(title='Top 10 Artists',url = 'https://www.last.fm/charts')
-      count = 1
-      for f in data[:10]:
-        embed.add_field(name=count,value=f['name'],inline=False)
-        count += 1
+      for f in enumerate(data[:10],1):
+        embed.add_field(name=f[0],value=f[1]['name'],inline=False)
       await ctx.send(embed=embed)
 
 
