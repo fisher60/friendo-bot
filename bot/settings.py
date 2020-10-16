@@ -12,6 +12,9 @@ MEME_PASSWORD = os.environ.get("MEME_PASSWORD")
 # event api key
 EVENT_API_KEY = os.environ.get("EVENT_API_KEY")
 
+#LastFM Api Key
+MUSIC_TOKEN = os.environ.get("MUSIC_TOKEN")
+
 COMMAND_PREFIX = "."
 
 VERSION = "1.2."
