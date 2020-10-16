@@ -58,3 +58,20 @@ $ pipenv shell
 # Run the bot
 $ pipenv run python -m bot
 ```
+
+## Command Line Arguments
+
+1. Suppreses the loading of cogs that requires external API ie. events and memes cogs
+```bash
+$ pipenv run python -m bot --no-api
+```
+2. Disable certain cogs and enables all other cogs
+```bash
+# disables events fun greetings cogs and enables all other cogs
+$ pipenv run python -m bot --disable events fun greetings
+```
+3. Enable certain cogs and disable all other cogs
+```bash
+# enables events fun greetings cogs and disables all other cogs
+$ pipenv run python -m bot --enable events fun greetings
+```
