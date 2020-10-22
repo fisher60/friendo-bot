@@ -1,10 +1,14 @@
 import asyncio
+import logging
+import traceback
 
 import aiohttp
 from discord.ext import commands
 
 from .settings import NAME, API_COGS
 from .disable import DisableApi
+
+logger = logging.getLogger(__name__)
 
 
 class Bot(commands.Bot):
@@ -25,10 +29,17 @@ class Bot(commands.Bot):
 
     async def on_ready(self):
         """Runs when the bot is connected."""
-        print("Logged in as")
-        print(self.user.name)
-        print(self.user.id)
-        print("------")
+        logger.info("Logged in as")
+        logger.info(self.user.name)
+        logger.info(self.user.id)
+        logger.info("------")
+
+    async def on_command_error(self, ctx, exception):
+        """Fired when exception happens."""
+        logger.error(
+            "Exception happened while executing command",
+            exc_info=(type(exception), exception, exception.__traceback__),
+        )
 
     async def logout(self) -> None:
         """Making sure connections are closed properly."""
