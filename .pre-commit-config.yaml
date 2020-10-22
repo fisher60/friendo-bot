@@ -2,21 +2,33 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.1.0
     hooks:
-      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
       - id: mixed-line-ending
-  - repo: https://github.com/psf/black
-    rev: stable
+        args: [ --fix=lf ]
+      - id: trailing-whitespace
+
+#  - repo: https://github.com/psf/black
+#    rev: stable
+#    hooks:
+#      - id: black
+#        args:
+#          - bot
+#        language_version: python3
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.5.1
     hooks:
-      - id: black
-        args:
-        - bot
-        language_version: python3
+      - id: python-check-blanket-noqa
+
   - repo: local
     hooks:
-      - id: pylint
+      - id: flake8
         args:
-        - bot
+          - bot
         name: pylint
-        entry: pipenv run pylint
+        entry: pipenv run flake8
         language: system
-        types: [python]
+        types: [ python ]

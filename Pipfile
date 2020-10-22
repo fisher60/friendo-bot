@@ -5,18 +5,28 @@ verify_ssl = true
 
 [packages]
 "discord.py" = "~=1.5.0"
-python-dotenv = "*"
-opencv-python = "*"
-scikit-image = "*"
-aiofiles = "*"
+python-dotenv = "0.14.0"
+opencv-python = "4.4.0.44"
+scikit-image = "0.17.2"
+aiofiles = "~=0.5.0"
 
 [dev-packages]
-pylint = "~=2.6.0"
-pre-commit = "~=2.1"
+flake8 = "~=3.8.4"
+flake8-annotations = "~=2.4.1"
+flake8-bugbear = "~=20.1.4"
+flake8-docstrings = "~=1.5.0"
+flake8-import-order = "~=0.18.1"
+flake8-string-format = "~=0.3.0"
+flake8-tidy-imports = "~=4.1.0"
+flake8-todo = "~=0.7"
+pep8-naming = "~=0.11.1"
+pre-commit = "~=2.7.1"
 
 [requires]
 python_version = "3.8"
 
 [scripts]
 start = "python -m bot"
+lint = "pre-commit run --all-files"
 precommit = "pre-commit install"
+flake8 = "python -m flake8"
