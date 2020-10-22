@@ -4,6 +4,6 @@ services:
     bot:
         build:
             context: .
-            dockerfile: DockerFile
+            dockerfile: Dockerfile
         tty: true
         env_file: bot.env
