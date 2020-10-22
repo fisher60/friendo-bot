@@ -17,7 +17,7 @@ async def update_of_todos(ctx, todos):
     todos = [t.strip() for t in todos.split(",") if t.strip() != ""]
 
     if Path(f"{BASE_DIR}/todo_list_data.json").is_file():  # Checks file if it exists
-        logger.info("File exists")
+        logger.info("todo_list_data.json exists")
 
         if (
             os.stat(f"{BASE_DIR}/todo_list_data.json").st_size > 0
@@ -65,7 +65,7 @@ async def update_of_todos(ctx, todos):
                     json.dump(todo_file_read, fp=update_write)
 
     else:  # If file does not exist, a new todo list will be created
-        logger.info("File does not exist")
+        logger.info("todo_list_data.json does not exist")
         with open(f"{BASE_DIR}/todo_list_data.json", "w+") as to_write:
             todo_dict = {
                 ctx.author.id: {
@@ -83,7 +83,7 @@ async def deletion_of_todos(
 
     k = [c.strip().rstrip() for c in keys_to_delete.split(",") if c.strip() != ""]
     if Path(f"{BASE_DIR}/todo_list_data.json").is_file():
-        logger.info("File exists")
+        logger.info("todo_list_data.json exists")
         if (
             os.stat(f"{BASE_DIR}/todo_list_data.json").st_size > 0
         ):  # This will check if the file is NOT empty
@@ -182,7 +182,7 @@ class TodoList(Cog):
         if Path(
             f"{BASE_DIR}/todo_list_data.json"
         ).is_file():  # Checks file if it exists
-            logger.info("File exists")
+            logger.info("todo_list_data.json exists")
 
         else:
             with open(Path(f"{BASE_DIR}/todo_list_data.json"), "w") as f:
