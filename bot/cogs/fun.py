@@ -24,6 +24,7 @@ UWU_WORDS = {
     "you": "yuw",
 }
 
+
 def get_factorial(num: int):
     """ Returns the factorial of `num` """
 
@@ -31,6 +32,7 @@ def get_factorial(num: int):
     for i in range(num, 0, -1):
         answer *= i
     return answer
+
 
 class Fun(Cog):
     """commands for fun that offer no benefit to users."""

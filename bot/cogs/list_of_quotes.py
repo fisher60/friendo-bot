@@ -16,11 +16,12 @@ lines = [
     "Success usually comes to those who are too busy to be looking for it.",
     "If you really look closely, most overnight successes took a long time.",
     "The only place where success comes before work is in the dictionary.",
-    "If you are not willing to risk the usual, you will have to settle for the ordinary." ,
-    "Whether you think you can or you think you can't, you're right." ,
+    "If you are not willing to risk the usual, you will have to settle for the ordinary.",
+    "Whether you think you can or you think you can't, you're right.",
     "The question isn't who is going to let me; it's who is going to stop me.",
     "Everything you've ever wanted is on the other side of fear.",
     "Dream big and dare to fail.",
     "You may be disappointed if you fail, but you are doomed if you don't try.",
     "It does not matter how slowly you go as long as you do not stop.",
-    "I didn't fail the test. I just found 100 ways to do it wrong."]
+    "I didn't fail the test. I just found 100 ways to do it wrong.",
+]

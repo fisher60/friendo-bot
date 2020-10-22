@@ -1,5 +1,8 @@
 import json
+import logging
 from bot.settings import EVENT_API_KEY
+
+logger = logging.getLogger(__name__)
 
 
 class Event:
@@ -10,9 +13,9 @@ class Event:
 
     async def show_events(self, artist):
         artist_find = ("-").join(artist.split(" "))
-        print(artist_find)
+        logger.info(artist_find)
         self.event_url = f"https://app.ticketmaster.com/discovery/v2/events.json?keyword={artist_find}&apikey={EVENT_API_KEY}"
-        print(self.event_url)
+        logger.info(self.event_url)
         async with self.bot.session.get(self.event_url) as res:
             if res.status == 200:
                 event_json = await res.json()
