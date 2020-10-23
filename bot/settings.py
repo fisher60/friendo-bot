@@ -24,6 +24,6 @@ IMG_CACHE = Path(BASE_DIR, "image_cache")
 
 BASE_GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"
 
-LOG_FILE_NAME = "friendo.log"
+LOG_FILE_PATH = Path(BASE_DIR, "logs")
 
-API_COGS = ['events', 'memes']
+API_COGS = ["events", "memes"]
