@@ -148,13 +148,11 @@ def setup(bot):
 
 def get_data(method, method2=''):
     """returns the json data from the url, takes in the two pieces of a URL as outlined in the last.fm api docs"""
-
     return json.loads(urllib.request.urlopen("http://ws.audioscrobbler.com/2.0/?method="+method+"&api_key="+MUSIC_TOKEN+"&format=json"+method2).read().decode())
 
 
 def get_album(album, artist=''):
         """returns the json data for a given album, takes in just an album or album and artist"""
-
         if not artist:
                 album = urllib.parse.quote(album)
                 data = get_data('album.search&album='+album)
@@ -175,27 +173,24 @@ def get_artist(artist):
 
 
 def get_track(track, artist=''):
-        """returns info about  a specific song/track takes in just a track or artist and track"""
-
+        """Returns info about  a specific song/track takes in just a track or artist and track."""
         artist = urllib.parse.quote(artist)
         track = urllib.parse.quote(track)
 
         if artist:
-                data = get_data('track.getinfo', '&artist='+artist+'&track='+track)['track']
-                return data
+        	data = get_data('track.getinfo', '&artist='+artist+'&track='+track)['track']
+            return data
         else:
-                artist = get_data('track.search&track='+track)['results']['trackmatches']['track'][0]['artist']
-                track = get_data('track.search&track='+track)['results']['trackmatches']['track'][0]['name']
-                return get_track(track, artist)
+        	artist = get_data('track.search&track='+track)['results']['trackmatches']['track'][0]['artist']
+          	track = get_data('track.search&track='+track)['results']['trackmatches']['track'][0]['name']
+     	    return get_track(track, artist)
 
 
 def top_tracks():
-        """returns data of the top songs on the charts, requires no args"""
-
+        """Returns data of the top songs on the charts, requires no args."""
         output = []
         for x in range(10):
-                output.append(x * 2)
-
+        	output.append(x * 2)
         output = [x * 2 for x in range(10)]
 
         data = get_data('chart.gettoptracks')['tracks']['track']
@@ -204,9 +199,8 @@ def top_tracks():
 
 
 def top_artists():
-    """returns data of the top artists takes in no args"""
-
+    """Returns data of the top artists takes in no args."""
     data = get_data('chart.gettopartists')['artists']['artist']
     artists = [f for f in data]
-
+    
     return artists
