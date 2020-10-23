@@ -12,7 +12,7 @@ MEME_PASSWORD = os.environ.get("MEME_PASSWORD")
 # event api key
 EVENT_API_KEY = os.environ.get("EVENT_API_KEY")
 
-#LastFM Api Key
+# LastFM Api Key
 MUSIC_TOKEN = os.environ.get("MUSIC_TOKEN")
 
 COMMAND_PREFIX = "."
@@ -28,6 +28,6 @@ IMG_CACHE = Path(BASE_DIR, "image_cache")
 BASE_GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"
 
 
-LOG_FILE_NAME = "friendo.log"
+LOG_FILE_PATH = Path(BASE_DIR, "logs")
 
-API_COGS = ['events', 'memes']
+API_COGS = ["events", "memes"]
