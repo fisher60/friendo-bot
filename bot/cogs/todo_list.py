@@ -11,7 +11,7 @@ from discord import Embed, Colour
 async def update_of_todos(ctx, todos):
     """This will create a todo list from todos"""
 
-    todos = [t.strip() for t in todos.split(",") if t.strip() != ""]
+    todos = [t.strip() for t in todos.split("|") if t.strip() != ""]
 
     if Path(f"{BASE_DIR}/todo_list_data.json").is_file():  # Checks file if it exists
         print("File exists")
@@ -78,7 +78,7 @@ async def deletion_of_todos(
 ):  # In this function, todos here refers to keys in the dictionary.
     """This will delete some todos using specified keys"""
 
-    k = [c.strip().rstrip() for c in keys_to_delete.split(",") if c.strip() != ""]
+    k = [c.strip().rstrip() for c in keys_to_delete.split("|") if c.strip() != ""]
     if Path(f"{BASE_DIR}/todo_list_data.json").is_file():
         print("File exists")
         if (
@@ -166,7 +166,10 @@ class TodoList(Cog):
 
         await self.todo_list_wrapper(ctx=ctx, task_type="todo_list", todos=todos)
 
-    @command(brief="Friendo deletes todos by specified keys")
+    @command(
+        brief="Friendo deletes todos by specified keys, otherwise use `.deletetodos all` as an alternative to `.nuketodos` command.",
+        aliases=["deletetodo", "deletetodos"]
+    )
     async def delete_todos(self, ctx, *, todos=None):
         """Deletes todos from a todo list for the user."""
 
@@ -228,7 +231,7 @@ class TodoList(Cog):
 
     @command(
         brief="Friendo will nuke your whole todo list to emptiness.",
-        aliases=["deletetodos", "nuketodos"],
+        aliases=["deletetodos all", "nuketodos"],
     )
     async def nuke_todos(self, ctx):
         """This will delete the whole todo list of a specific user. Good if user has too many todos."""
