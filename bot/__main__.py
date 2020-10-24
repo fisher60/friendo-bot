@@ -122,4 +122,7 @@ if __name__ == "__main__":
     # load in Todo List command
     bot.load_extension("bot.cogs.todo_list")
 
+    # load in wolfram command
+    bot.load_extension("bot.cogs.wolfram")
+
     bot.run(settings.TOKEN)
