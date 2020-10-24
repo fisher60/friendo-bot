@@ -169,6 +169,7 @@ class Utilities(Cog):
         embed_quote = Embed(title=random.choice(lines), color=Colour.green())
         await ctx.send(embed=embed_quote)
 
+
 def setup(bot: Bot) -> None:
     """Load the Utilities cog."""
     bot.add_cog(Utilities(bot))

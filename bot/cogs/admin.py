@@ -3,9 +3,14 @@ Contains all commands relating to admin duties and permissions.
 """
 
 import json
+import logging
 import re
+
 from discord.ext.commands import Bot, Cog, command, check
+
 from bot.settings import BASE_DIR
+
+logger = logging.getLogger(__name__)
 
 
 def is_admin():
@@ -44,7 +49,7 @@ class AdminCommands(Cog):
 
         msg = "Mr. Stark, I don't feel so good. . ."
         await ctx.send(msg)
-        print("Closing Client...")
+        logger.info("Closing Client...")
         await self.bot.logout()
 
     @command(name="createadmin", brief="gives the @mention user admin permissions")
