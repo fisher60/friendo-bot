@@ -62,3 +62,4 @@ class Wolfram(commands.Cog):
 def setup(bot):
     """sets up the cog"""
     bot.add_cog(Wolfram(bot))
+    
