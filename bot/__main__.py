@@ -14,7 +14,7 @@ if __name__ == "__main__":
         char_repeat = 20
         embed = discord.Embed(
             title=f"{'-' * (char_repeat//2)}Friendo_Bot{'-' * (char_repeat//2)}",
-            url="https://github.com/Aravindha1234u/Friendo_Bot",
+            url=settings.BASE_GITHUB_REPO,
             color=0x1C1C1C,
         )
         embed.set_thumbnail(
