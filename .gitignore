@@ -7,3 +7,4 @@ image_cache/
 meme_list.json
 .vscode/
 todo_list_data.json
+*.log

@@ -116,6 +116,9 @@ if __name__ == "__main__":
     # load in Fun commands
     bot.load_extension("bot.cogs.fun")
 
+    # load in randomcase command
+    bot.load_extension("bot.cogs.randomcase")
+
     # load in Event command
     bot.load_extension("bot.cogs.events")
 
@@ -124,5 +127,8 @@ if __name__ == "__main__":
 
     # load in wolfram command
     bot.load_extension("bot.cogs.wolfram")
+    
+    # load covid stats
+    bot.load_extension("bot.cogs.covid_stats")
 
     bot.run(settings.TOKEN)

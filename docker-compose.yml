@@ -4,6 +4,10 @@ services:
     bot:
         build:
             context: .
-            dockerfile: DockerFile
+            dockerfile: Dockerfile
         tty: true
         env_file: bot.env
+        volumes:
+        - ./logs:/app/bot/logs
+volumes:
+  logs:

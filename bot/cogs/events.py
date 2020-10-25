@@ -1,8 +1,12 @@
 """Commands for using the events module"""
+import logging
+
 from discord.ext.commands import Bot, Cog, command, group
 import discord
 from bot.events_api import Event
 import json
+
+logger = logging.getLogger(__name__)
 
 
 class Events(Cog):
@@ -16,7 +20,7 @@ class Events(Cog):
 
     @Cog.listener()
     async def on_ready(self):
-        print("events cog has been loaded")
+        logger.info("events cog has been loaded")
 
     @group(
         brief=('Event command. Usage: `.events show "[*args]"`'),

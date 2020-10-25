@@ -23,3 +23,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMG_CACHE = Path(BASE_DIR, "image_cache")
 
 BASE_GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"
+
+LOG_FILE_PATH = Path(BASE_DIR, "logs")
+
+API_COGS = ["events", "memes"]
