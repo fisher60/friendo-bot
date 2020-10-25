@@ -16,7 +16,7 @@ class Wolfram(commands.Cog):
 
     # wolfram command, takes in a search and gives the result
     # PS, I didn't totally steal it from seasonal bot
-    @commands.command(brief="Takes in a wolfram search and displays the result, Usage-> `.wolfram [query]`")
+    @commands.command(brief="Takes in a wolfram search and displays the result", usage=".wolfram [query]")
     async def wolfram(self, ctx, *, query):
 
         url_str = parse.urlencode({
@@ -38,10 +38,12 @@ class Wolfram(commands.Cog):
                     if status == 501:
                         message = "Failed to get response"
                         footer = ""
+                        color = discord.Color.red()
                         
                     elif status == 400:
                         message = "No input found"
                         footer = ""
+                        
                         
                     elif status == 403:
                         message = "Wolfram API key is invalid or missing."
@@ -50,10 +52,11 @@ class Wolfram(commands.Cog):
                     else:
                         message = ""
                         footer = "View original for a bigger picture."
+                        color = discord.Colour.orange()
                         
                     
 
-                    final_emb = discord.Embed(title=message)
+                    final_emb = discord.Embed(title=message, color=color)
                     final_emb.set_image(url=image_url)
                     final_emb.set_footer(text=footer)
                     
