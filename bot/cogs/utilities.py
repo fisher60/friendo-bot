@@ -1,43 +1,51 @@
-"""Commands that provide some sort of service to a user."""
-import random
 from asyncio import sleep
+from pathlib import Path
+import random
 import subprocess
+from typing import Optional
+
+from discord import Colour, Embed
 from discord.ext import tasks
-from discord.ext.commands import Bot, Cog, command
+from discord.ext.commands import Cog, Context, command
+import yaml
+
 from bot import settings
-from bot.cogs.list_of_quotes import lines
-from discord import Embed, Colour
+from bot.bot import Friendo
+
+with open(Path.cwd() / 'resources' / 'list_of_quotes.yaml', 'r', encoding='utf-8') as f:
+    lines = yaml.load(f, Loader=yaml.FullLoader)['lines']
 
 # Define the time period units user can pass
-VALID_PERIODS = (
-    "s sec secs second seconds m min mins minute minutes h hour hours".split()
-)
+VALID_PERIODS = "s sec secs second seconds m min mins minute minutes h hour hours".split()
 
 
-def convert_time(time, period) -> int:
-    """Converts the given time and period (i.e 10 minutes) to seconds"""
-
+def convert_time(time: str, period: str) -> Optional[int]:
+    """Converts the given time and period (i.e 10 minutes) to seconds."""
     try:
         # Strip at most one trailing s (if the string is not just "s")
         # Using rstrip() would let people enter "sss" which would return ""
         if len(period) > 1 and period[-1] == "s":
             period = period[:-1]
+
         time = int(time)
+
         if period in ("s", "sec", "second"):
             return time
+
         if period in ("m", "min", "minute"):
             return time * 60
+
         if period in ("h", "hour"):
             return time * (60 ** 2)
+
     except ValueError:
         pass
-    return None
 
 
 class Utilities(Cog):
     """Simple, useful commands that offer some sort of service or benefit to users."""
 
-    def __init__(self, bot: Bot):
+    def __init__(self, bot: Friendo) -> None:
         self.bot = bot
 
         self.drink_tasks = {}
@@ -45,10 +53,15 @@ class Utilities(Cog):
         self.reminder_limit = 1
 
     async def reminder_wrapper(
-        self, time, period, ctx, msg="Reminder!", task_type="reminder", reason=None
-    ):
-        """Wrapper function for reminders to allow the task to be created on function call"""
-
+            self,
+            time: str,
+            period: str,
+            ctx: Context,
+            msg: str = "Reminder!",
+            task_type: str = "reminder",
+            reason: str = None
+    ) -> None:
+        """Wrapper function for reminders to allow the task to be created on function call."""
         seconds = convert_time(time, period)
 
         if task_type == "drink":
@@ -57,27 +70,30 @@ class Utilities(Cog):
             self.reminder_tasks[ctx.author.id] += 1
 
         @tasks.loop(count=1)
-        async def create_reminder():
-            """sets a delay for the reminder to complete"""
-
+        async def create_reminder() -> None:
+            """Sets a delay for the reminder to complete."""
             await sleep(seconds)
 
         @create_reminder.after_loop
-        async def after_create_reminder():
+        async def after_create_reminder() -> None:
             """
             After the delay is complete, this function will execute.
-            Used for both regular reminders and the special 'drink' reminder\
-            """
 
+            Used for both regular reminders and the special 'drink' reminder.
+            """
             completion_message = msg
+
             if task_type == "drink":
                 if self.drink_tasks[ctx.author.id] > 0:
                     await ctx.send(completion_message)
+
                 self.drink_tasks[ctx.author.id] -= 1
+
             elif task_type == "reminder":
                 completion_message = (
                     f"{ctx.author.mention}, Reminder for: {reason if reason else ''}"
                 )
+
             if self.reminder_tasks[ctx.author.id] > 0:
                 self.reminder_tasks[ctx.author.id] -= 1
                 await ctx.send(completion_message)
@@ -90,23 +106,18 @@ class Utilities(Cog):
             await ctx.send(msg)
 
     @command(brief="Returns Friendo's Version")
-    async def version(self, ctx):
+    async def version(self, ctx: Context) -> str:
         """Creates a version number from settings.VERSION and most recent commit hash."""
-
-        commit_hash = (
-            subprocess.check_output(["git", "rev-parse", "HEAD"])
-            .strip()
-            .decode("ascii")
-        )
+        commit_hash = (subprocess.check_output(["git", "rev-parse", "HEAD"]).strip().decode("ascii"))
         msg = f"Version is {settings.VERSION}{commit_hash[-4:]}"
 
         await ctx.send(msg)
+
         return msg
 
     @command(brief="[number] [unit (seconds/minutes/hours)] [reason for reminder]")
-    async def reminder(self, ctx, time, period="minutes", *, reason=None):
-        """creates a reminder for the user"""
-
+    async def reminder(self, ctx: Context, time: str, period: str = "minutes", *, reason: str = None) -> None:
+        """Creates a reminder for the user."""
         reason = reason if reason else "nothing"
 
         if ctx.author.id not in self.reminder_tasks:
@@ -127,49 +138,52 @@ class Utilities(Cog):
             )
 
     @command(brief="Starts a 10 minute drink session to stay hydrated")
-    async def drink(self, ctx):
-        """
-        Sets multiple reminders for a user to remind them to drink water and pace their drinking.
-        """
+    async def drink(self, ctx: Context) -> None:
+        """Sets multiple reminders for a user to remind them to drink water and pace their drinking."""
         if ctx.author.id not in self.drink_tasks:
             self.drink_tasks[ctx.author.id] = 0
+
         if self.drink_tasks[ctx.author.id] < 1:
             await ctx.send(f"{ctx.author.mention} I got you, mate.")
+
             base_msg = f"OY! {ctx.author.mention} drink some water, mate."
+
             await self.reminder_wrapper(
                 ctx=ctx,
-                time=5,
+                time='5',
                 period="minutes",
                 msg=base_msg,
                 task_type="drink",
                 reason="drinking",
             )
+
             await self.reminder_wrapper(
                 ctx=ctx,
-                time=10,
+                time='10',
                 period="minutes",
-                msg=base_msg
-                + "\n\nYou can run this command and have another if you'd like.",
+                msg=base_msg + "\n\nYou can run this command and have another if you'd like.",
                 task_type="drink",
                 reason="drinking",
             )
+
         else:
             msg = f"{ctx.author.mention} You are already drinking!"
+
             await ctx.send(msg)
 
     @command(brief="Shows the latency between Friendo and the Discord API")
-    async def ping(self, ctx):
+    async def ping(self, ctx: Context) -> None:
         """Sends the ping between the bot and the discord API."""
         await ctx.send(f"Ping is {round(self.bot.latency * 1000)}ms")
-        return self.bot.latency
 
     @command(brief="Shows quotes", name="quote")
-    async def quotes(self, ctx):
-        """Chooses between a list of quotes"""
+    async def quotes(self, ctx: Context) -> None:
+        """Chooses between a list of quotes."""
         embed_quote = Embed(title=random.choice(lines), color=Colour.green())
+
         await ctx.send(embed=embed_quote)
 
 
-def setup(bot: Bot) -> None:
+def setup(bot: Friendo) -> None:
     """Load the Utilities cog."""
     bot.add_cog(Utilities(bot))
