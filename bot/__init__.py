@@ -4,10 +4,11 @@ import logging
 import os
 from pathlib import Path
 
-from .settings import IMG_CACHE, LOG_FILE_PATH
+LOG_FILE_PATH = Path.cwd() / 'logs'
+IMG_CACHE = Path.cwd() / 'tmp'
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
 
 if not os.path.exists(LOG_FILE_PATH):
     os.makedirs(LOG_FILE_PATH)
@@ -20,9 +21,9 @@ FILE_HANDLER.setFormatter(
     logging.Formatter("%(levelname)s:%(asctime)s:%(name)s: %(message)s")
 )
 
-logger.addHandler(FILE_HANDLER)
+log.addHandler(FILE_HANDLER)
 
-logger.info("Cleaning out image_cache")
+log.info("Cleaning out image_cache")
 
 img_dir = os.listdir(IMG_CACHE)
 for file in img_dir:
