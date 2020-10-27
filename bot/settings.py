@@ -1,29 +1,17 @@
-"""Constants for the bot."""
+from os import environ
 
-import os
-from pathlib import Path
+TOKEN = environ.get("FRIENDO_TOKEN")
 
-TOKEN = os.environ.get("FRIENDO_TOKEN")
+MEME_USERNAME = environ.get("MEME_USERNAME")
 
-MEME_USERNAME = os.environ.get("MEME_USERNAME")
+MEME_PASSWORD = environ.get("MEME_PASSWORD")
 
-MEME_PASSWORD = os.environ.get("MEME_PASSWORD")
+EVENT_API_KEY = environ.get("EVENT_API_KEY")
 
-# event api key
-EVENT_API_KEY = os.environ.get("EVENT_API_KEY")
+COMMAND_PREFIX = environ.get("COMMAND_PREFIX", ".")
 
-COMMAND_PREFIX = "."
+VERSION = "1.2"
 
-VERSION = "1.2."
-
-NAME = "Friendo"
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-IMG_CACHE = Path(BASE_DIR, "image_cache")
-
-BASE_GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"
-
-LOG_FILE_PATH = Path(BASE_DIR, "logs")
+GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"
 
 API_COGS = ["events", "memes"]
