@@ -4,9 +4,10 @@ import random
 from discord.ext.commands import Bot, Cog, Context, command
 import yaml
 
-with open(Path.cwd() / 'resources' / 'greetings.yaml', 'r', encoding='utf-8') as f:
+
+with open(Path.cwd() / 'bot' / 'resources' / 'greetings.yaml', 'r', encoding='utf-8') as f:
     info = yaml.load(f, Loader=yaml.FullLoader)
-    PRAISE, ROAST = info['(PRAISE'], info['roast']
+    PRAISE, ROAST = info['praise'], info['roast']
 
 
 class Greetings(Cog):

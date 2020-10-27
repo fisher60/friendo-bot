@@ -15,7 +15,7 @@ class Event:
     def __init__(self, bot: Friendo) -> None:
         self.bot = bot
 
-    async def show_events(self, artist: str) -> Optional[Dict[Any]]:
+    async def show_events(self, artist: str) -> Optional[Dict[Any, Any]]:
         """Show an event by requesting from it's webpage."""
         artist_find = "-".join(artist.split(" "))
 

@@ -10,8 +10,13 @@ IMG_CACHE = Path.cwd() / 'tmp'
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 
+# create log directory
 if not os.path.exists(LOG_FILE_PATH):
     os.makedirs(LOG_FILE_PATH)
+
+# create image cache tmp directory
+if not os.path.exists(IMG_CACHE):
+    os.makedirs(IMG_CACHE)
 
 FILE_HANDLER = logging.FileHandler(
     filename=Path(LOG_FILE_PATH, "friendo.log"), encoding="utf-8", mode="w"

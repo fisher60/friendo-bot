@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Union
 from bot.bot import Friendo
 from bot.settings import MEME_PASSWORD, MEME_USERNAME
 
-MEME_DIR = Path.cwd() / 'meme_api' / 'json' / 'meme_list.json'
+MEME_DIR = Path.cwd() / 'bot' / 'meme_api' / 'json' / 'meme_list.json'
 
 log = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class Meme:
         self.user_name = MEME_USERNAME
         self.password = MEME_PASSWORD
 
-    async def generate_meme(self, *, name: str, text: str = None) -> Union[str, Dict[Any]]:
+    async def generate_meme(self, *, name: str, text: str = None) -> str:
         """Creates a meme given the name of a template."""
         data = {"username": self.user_name, "password": self.password}
 
