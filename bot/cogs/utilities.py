@@ -12,7 +12,7 @@ import yaml
 from bot import settings
 from bot.bot import Friendo
 
-with open(Path.cwd() / 'resources' / 'list_of_quotes.yaml', 'r', encoding='utf-8') as f:
+with open(Path.cwd() / 'bot' / 'resources' / 'list_of_quotes.yaml', 'r', encoding='utf-8') as f:
     lines = yaml.load(f, Loader=yaml.FullLoader)['lines']
 
 # Define the time period units user can pass

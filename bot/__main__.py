@@ -4,6 +4,9 @@ from bot.bot import Friendo
 if __name__ == "__main__":
     bot = Friendo(command_prefix=settings.COMMAND_PREFIX, help_command=None)
 
+    # load help command
+    bot.load_extension("bot.cogs.help")
+
     # load in basic commands
     bot.load_extension("bot.cogs.greetings")
     bot.load_extension("bot.cogs.utilities")
@@ -17,12 +20,6 @@ if __name__ == "__main__":
 
     # load in Admin commands
     bot.load_extension("bot.cogs.admin")
-
-    # load in Trivia commands
-    bot.load_extension("bot.cogs.trivia")
-
-    # load in weather command
-    bot.load_extension("bot.cogs.weather")
 
     # load in Fun commands
     bot.load_extension("bot.cogs.fun")
