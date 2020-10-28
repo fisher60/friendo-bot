@@ -17,7 +17,7 @@ def is_admin() -> Callable:
 
     def predicate(ctx: Context) -> bool:
         """Opening the admin json config file."""
-        with open(Path.cwd() / "save_data.json", "r") as file:
+        with open(Path.cwd() / "bot" / "save_data.JSON", "r") as file:
             save_data = json.load(file)
 
         return str(ctx.message.author.id) in save_data["admins"]

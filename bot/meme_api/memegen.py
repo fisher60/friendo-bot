@@ -1,7 +1,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import List
 
 from bot.bot import Friendo
 from bot.settings import MEME_PASSWORD, MEME_USERNAME
