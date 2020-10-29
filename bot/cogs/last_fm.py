@@ -1,9 +1,8 @@
-import json
-import urllib
 import discord
-from bot.settings import MUSIC_TOKEN
+import urllib
+import json
 from discord.ext import commands
-
+MUSIC_TOKEN = '386e76f571fd03ac5e56501fe05db36a'
 
 class MusicCog(commands.Cog):
     """
@@ -125,7 +124,7 @@ class MusicCog(commands.Cog):
         data = top_tracks()
         embed = discord.Embed(title='Top 10 Tracks', url='https://www.last.fm/charts')
         for count, song in enumerate(data[:10], 1):
-                embed.add_field(name=count, value=f"{song['name']} by {song['artist']['name']}", inline=False)
+                embed.add_field(name=str(count), value=f"{song['name']} by {song['artist']['name']}", inline=False)
         await ctx.send(embed=embed)
 
     @commands.command(
@@ -137,21 +136,15 @@ class MusicCog(commands.Cog):
         data = top_artists()
         embed = discord.Embed(title='Top 10 Artists', url='https://www.last.fm/charts')
         for count, artist in enumerate(data[:10], 1):
-                embed.add_field(name=count, value=artist['name'], inline=False)
+                embed.add_field(name=str(count), value=artist['name'], inline=False)
         await ctx.send(embed=embed)
 
-
-def setup(bot):
-    "Imports the cog"
-    bot.add_cog(MusicCog(bot))
-
-
-def get_data(method, method2=''):
+def get_data(url_data1:str, url_data2:str=''):
     """returns the json data from the url, takes in the two pieces of a URL as outlined in the last.fm api docs"""
-    return json.loads(urllib.request.urlopen("http://ws.audioscrobbler.com/2.0/?method="+method+"&api_key="+MUSIC_TOKEN+"&format=json"+method2).read().decode())
+    return json.loads(urllib.request.urlopen("http://ws.audioscrobbler.com/2.0/?method="+url_data1+"&api_key="+MUSIC_TOKEN+"&format=json"+url_data2).read().decode())
 
 
-def get_album(album, artist=''):
+def get_album(album:str, artist:str=''):
         """returns the json data for a given album, takes in just an album or album and artist"""
         if not artist:
                 album = urllib.parse.quote(album)
@@ -165,42 +158,40 @@ def get_album(album, artist=''):
                 return get_data('album.getinfo', '&artist='+artist+'&album='+album)
 
 
-def get_artist(artist):
+def get_artist(artist:str):
     """returns the json data for a given artist, takes in artist name"""
 
     artist = urllib.parse.quote(artist)
     return get_data('artist.getinfo&artist='+artist)['artist']
 
 
-def get_track(track, artist=''):
-        """Returns info about  a specific song/track takes in just a track or artist and track."""
+def get_track(track:str, artist:str=''):
+        """Returns info about a specific song/track takes in just a track or artist and track."""
         artist = urllib.parse.quote(artist)
         track = urllib.parse.quote(track)
 
         if artist:
-        	data = get_data('track.getinfo', '&artist='+artist+'&track='+track)['track']
-            return data
+        	return get_data('track.getinfo', '&artist='+artist+'&track='+track)['track']
         else:
-        	artist = get_data('track.search&track='+track)['results']['trackmatches']['track'][0]['artist']
-          	track = get_data('track.search&track='+track)['results']['trackmatches']['track'][0]['name']
-     	    return get_track(track, artist)
+          artist = get_data('track.search&track='+track)['results']['trackmatches']['track'][0]['artist']
+          track = get_data('track.search&track='+track)['results']['trackmatches']['track'][0]['name']
+          return get_track(track, artist)
 
 
 def top_tracks():
-        """Returns data of the top songs on the charts, requires no args."""
-        output = []
-        for x in range(10):
-        	output.append(x * 2)
-        output = [x * 2 for x in range(10)]
+        """Returns data of the top songs on the charts"""
 
         data = get_data('chart.gettoptracks')['tracks']['track']
-        songs = [f for f in data]
-        return songs
+        return [f for f in data]
 
 
 def top_artists():
-    """Returns data of the top artists takes in no args."""
+    """Returns data of the top artists"""
     data = get_data('chart.gettopartists')['artists']['artist']
-    artists = [f for f in data]
-    
-    return artists
+    return [f for f in data]
+
+
+def setup(bot):
+    "Imports the cog"
+    bot.add_cog(MusicCog(bot))
+
