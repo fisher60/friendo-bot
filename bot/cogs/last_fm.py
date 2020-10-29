@@ -18,6 +18,7 @@ class MusicCog(commands.Cog):
         aliases=['song', 'gets']
     )
     async def getsong(self, ctx, *, args):
+        """Function to return discord embed with song info"""
         try:
             if ', ' in args:
                 args = args.split('; ')
@@ -42,6 +43,7 @@ class MusicCog(commands.Cog):
       aliases=['lyrics', 'getl']
     )
     async def get_lyrics(self, ctx, *, args):
+        """Function to return discord embed with song info and lyrics"""
         try:
                 if ' ; ' in args:
                     args = args.split('; ')
@@ -69,6 +71,7 @@ class MusicCog(commands.Cog):
       aliases=['album', 'getal']
     )
     async def getalbum(self, ctx, *, args):
+        """Function to return discord embed with album info"""
         try:
                 if '; ' in args:
                     args = args.split('; ')
@@ -97,6 +100,7 @@ class MusicCog(commands.Cog):
       aliases=['artist', 'getar']
     )
     async def getartist(self, ctx, *, args):
+        """Function to return discord embed with artist info"""
         try:
                 data = get_artist(args)
                 album_data = get_data('artist.gettopalbums&artist='+urllib.parse.quote(data['name']))['topalbums']['album']
@@ -121,6 +125,7 @@ class MusicCog(commands.Cog):
       aliases=['songs', 'tops']
     )
     async def topsongs(self, ctx):
+        """Function to return discord embed with top chart songs"""
         data = top_tracks()
         embed = discord.Embed(title='Top 10 Tracks', url='https://www.last.fm/charts')
         for count, song in enumerate(data[:10], 1):
@@ -133,6 +138,7 @@ class MusicCog(commands.Cog):
       aliases=['artists', 'topa']
     )
     async def topartists(self, ctx):
+        """Function to return discord embed with top chart artists"""
         data = top_artists()
         embed = discord.Embed(title='Top 10 Artists', url='https://www.last.fm/charts')
         for count, artist in enumerate(data[:10], 1):
@@ -194,4 +200,5 @@ def top_artists():
 def setup(bot):
     "Imports the cog"
     bot.add_cog(MusicCog(bot))
+
 
