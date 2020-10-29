@@ -1,8 +1,8 @@
-import discord
-import urllib
 import json
+import urllib
+import discord
+from bot.settings import MUSIC_TOKEN
 from discord.ext import commands
-MUSIC_TOKEN = '386e76f571fd03ac5e56501fe05db36a'
 
 class MusicCog(commands.Cog):
     """
