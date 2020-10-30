@@ -13,7 +13,7 @@ MEME_PASSWORD = os.environ.get("MEME_PASSWORD")
 EVENT_API_KEY = os.environ.get("EVENT_API_KEY")
 
 # wolfram appid
-APPID = os.environ.get("WOLFRAM_APPID")
+WOLFRAM_APPID = os.environ.get("WOLFRAM_APPID")
 
 COMMAND_PREFIX = "."
 
