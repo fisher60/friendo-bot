@@ -1,13 +1,15 @@
 version: "3.7"
 
 services:
-    bot:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        tty: true
-        env_file: bot.env
-        volumes:
-        - ./logs:/app/bot/logs
-volumes:
-  logs:
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    tty: true
+
+    env_file: bot.env
+
+    volumes:
+      - ./logs:/app/bot/logs
