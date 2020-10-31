@@ -24,6 +24,7 @@ FRIENDO_TOKEN = <your token here>
 MEME_USERNAME = <your imgflip api username>
 MEME_PASSWORD = <your imgflip api password>
 EVENT_API_KEY = <your ticketmaster api key>
+WOLFRAM_APPID = <your wolfram appid>
 ```
 
 ## Dev Installation
