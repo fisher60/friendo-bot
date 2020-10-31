@@ -25,19 +25,24 @@ parser.add_argument(
 
 
 class DisableApi:
-    def __init__(self):
+    """Checks the abilities of an API."""
+
+    def __init__(self) -> None:
         self.args = parser.parse_args()
         # Both enable and disable arguments can be passed
         if self.args.enable and self.args.disable:
             raise ValueError("Cannot pass both enable and disable")
 
-    def get_no_api(self):
+    def get_no_api(self) -> bool:
+        """Sees if there's an API at all."""
         return self.args.no_api
 
-    def get_enable(self):
+    def get_enable(self) -> bool:
+        """Is the API enabled?"""
         return self.args.enable
 
-    def get_disable(self):
+    def get_disable(self) -> bool:
+        """Is the API disabled?"""
         return self.args.disable
 
 
