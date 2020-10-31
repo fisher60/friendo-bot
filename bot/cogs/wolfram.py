@@ -7,12 +7,13 @@ from bot.settings import WOLFRAM_APPID
 
 class Wolfram(commands.Cog):
     """Command for Wolfram search."""
-    def __init__(self, bot):
+
+    def __init__(self, bot: commands.bot):
         self.bot = bot
         self.query = "http://api.wolframalpha.com/v2/{request}?{data}"
-        
+
     @commands.command(brief="Takes in a wolfram search and displays the result", usage=".wolfram [query]")
-    async def wolfram(self, ctx, *, query):
+    async def wolfram(self, ctx: commands.context, *, query: str) -> None:
         """Wolfram command, takes in a search and gives the result."""
         url_str = parse.urlencode({
             "i": query,
@@ -32,15 +33,14 @@ class Wolfram(commands.Cog):
                 message = ""
                 footer = "View original for a bigger picture."
                 color = discord.Colour.orange()
-                                
+
                 final_emb = discord.Embed(title=message, color=color)
                 final_emb.set_image(url=image_url)
                 final_emb.set_footer(text=footer)
- 
+
                 await ctx.send(embed=final_emb, file=image_file)
 
 
-def setup(bot):
+def setup(bot: commands.bot) -> None:
     """Sets up the Wolfram cog."""
     bot.add_cog(Wolfram(bot))
-    

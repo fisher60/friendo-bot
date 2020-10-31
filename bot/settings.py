@@ -10,9 +10,7 @@ EVENT_API_KEY = environ.get("EVENT_API_KEY")
 
 COMMAND_PREFIX = environ.get("COMMAND_PREFIX", ".")
 
-WOLFRAM_APPID = os.environ.get("WOLFRAM_APPID")
-
-COMMAND_PREFIX = "."
+WOLFRAM_APPID = environ.get("WOLFRAM_APPID")
 
 VERSION = "1.2"
 

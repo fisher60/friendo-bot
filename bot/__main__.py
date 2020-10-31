@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     # load in wolfram command
     bot.load_extension("bot.cogs.wolfram")
-    
+
     # load covid stats
     bot.load_extension("bot.cogs.covid_stats")
 
