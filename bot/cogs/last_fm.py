@@ -172,33 +172,29 @@ async def get_artist(artist:str):
 
 
 async def get_track(track:str, artist:str=''):
-        """Returns info about a specific song/track takes in just a track or artist and track."""
-        artist = urllib.parse.quote(artist)
-        track = urllib.parse.quote(track)
+    """Returns info about a specific song/track takes in just a track or artist and track."""
+    artist = urllib.parse.quote(artist)
+    track = urllib.parse.quote(track)
 
         if artist:
-        	return (await get_data('track.getinfo', '&artist='+artist+'&track='+track))['track']
+            return (await get_data('track.getinfo', '&artist='+artist+'&track='+track))['track']
         else:
-          artist = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['artist']
-          track = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['name']
-          return await get_track(track, artist)
-
+            artist = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['artist']
+            track = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['name']
+            return await get_track(track, artist)
 
 async def top_tracks():
-        """Returns data of the top songs on the charts"""
-
-        data = (await get_data('chart.gettoptracks'))['tracks']['track']
-        return [f for f in data]
+    """Returns data of the top songs on the charts."""
+    data = (await get_data('chart.gettoptracks'))['tracks']['track']
+    return [f for f in data]
 
 
 async def top_artists():
-    """Returns data of the top artists"""
+    """Returns data of the top artists."""
     data = (await get_data('chart.gettopartists'))['artists']['artist']
     return [f for f in data]
 
 
 def setup(bot):
-    "Imports the cog"
+    """Imports the cog."""
     bot.add_cog(MusicCog(bot))
-
-
