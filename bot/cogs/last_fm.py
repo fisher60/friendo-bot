@@ -3,17 +3,17 @@ import urllib
 import aiohttp
 from discord.ext import commands
 from bot.settings import MUSIC_TOKEN
-from discord.ext import commands
 
 
 class MusicCog(commands.Cog):
     """Commands for song searching."""
+    
     def __init__(self, bot):
         self.bot = bot
    
     @commands.command(
         name="getsong",
-         brief="a command to get song lyrics and info",
+        brief="a command to get song lyrics and info",
         description="takes in song by itself or song followed by artist seperated by ; ",
         aliases=['song', 'gets', 'getlyrics', 'getl']
     )
@@ -148,17 +148,17 @@ async def get_data(url_data1: str, url_data2: str = ''):
 
 
 async def get_album(album: str, artist: str = ''):
-        """Returns the json data for a given album, takes in just an album or album and artist."""
-        if not artist:
-            album = urllib.parse.quote(album)
-            data = (await get_data('album.search&album='+album))
-            album = data['results']['albummatches']['album'][0]['name']
-            artist = data['results']['albummatches']['album'][0]['artist']
-            return await get_album(album, artist)
-        else:
-            artist = urllib.parse.quote(artist)
-            album = urllib.parse.quote(album)
-            return await get_data('album.getinfo', '&artist='+artist+'&album='+album)
+    """Returns the json data for a given album, takes in just an album or album and artist."""
+    if not artist:
+        album = urllib.parse.quote(album)
+        data = (await get_data('album.search&album='+album))
+        album = data['results']['albummatches']['album'][0]['name']
+        artist = data['results']['albummatches']['album'][0]['artist']
+        return await get_album(album, artist)
+    else:
+        artist = urllib.parse.quote(artist)
+        album = urllib.parse.quote(album)
+        return await get_data('album.getinfo', '&artist='+artist+'&album='+album)
 
 
 async def get_artist(artist: str):
@@ -167,7 +167,7 @@ async def get_artist(artist: str):
     return (await get_data('artist.getinfo&artist='+artist))['artist']
 
 
-async def get_track(track: str, artist :str = ''):
+async def get_track(track: str, artist: str = ''):
     """Returns info about a specific song/track takes in just a track or artist and track."""
     artist = urllib.parse.quote(artist)
     track = urllib.parse.quote(track)
