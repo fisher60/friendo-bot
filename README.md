@@ -27,7 +27,8 @@ MEME_USERNAME = <your imgflip api username>
 MEME_PASSWORD = <your imgflip api password>
 EVENT_API_KEY = <your ticketmaster api key>
 MUSIC_TOKEN = <your Last.fm api key>
-```
+=======
+WOLFRAM_APPID = <your wolfram appid>
 
 ## Dev Installation
 * You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv
