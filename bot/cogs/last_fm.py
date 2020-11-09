@@ -165,23 +165,23 @@ async def get_album(album:str, artist:str=''):
 
 
 async def get_artist(artist:str):
-    """returns the json data for a given artist, takes in artist name"""
+    """Returns the json data for a given artist, takes in artist name."""
 
     artist = urllib.parse.quote(artist)
     return (await get_data('artist.getinfo&artist='+artist))['artist']
 
 
-async def get_track(track:str, artist:str=''):
+async def get_track(track: str, artist: str= ''):
     """Returns info about a specific song/track takes in just a track or artist and track."""
     artist = urllib.parse.quote(artist)
     track = urllib.parse.quote(track)
 
-        if artist:
-            return (await get_data('track.getinfo', '&artist='+artist+'&track='+track))['track']
-        else:
-            artist = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['artist']
-            track = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['name']
-            return await get_track(track, artist)
+    if artist:
+        return (await get_data('track.getinfo', '&artist='+artist+'&track='+track))['track']
+    else:
+        artist = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['artist']
+        track = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['name']
+        return await get_track(track, artist)
 
 async def top_tracks():
     """Returns data of the top songs on the charts."""
