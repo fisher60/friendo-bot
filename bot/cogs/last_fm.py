@@ -1,6 +1,7 @@
-import json
-import urllib
 import discord
+import urllib
+import aiohttp
+from discord.ext import commands
 from bot.settings import MUSIC_TOKEN
 from discord.ext import commands
 
