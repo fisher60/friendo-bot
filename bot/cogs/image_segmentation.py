@@ -1,73 +1,79 @@
-import aiohttp
-import aiofiles
-import discord
-import matplotlib.pyplot as plt
-from cv2 import imread, cvtColor, COLOR_BGR2RGB
-from discord.ext.commands import Bot, Cog, command
 from functools import partial
 from os import remove
 from pathlib import Path
-from skimage.color import rgb2hsv
+from typing import List, Optional
 
-from bot.settings import IMG_CACHE
+import aiofiles
+from cv2 import COLOR_BGR2RGB, cvtColor, imread
+import discord
+from discord.ext.commands import Cog, Context, command
+import matplotlib.pyplot as plt
+from skimage.color import rgb2hsv
+from numpy import ndarray
+
+from bot.bot import Friendo
 
 
 class Segmentation(Cog):
     """Commands for returning a segmented image back to a user."""
 
-    def __init__(self, bot: Bot):
+    def __init__(self, bot: Friendo) -> None:
         self.bot = bot
         self.img_queue = []
 
-    async def download_image(self, url) -> str or None:
+    async def download_image(self, url: str) -> Optional[str]:
         """
-        Download a discord attatchment using the CDN url.
+        Download a discord attachment using the CDN url.
 
         Returns the file name if successful, else it returns None.
         """
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                if resp.status == 200:
-                    file_name = f"temp_img_{len(self.img_queue)}.jpg"
-                    self.img_queue.append(file_name)
-                    f = await aiofiles.open(
-                        Path(IMG_CACHE, file_name),
-                        mode="wb",
-                    )
-                    await f.write(await resp.read())
-                    await f.close()
+        async with self.bot.session.get(url) as resp:
+            if resp.status == 200:
+                file_name = f"temp_img_{len(self.img_queue)}.jpg"
+                self.img_queue.append(file_name)
+                f = await aiofiles.open(
+                    Path.cwd() / file_name,
+                    mode="wb",
+                )
+                await f.write(await resp.read())
+                await f.close()
 
-                    return file_name
-
-                else:
-                    return None
+                return file_name
 
     @staticmethod
-    def delete_image(file_name):
-        remove(Path(IMG_CACHE, file_name))
+    def delete_image(file_name: str) -> None:
+        """Deletes an image."""
+        remove(Path.cwd() / file_name)
 
     @staticmethod
-    def save_image(file_name, array):
-        plt.imsave(Path(IMG_CACHE, file_name), array)
+    def save_image(file_name: str, array: List[str]) -> None:
+        """Saves the image from the MatPlotLib plot."""
+        plt.imsave(Path.cwd() / file_name, array)
 
     @staticmethod
-    def hsv_image(file_name: str):
-        rgb_img = cvtColor(imread(str(Path(IMG_CACHE, file_name))), COLOR_BGR2RGB)
+    def hsv_image(file_name: str) -> ndarray:
+        """Converts color data of a image."""
+        rgb_img = cvtColor(imread(str(Path.cwd() / file_name)), COLOR_BGR2RGB)
+
         return rgb2hsv(rgb_img)
 
     def hue_image(self, file_name: str) -> str:
+        """Change hue of image."""
         hsv_img = self.hsv_image(file_name)
+
         self.save_image(file_name, hsv_img[:, :, 0])
+
         return file_name
 
     @command(
         brief="Send an image and get a segmented one back",
         description="Invoke this command and specify your options to get a segmented image back.",
     )
-    async def segment(self, ctx, img_format=None) -> None:
+    async def segment(self, ctx: Context, img_format: str = None) -> None:
         """
-        Takes a discord attatchment and an optional argument 'img_format'.
-        Sends the same attatchment in the specified format
+        Takes a discord attachment and an optional argument 'img_format'.
+
+        Sends the same attachment in the specified format.
         """
         processed_image = None
         attachments = ctx.message.attachments
@@ -86,7 +92,7 @@ class Segmentation(Cog):
 
                 # Input was valid
                 if processed_image:
-                    output_image = discord.File(Path(IMG_CACHE, processed_image))
+                    output_image = discord.File(Path.cwd() / processed_image)
                     await ctx.send(file=output_image)
 
                 self.delete_image(file_name)
@@ -95,11 +101,11 @@ class Segmentation(Cog):
             else:
                 await ctx.send("Image could not be processed")
 
-        # No attatchement
+        # No attachment
         else:
-            await ctx.send("Attatch an image, mate.")
+            await ctx.send("Attach an image, mate.")
 
 
-def setup(bot: Bot) -> None:
+def setup(bot: Friendo) -> None:
     """Load the Image Segmentation cog."""
     bot.add_cog(Segmentation(bot))

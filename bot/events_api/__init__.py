@@ -1,21 +1,27 @@
-import json
+import logging
+from typing import Any, Dict, Optional
+
+from bot.bot import Friendo
 from bot.settings import EVENT_API_KEY
+
+logger = logging.getLogger(__name__)
+
+EVENT_URL = "https://app.ticketmaster.com/discovery/v2/events.json?"
 
 
 class Event:
-    def __init__(self, bot):
-        self.bot = bot
-        # event api url
-        self.event_url = "https://app.ticketmaster.com/discovery/v2/events.json?"
+    """An event for the event API."""
 
-    async def show_events(self, artist):
-        artist_find = ("-").join(artist.split(" "))
-        print(artist_find)
-        self.event_url = f"https://app.ticketmaster.com/discovery/v2/events.json?keyword={artist_find}&apikey={EVENT_API_KEY}"
-        print(self.event_url)
-        async with self.bot.session.get(self.event_url) as res:
+    def __init__(self, bot: Friendo) -> None:
+        self.bot = bot
+
+    async def show_events(self, artist: str) -> Optional[Dict[Any, Any]]:
+        """Show an event by requesting from it's webpage."""
+        artist_find = "-".join(artist.split(" "))
+
+        event_url = f"{EVENT_URL}keyword={artist_find}&apikey={EVENT_API_KEY}"
+
+        async with self.bot.session.get(event_url) as res:
             if res.status == 200:
                 event_json = await res.json()
                 return event_json
-            else:
-                return 0

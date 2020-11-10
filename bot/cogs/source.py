@@ -1,24 +1,23 @@
-"""Command to get a link to the source repo for this project."""
-
-from discord import Embed, Colour
-from discord.ext import commands
 from typing import Union
+
+from discord import Colour, Embed
+from discord.ext import commands as comms
+
 from bot import settings
 
-
 SourceType = Union[
-    commands.HelpCommand,
-    commands.Command,
-    commands.Cog,
+    comms.HelpCommand,
+    comms.Command,
+    comms.Cog,
     str,
-    commands.ExtensionNotLoaded,
+    comms.ExtensionNotLoaded,
 ]
 
 
-class SourceConverter(commands.Converter):
+class SourceConverter(comms.Converter):
     """Convert an argument into a help command, tag, command, or cog."""
 
-    async def convert(self, ctx: commands.Context, argument: str) -> SourceType:
+    async def convert(self, ctx: comms.Context, argument: str) -> SourceType:
         """Convert argument into source object."""
         if argument.lower().startswith("help"):
             return ctx.bot.help_command
@@ -39,19 +38,19 @@ class SourceConverter(commands.Converter):
         elif argument.lower() in tags_cog._cache:
             return argument.lower()
 
-        raise commands.BadArgument(
+        raise comms.BadArgument(
             f"Unable to convert `{argument}` to valid command{', tag,' if show_tag else ''} or Cog."
         )
 
 
-class Source(commands.Cog):
+class Source(comms.Cog):
     """Command to send the source (github repo) of a command."""
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: comms.Bot) -> None:
         self.bot = bot
 
-    @commands.command(name="source", brief="Send a link to Friendo's GitHub repo")
-    async def send_source(self, ctx, arg1=None):
+    @comms.command(name="source", brief="Send a link to Friendo's GitHub repo")
+    async def send_source(self, ctx: comms.Context, arg1: str = None) -> None:
         """Send the source url in an embed."""
         src_conv = SourceConverter()
         if arg1:
@@ -64,19 +63,19 @@ class Source(commands.Cog):
                 )
                 embed.add_field(
                     name="Repository",
-                    value=f"[Go To GitHub]({settings.BASE_GITHUB_REPO})",
+                    value=f"[Go To GitHub]({settings.GITHUB_REPO})",
                 )
                 await ctx.send(embed=embed)
-            except commands.BadArgument:
+            except comms.BadArgument:
                 await ctx.send("That command could not be found.")
         else:
             embed = Embed(title="Friendo's GitHub Repo", colour=Colour.blue())
             embed.add_field(
-                name="Repository", value=f"[Go To GitHub]({settings.BASE_GITHUB_REPO})"
+                name="Repository", value=f"[Go To GitHub]({settings.GITHUB_REPO})"
             )
             await ctx.send(embed=embed)
 
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: comms.Bot) -> None:
     """Load the Source cog."""
     bot.add_cog(Source(bot))

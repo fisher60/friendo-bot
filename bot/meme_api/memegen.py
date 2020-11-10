@@ -1,14 +1,20 @@
 import json
+import logging
+from pathlib import Path
+from typing import List
 
-from bot.settings import BASE_DIR, MEME_PASSWORD, MEME_USERNAME
+from bot.bot import Friendo
+from bot.settings import MEME_PASSWORD, MEME_USERNAME
 
-MEME_DIR = f"{BASE_DIR}/meme_api/json/meme_list.json"
+MEME_DIR = Path.cwd() / 'bot' / 'meme_api' / 'json' / 'meme_list.json'
+
+log = logging.getLogger(__name__)
 
 
 class Meme:
     """Pulls meme templates from imgfip api and creates memes."""
 
-    def __init__(self, bot):
+    def __init__(self, bot: Friendo) -> None:
         self.bot = bot
 
         self.gen_meme_url = "https://api.imgflip.com/caption_image"
@@ -22,12 +28,11 @@ class Meme:
         self.user_name = MEME_USERNAME
         self.password = MEME_PASSWORD
 
-    async def generate_meme(self, *, name, text=None):
+    async def generate_meme(self, *, name: str, text: str = None) -> str:
         """Creates a meme given the name of a template."""
         data = {"username": self.user_name, "password": self.password}
 
         if text:
-
             for meme in self.meme_dict:
                 if meme["name"].lower() == name.lower():
                     data["template_id"] = meme["id"]
@@ -43,20 +48,21 @@ class Meme:
                 _json = await resp.json()
                 return _json["data"]["url"]
 
-    async def get_all_memes(self):
+    async def get_all_memes(self) -> None:
         """Gets the names of all available meme templates."""
         async with self.bot.session.get(self.get_all_memes_url) as resp:
             if resp.status == 200:
-                print("updating meme list...")
+                log.info("updating meme list...")
 
                 _json = await resp.json()
 
                 with open(MEME_DIR, "w+") as f:
                     json.dump(_json, f)
-            else:
-                print("Failed to update meme list, aborting...")
 
-    def search_meme_list(self, search_words: list):
+            else:
+                log.info("Failed to update meme list, aborting...")
+
+    def search_meme_list(self, search_words: List[str]) -> str:
         """Checks if the input search_words matches any available meme templates."""
         final_dict = {}
 
@@ -69,8 +75,4 @@ class Meme:
                     final_dict[name] = meme["box_count"]
 
         if len(final_dict) > 0:
-            return "\n".join(
-                [f"Name: {x}, Text Boxes: {final_dict[x]}" for x in final_dict.keys()][
-                    :10
-                ]
-            )
+            return "\n".join([f"Name: {x}, Text Boxes: {final_dict[x]}" for x in final_dict.keys()][:10])
