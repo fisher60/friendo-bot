@@ -5,7 +5,7 @@ from discord.ext import commands
 from bot.settings import MUSIC_TOKEN
 
 
-class MusicCog(commands.Cog):
+class Music(commands.Cog):
     """Commands for song searching."""
 
     def __init__(self, bot: discord.ext.commands.bot.Bot):
@@ -17,14 +17,14 @@ class MusicCog(commands.Cog):
         description="takes in song by itself or song followed by artist seperated by ; ",
         aliases=['song', 'gets', 'getlyrics', 'getl']
     )
-    async def get_lyrics(self, ctx: discord.ext.commands.context.Context, *, args: str) -> None:
+    async def get_lyrics(self, ctx: discord.ext.commands.context.Context, *, song_title: str) -> None:
         """Function to return discord embed with song info and lyrics."""
         try:
-            if ';' in args:
-                args = args.split('; ')
-                data = await get_track(args[0], args[1])
+            if ';' in song_title:
+                song_title = song_title.split('; ')
+                data = await get_track(song_title[0], song_title[1])
             else:
-                data = await get_track(args)
+                data = await get_track(song_title)
             track = urllib.parse.quote(data['name']).lower()
             artist = urllib.parse.quote(data['artist']['name']).lower()
 
@@ -50,8 +50,10 @@ class MusicCog(commands.Cog):
                     embed.add_field(name="\u200b", value=f, inline=False)
             embed.set_thumbnail(url=data['album']['image'][2]['#text'])
             await ctx.send(embed=embed)
-        except IndexError:
-            await ctx.send('Invalid search term, try again')
+        except KeyError:
+            embed = discord.Embed(title="Music Cog", color=discord.Colour.blue())
+            embed.add_field(name="Error", value=f"Could not find song with title {song_title}")
+            await ctx.send(embed=embed)
 
     @commands.command(
         name="getalbum",
@@ -59,29 +61,32 @@ class MusicCog(commands.Cog):
         description="takes in album by itself or album followed by artist seperated by ; ",
         aliases=['album', 'getal']
     )
-    async def getalbum(self, ctx: discord.ext.commands.context.Context, *, args: str) -> None:
+    async def getalbum(self, ctx: discord.ext.commands.context.Context, *, album_title: str) -> None:
         """Function to return discord embed with album info."""
         try:
-            if '; ' in args:
-                args = args.split('; ')
-                data = await get_album(args[0], args[1])
+            if '; ' in album_title:
+                album_title = album_title.split('; ')
+                data = await get_album(album_title[0], album_title[1])
             else:
-                data = await get_album(args)
+                data = await get_album(album_title)
+
             title = f"{data['album']['name']} by {data['album']['artist']}"
             embed = discord.Embed(title=title, url=data['album']['url'])
             embed.add_field(name='Artist', value=data['album']['artist'])
             embed.set_thumbnail(url=data['album']['image'][2]['#text'])
-            try:
-                embed.add_field(name='Release Data', value=data['album']['wiki']['published'], inline=False)
-            except KeyError:
-                pass
-            try:
-                embed.add_field(name='About', value=data['album']['wiki']['summary'].split('<a', 1)[0])
-            except KeyError:
-                pass
+
+            wiki = data['album']['wiki']
+
+            if "published" in wiki.keys():
+                embed.add_field(name='Release Data', value=wiki["published"], inline=False)
+            else:
+                embed.add_field(name='About', value=wiki.split('<a', 1)[0])
             await ctx.send(embed=embed)
-        except IndexError:
-            await ctx.send('Invalid search term, try again')
+
+        except (KeyError, IndexError):
+            embed = discord.Embed(title="Music Cog", color=discord.Colour.blue())
+            embed.add_field(name="Error", value=f"Could not find album with title {album_title}")
+            await ctx.send(embed=embed)
 
     @commands.command(
         name="getartist",
@@ -93,7 +98,7 @@ class MusicCog(commands.Cog):
         """Function to return discord embed with artist info."""
         try:
             data = await get_artist(args)
-            start_data = await get_data('artist.gettopalbums&artist='+urllib.parse.quote(data['name']))
+            start_data = await get_data('artist.gettopalbums&artist=' + urllib.parse.quote(data['name']))
             album_data = start_data['topalbums']['album']
             bio = data['bio']['summary'].split('\n', 2)[0].split('<a', 1)[0]
             if bio == '':
@@ -139,7 +144,6 @@ class MusicCog(commands.Cog):
 
 async def get_data(url_data1: str, url_data2: str = '') -> dict:
     """Returns the json data from the url, takes in the two pieces of a URL from Last.FM API Docs."""
-    data = None
     async with aiohttp.ClientSession() as session:
         url = 'http://ws.audioscrobbler.com/2.0/?method='
         async with session.get(f"{url}{url_data1}&api_key={MUSIC_TOKEN}&format=json{url_data2}") as resp:
@@ -194,4 +198,4 @@ async def top_artists() -> list:
 
 def setup(bot: discord.ext.commands.bot.Bot) -> None:
     """Imports the cog."""
-    bot.add_cog(MusicCog(bot))
+    bot.add_cog(Music(bot))

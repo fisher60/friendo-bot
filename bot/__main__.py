@@ -38,8 +38,8 @@ if __name__ == "__main__":
 
     # load covid stats
     bot.load_extension("bot.cogs.covid_stats")
-    
-    #load music cogs
+
+    # load music cogs
     bot.load_extension("bot.cogs.last_fm")
 
     bot.run(settings.TOKEN)
