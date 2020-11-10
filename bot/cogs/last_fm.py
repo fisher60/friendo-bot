@@ -8,7 +8,7 @@ from bot.settings import MUSIC_TOKEN
 class MusicCog(commands.Cog):
     """Commands for song searching."""
 
-    def __init__(self, bot):
+    def __init__(self, bot: discord.ext.commands.bot.Bot):
         self.bot = bot
 
     @commands.command(
