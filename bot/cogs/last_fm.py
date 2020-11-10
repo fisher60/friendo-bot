@@ -17,7 +17,7 @@ class MusicCog(commands.Cog):
         description="takes in song by itself or song followed by artist seperated by ; ",
         aliases=['song', 'gets', 'getlyrics', 'getl']
     )
-    async def get_lyrics(self, ctx: discord.ext.commands.context.Context, *, args: str):
+    async def get_lyrics(self, ctx: discord.ext.commands.context.Context, *, args: str) -> None:
         """Function to return discord embed with song info and lyrics."""
         try:
             if ';' in args:
@@ -33,9 +33,7 @@ class MusicCog(commands.Cog):
                     lyrics = (await resp.json())['lyrics']
 
             split_lyrics = lyrics.split('\n\n\n')
-            print(split_lyrics)
             lyric_array = [""]
-            print(len(lyric_array))
             count = 0
             for f in split_lyrics:
                 if len(lyric_array[count] + f) <= 256:
@@ -61,7 +59,7 @@ class MusicCog(commands.Cog):
         description="takes in album by itself or album followed by artist seperated by ; ",
         aliases=['album', 'getal']
     )
-    async def getalbum(self, ctx: discord.ext.commands.context.Context, *, args: str):
+    async def getalbum(self, ctx: discord.ext.commands.context.Context, *, args: str) -> None:
         """Function to return discord embed with album info."""
         try:
             if '; ' in args:
@@ -69,8 +67,8 @@ class MusicCog(commands.Cog):
                 data = await get_album(args[0], args[1])
             else:
                 data = await get_album(args)
-            print(data)
-            embed = discord.Embed(title=f"{data['album']['name']} by {data['album']['artist']}", url=data['album']['url'])
+            title = f"{data['album']['name']} by {data['album']['artist']}"
+            embed = discord.Embed(title=title, url=data['album']['url'])
             embed.add_field(name='Artist', value=data['album']['artist'])
             embed.set_thumbnail(url=data['album']['image'][2]['#text'])
             try:
@@ -91,11 +89,12 @@ class MusicCog(commands.Cog):
         description="Takes in just artist name",
         aliases=['artist', 'getar']
     )
-    async def getartist(self, ctx: discord.ext.commands.context.Context, *, args: str):
+    async def getartist(self, ctx: discord.ext.commands.context.Context, *, args: str) -> None:
         """Function to return discord embed with artist info."""
         try:
             data = await get_artist(args)
-            album_data = (await get_data('artist.gettopalbums&artist='+urllib.parse.quote(data['name'])))['topalbums']['album']
+            start_data= await get_data('artist.gettopalbums&artist='+urllib.parse.quote(data['name']))
+            album_data = start_data['topalbums']['album']
             bio = data['bio']['summary'].split('\n', 2)[0].split('<a', 1)[0]
             if bio == '':
                 bio = data['bio']['summary'].split('\n', 2)[1].split('<a', 1)[0]
@@ -116,20 +115,20 @@ class MusicCog(commands.Cog):
         brief="Gets a list of the top songs on the world charts",
         aliases=['songs', 'tops']
     )
-    async def topsongs(self, ctx: discord.ext.commands.context.Context):
+    async def topsongs(self, ctx: discord.ext.commands.context.Context) -> None:
         """Function to return discord embed with top chart songs."""
         data = await top_tracks()
-        embed = discord.Embed(title='Top 10 Tracks', url='https://www.last.fm/charts')
+        em = discord.Embed(title='Top 10 Tracks', url='https://www.last.fm/charts')
         for count, song in enumerate(data[:10], 1):
-            embed.add_field(name=str(count), value=f"{song['name']} by {song['artist']['name']}", inline=False)
-        await ctx.send(embed=embed)
+            em.add_field(name=str(count), value=f"{song['name']} by {song['artist']['name']}", inline=False)
+        await ctx.send(embed=em)
 
     @commands.command(
         name="topartists",
         brief="Gets a list of the top artists on the world charts",
         aliases=['artists', 'topa']
     )
-    async def topartists(self, ctx: discord.ext.commands.context.Context):
+    async def topartists(self, ctx: discord.ext.commands.context.Context) -> None:
         """Function to return discord embed with top chart artists."""
         data = await top_artists()
         embed = discord.Embed(title='Top 10 Artists', url='https://www.last.fm/charts')
@@ -138,16 +137,17 @@ class MusicCog(commands.Cog):
         await ctx.send(embed=embed)
 
 
-async def get_data(url_data1: str, url_data2: str = ''):
-    """Returns the json data from the url, takes in the two pieces of a URL as outlined in the last.fm api docs."""
+async def get_data(url_data1: str, url_data2: str = '') -> dict:
+    """Returns the json data from the url, takes in the two pieces of a URL from Last.FM API Docs"""
     data = None
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"http://ws.audioscrobbler.com/2.0/?method={url_data1}&api_key={MUSIC_TOKEN}&format=json{url_data2}") as resp:
+        url='http://ws.audioscrobbler.com/2.0/?method='
+        async with session.get(f"{url}{url_data1}&api_key={MUSIC_TOKEN}&format=json{url_data2}") as resp:
             data = await resp.json()
     return data
 
 
-async def get_album(album: str, artist: str = ''):
+async def get_album(album: str, artist: str = '') -> dict:
     """Returns the json data for a given album, takes in just an album or album and artist."""
     if not artist:
         album = urllib.parse.quote(album)
@@ -161,13 +161,13 @@ async def get_album(album: str, artist: str = ''):
         return await get_data('album.getinfo', '&artist='+artist+'&album='+album)
 
 
-async def get_artist(artist: str):
+async def get_artist(artist: str) -> dict:
     """Returns the json data for a given artist, takes in artist name."""
     artist = urllib.parse.quote(artist)
     return (await get_data('artist.getinfo&artist='+artist))['artist']
 
 
-async def get_track(track: str, artist: str = ''):
+async def get_track(track: str, artist: str = '') -> dict:
     """Returns info about a specific song/track takes in just a track or artist and track."""
     artist = urllib.parse.quote(artist)
     track = urllib.parse.quote(track)
@@ -175,23 +175,23 @@ async def get_track(track: str, artist: str = ''):
     if artist:
         return (await get_data('track.getinfo', '&artist='+artist+'&track='+track))['track']
     else:
-        artist = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['artist']
-        track = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]['name']
-        return await get_track(track, artist)
+        artist = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]
+        track = (await get_data('track.search&track='+track))['results']['trackmatches']['track'][0]
+        return await get_track(track['name'], artist['artist'])
 
 
-async def top_tracks():
+async def top_tracks() -> list:
     """Returns data of the top songs on the charts."""
     data = (await get_data('chart.gettoptracks'))['tracks']['track']
     return [f for f in data]
 
 
-async def top_artists():
+async def top_artists() -> list:
     """Returns data of the top artists."""
     data = (await get_data('chart.gettopartists'))['artists']['artist']
     return [f for f in data]
 
 
-def setup(bot: discord.ext.commands.bot.Bot):
+def setup(bot: discord.ext.commands.bot.Bot) -> None:
     """Imports the cog."""
     bot.add_cog(MusicCog(bot))
