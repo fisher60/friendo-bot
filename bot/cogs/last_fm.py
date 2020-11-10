@@ -7,17 +7,17 @@ from bot.settings import MUSIC_TOKEN
 
 class MusicCog(commands.Cog):
     """Commands for song searching."""
-    
+
     def __init__(self, bot):
         self.bot = bot
-   
+
     @commands.command(
         name="getsong",
         brief="a command to get song lyrics and info",
         description="takes in song by itself or song followed by artist seperated by ; ",
         aliases=['song', 'gets', 'getlyrics', 'getl']
     )
-    async def get_lyrics(self, ctx, *, args: str):
+    async def get_lyrics(self, ctx: discord.ext.commands.context.Context, *, args: str):
         """Function to return discord embed with song info and lyrics."""
         try:
             if ';' in args:
@@ -38,18 +38,18 @@ class MusicCog(commands.Cog):
             print(len(lyric_array))
             count = 0
             for f in split_lyrics:
-              if len(lyric_array[count] + f) <= 256:
-                lyric_array[count] += f
-              else:
-                count += 1
-                lyric_array.append(f)
- 
+                if len(lyric_array[count] + f) <= 256:
+                    lyric_array[count] += f
+                else:
+                    count += 1
+                    lyric_array.append(f)
+
             embed = discord.Embed(title=f"{data['name']} by {data['artist']['name']}", url=data['url'])
             embed.add_field(name='Artist', value=data['artist']['name'])
             embed.add_field(name='Album', value=data['album']['title'])
             for f in lyric_array:
-              if f:
-                embed.add_field(name="\u200b", value=f, inline=False)
+                if f:
+                    embed.add_field(name="\u200b", value=f, inline=False)
             embed.set_thumbnail(url=data['album']['image'][2]['#text'])
             await ctx.send(embed=embed)
         except IndexError:
@@ -61,7 +61,7 @@ class MusicCog(commands.Cog):
         description="takes in album by itself or album followed by artist seperated by ; ",
         aliases=['album', 'getal']
     )
-    async def getalbum(self, ctx, *, args: str):
+    async def getalbum(self, ctx: discord.ext.commands.context.Context, *, args: str):
         """Function to return discord embed with album info."""
         try:
             if '; ' in args:
@@ -91,7 +91,7 @@ class MusicCog(commands.Cog):
         description="Takes in just artist name",
         aliases=['artist', 'getar']
     )
-    async def getartist(self, ctx, *, args: str):
+    async def getartist(self, ctx: discord.ext.commands.context.Context, *, args: str):
         """Function to return discord embed with artist info."""
         try:
             data = await get_artist(args)
@@ -116,7 +116,7 @@ class MusicCog(commands.Cog):
         brief="Gets a list of the top songs on the world charts",
         aliases=['songs', 'tops']
     )
-    async def topsongs(self, ctx):
+    async def topsongs(self, ctx: discord.ext.commands.context.Context):
         """Function to return discord embed with top chart songs."""
         data = await top_tracks()
         embed = discord.Embed(title='Top 10 Tracks', url='https://www.last.fm/charts')
@@ -129,7 +129,7 @@ class MusicCog(commands.Cog):
         brief="Gets a list of the top artists on the world charts",
         aliases=['artists', 'topa']
     )
-    async def topartists(self, ctx):
+    async def topartists(self, ctx: discord.ext.commands.context.Context):
         """Function to return discord embed with top chart artists."""
         data = await top_artists()
         embed = discord.Embed(title='Top 10 Artists', url='https://www.last.fm/charts')
@@ -137,7 +137,7 @@ class MusicCog(commands.Cog):
             embed.add_field(name=str(count), value=artist['name'], inline=False)
         await ctx.send(embed=embed)
 
-                                
+
 async def get_data(url_data1: str, url_data2: str = ''):
     """Returns the json data from the url, takes in the two pieces of a URL as outlined in the last.fm api docs."""
     data = None
@@ -192,6 +192,6 @@ async def top_artists():
     return [f for f in data]
 
 
-def setup(bot):
+def setup(bot: discord.ext.commands.bot.Bot):
     """Imports the cog."""
     bot.add_cog(MusicCog(bot))
