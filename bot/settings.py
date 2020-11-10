@@ -10,6 +10,7 @@ EVENT_API_KEY = environ.get("EVENT_API_KEY")
 
 COMMAND_PREFIX = environ.get("COMMAND_PREFIX", ".")
 
+MUSIC_TOKEN = environ.get("MUSIC_TOKEN"
 
 WOLFRAM_APPID = environ.get("WOLFRAM_APPID")
 
