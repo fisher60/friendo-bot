@@ -93,7 +93,7 @@ class MusicCog(commands.Cog):
         """Function to return discord embed with artist info."""
         try:
             data = await get_artist(args)
-            start_data= await get_data('artist.gettopalbums&artist='+urllib.parse.quote(data['name']))
+            start_data = await get_data('artist.gettopalbums&artist='+urllib.parse.quote(data['name']))
             album_data = start_data['topalbums']['album']
             bio = data['bio']['summary'].split('\n', 2)[0].split('<a', 1)[0]
             if bio == '':
@@ -138,10 +138,10 @@ class MusicCog(commands.Cog):
 
 
 async def get_data(url_data1: str, url_data2: str = '') -> dict:
-    """Returns the json data from the url, takes in the two pieces of a URL from Last.FM API Docs"""
+    """Returns the json data from the url, takes in the two pieces of a URL from Last.FM API Docs."""
     data = None
     async with aiohttp.ClientSession() as session:
-        url='http://ws.audioscrobbler.com/2.0/?method='
+        url = 'http://ws.audioscrobbler.com/2.0/?method='
         async with session.get(f"{url}{url_data1}&api_key={MUSIC_TOKEN}&format=json{url_data2}") as resp:
             data = await resp.json()
     return data
