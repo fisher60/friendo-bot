@@ -42,4 +42,7 @@ if __name__ == "__main__":
     # load music cogs
     bot.load_extension("bot.cogs.last_fm")
 
+    # load winder twins cog
+    bot.load_extension("bot.cogs.wonder_twins")
+
     bot.run(settings.TOKEN)
