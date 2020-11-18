@@ -26,6 +26,7 @@ class Friendo(Bot):
     async def on_ready() -> None:
         """Runs when the bot is connected."""
         log.info('Awaiting...')
+        print("Bot Is Ready For Commands")
 
     async def on_command_error(self, ctx: Context, exception: CommandError) -> None:
         """Fired when exception happens."""
