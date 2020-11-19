@@ -10,6 +10,6 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Docker Build
-        run: docker-compose up --build --env-file /dev/null
+        run: docker build --tag bot:dry-run .
         env:
           FRIENDO_TOKEN: ${{ secrets.DEV_TOKEN }}
