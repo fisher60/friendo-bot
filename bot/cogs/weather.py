@@ -24,7 +24,6 @@ class Weather(commands.Cog):
                 embed = discord.Embed(title=f"Weather in {args}")
 
                 url = "http://api.openweathermap.org/data/2.5/weather?q="
-                args = args.replace(' ', '%20')
 
                 imperial_url = f"{url}{args}&appid={WEATHER_TOKEN}&units=imperial"
                 metric_url = f"{url}{args}&appid={WEATHER_TOKEN}&units=metric"
