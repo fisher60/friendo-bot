@@ -47,5 +47,8 @@ if __name__ == "__main__":
 
     # loads the weather cog
     bot.load_extension("bot.cogs.weather")
+    
+    # loads the animals cog
+    bot.load_extension("bot.cogs.animals")
 
     bot.run(settings.TOKEN)
