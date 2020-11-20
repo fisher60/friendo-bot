@@ -16,7 +16,7 @@ class Weather(commands.Cog, name='weather'):
     def __init__(self, bot: discord.ext.commands.bot.Bot):
         self.bot = bot
 
-    @commands.command(
+    @commands.command(brief="Takes in a city name and returns the weather for that location")
         brief="Takes in a city name and returns the weather for that location")
     async def weather(self, ctx: discord.ext.commands.context.Context, *, args: str) -> None:
         """Weather command takes in a city name and sends embed."""
