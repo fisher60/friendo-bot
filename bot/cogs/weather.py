@@ -20,22 +20,23 @@ class Weather(commands.Cog):
         brief="Takes in a city name and returns the weather for that location")
     async def weather(self, ctx: context.Context, *, args = "": str) -> None:
         if not args:
-            await ctx.send(embed=disocrd.Embed(title='Please give a city name', description = 'This should be done like `.weather city name`'
+            description = 'This should be done like `.weather city name`'
+            await ctx.send(embed=disocrd.Embed(title='Please give a city name', description=description
         """Weather command takes in a city name and sends embed."""
         embed = discord.Embed(title=f"Weather in {args}")
-        
+
         url = "http://api.openweathermap.org/data/2.5/weather?q="
         args = args.replace(' ', '%20')
-        
+
         imperial_url = f"{url}{args}&appid={WEATHER_TOKEN}&units=imperial"
         metric_url = f"{url}{args}&appid={WEATHER_TOKEN}&units=metric"
-        
+
         async with aiohttp.ClientSession() as session:
             async with session.get(metric_url) as resp:
                 metric = await resp.json()
             async with session.get(imperial_url) as resp:
                 data = await resp.json()
-    
+  
 
         icon = data['weather']
         weather = data['main']
