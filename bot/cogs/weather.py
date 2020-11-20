@@ -1,5 +1,10 @@
 """Commands for the weather module."""
+import aiohttp
 import discord
+
+from discord.ext import commands
+
+from bot.settings import WEATHER_TOKEN
 from discord.ext import commands
 import aiohttp
 from bot.settings import WEATHER_TOKEN
