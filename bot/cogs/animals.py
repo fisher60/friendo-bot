@@ -119,4 +119,4 @@ class Animals(commands.Cog):
 
 def setup(bot: commands.bot.Bot) -> None:
     """Sets up the cog."""
-    bot.add_cog(AnimalCog(bot))
+    bot.add_cog(Animals(bot))
