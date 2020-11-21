@@ -15,9 +15,11 @@ To get a bot token go to [Discord Developer Portal](https://discord.com/develope
 
 4. Create a [Last.fm](https://www.last.fm/api) api account
 
-5. Create a file `bot.env` in the root project directory and fill it out using the example below
+5. Create a [Open Weather](https://openweathermap.org/price) api account (a free account works for this)
 
-6. `docker-compose up --build -d`
+6. Create a file `bot.env` in the root project directory and fill it out using the example below
+
+7. `docker-compose up --build -d`
 
 ```text
 # bot.env
@@ -27,8 +29,8 @@ MEME_USERNAME = <your imgflip api username>
 MEME_PASSWORD = <your imgflip api password>
 EVENT_API_KEY = <your ticketmaster api key>
 MUSIC_TOKEN = <your Last.fm api key>
-=======
-WOLFRAM_APPID = <your wolfram appid>
+WEATHER_TOKEN = <you open weather token>
+```
 
 ## Dev Installation
 * You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv
@@ -58,21 +60,4 @@ $ pipenv shell
 
 # Run the bot
 $ pipenv run python -m bot
-```
-
-## Command Line Arguments
-
-1. Suppreses the loading of cogs that requires external API ie. events and memes cogs
-```bash
-$ pipenv run python -m bot --no-api
-```
-2. Disable certain cogs and enables all other cogs
-```bash
-# disables events fun greetings cogs and enables all other cogs
-$ pipenv run python -m bot --disable events fun greetings
-```
-3. Enable certain cogs and disable all other cogs
-```bash
-# enables events fun greetings cogs and disables all other cogs
-$ pipenv run python -m bot --enable events fun greetings
 ```
