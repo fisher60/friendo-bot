@@ -14,6 +14,8 @@ MUSIC_TOKEN = environ.get("MUSIC_TOKEN")
 
 WOLFRAM_APPID = environ.get("WOLFRAM_APPID")
 
+WEATHER_TOKEN = environ.get("WEATHER_TOKEN")
+
 VERSION = "1.2"
 
 GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"
