@@ -1,0 +1,14 @@
+name: Build Checks
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Docker Build
+        run: docker build --tag bot:dry-run .
+        env:
+          FRIENDO_TOKEN: ${{ secrets.DEV_TOKEN }}

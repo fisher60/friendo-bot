@@ -70,16 +70,6 @@ class Weather(commands.Cog):
                         False
                     ),
                     (
-                        'Current Temp',
-                        f"{str(temp_f)}F ({str(temp_c)}C)",
-                        False
-                    ),
-                    (
-                        'Current Temp',
-                        f"{str(temp_f)}F ({str(temp_c)}C)",
-                        False
-                    ),
-                    (
                         'Feels Like',
                         f"{str(temp_ft)}F ({str(temp_fc)}'C)",
                         True

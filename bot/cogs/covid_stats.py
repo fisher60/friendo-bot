@@ -63,7 +63,7 @@ class CovidStats(Cog):
         """Acquires Covid statistics about a specific country."""
         async with self.bot.session.get(COVID_URL) as resp:
             assert resp.status == 200, resp.raise_for_status()
-            read = await resp.json()["Countries"]
+            read = (await resp.json())["Countries"]
 
             data = []
             for _ in read:
