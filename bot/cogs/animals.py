@@ -82,7 +82,7 @@ class AnimalCog(Cog, name='Animals'):
 
         await self.animal_fact(ctx, url, fact_url, 'cat')
 
-    @command(brief='Returns a random bird fact and image', aliases=['birds','birb','birbs'])
+    @command(brief='Returns a random bird fact and image', aliases=['birds', 'birb', 'birbs'])
     async def bird(self, ctx: context.Context) -> None:
         """Sets url and gets random bird image and fact."""
         url = 'https://some-random-api.ml/img/birb'
@@ -112,7 +112,7 @@ class AnimalCog(Cog, name='Animals'):
             if animal == 'cat':
                 data = (await resp.json())[0]['url']
             else:
-               data = (await resp.json())['link']
+                data = (await resp.json())['link']
 
         async with self.bot.session.get(fact_url) as resp:
             fact = (await resp.json())['fact']
