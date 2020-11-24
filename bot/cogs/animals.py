@@ -10,7 +10,7 @@ class AnimalCog(Cog, name='Animals'):
     def __init__(self, bot: bot.Bot):
         self.bot = bot
 
-    @command(brief="Gets a random dog breed info and photo", aliases='dogs')
+    @command(brief="Gets a random dog breed info and photo", aliases=['dogs'])
     async def dog(self, ctx: context.Context) -> None:
         """Gets random dog breed and facts about it."""
         url = 'https://api.thedogapi.com/v1/images/search'
@@ -74,7 +74,7 @@ class AnimalCog(Cog, name='Animals'):
             except KeyError:
                 await self.dog(ctx)
 
-    @command(brief='Returns a random cat fact and image', aliases='cats')
+    @command(brief='Returns a random cat fact and image', aliases=['cats'])
     async def cat(self, ctx: context.Context) -> None:
         """Sets url and gets random cat image and fact."""
         url = 'https://api.thecatapi.com/v1/images/search'
@@ -88,23 +88,23 @@ class AnimalCog(Cog, name='Animals'):
         url = 'https://some-random-api.ml/img/birb'
         fact_url = 'https://some-random-api.ml/facts/bird'
 
-        await self.animal_fact(ctx, url, fact_url, 'Bird')
+        await self.animal_fact(ctx, url, fact_url, 'bird')
 
-    @command(brief='Returns a random fox fact and image', aliases='foxes')
+    @command(brief='Returns a random fox fact and image', aliases=['foxes'])
     async def fox(self, ctx: context.Context) -> None:
         """Sets url and gets random fox image and fact."""
         url = 'https://some-random-api.ml/img/fox'
         fact_url = 'https://some-random-api.ml/facts/fox'
 
-        await self.animal_fact(ctx, url, fact_url, 'Bird')
+        await self.animal_fact(ctx, url, fact_url, 'fox')
 
-    @command(brief='Returns a random panada fact and image', aliases='pandas')
+    @command(brief='Returns a random panada fact and image', aliases=['pandas'])
     async def panda(self, ctx: context.Context) -> None:
         """Sets url and gets random panda image and fact."""
         url = 'https://some-random-api.ml/img/panda'
         fact_url = 'https://some-random-api.ml/facts/panda'
 
-        await self.animal_fact(ctx, url, fact_url, 'Bird')
+        await self.animal_fact(ctx, url, fact_url, 'panda')
 
     async def animal_fact(self, ctx: context.Context, url: str, fact_url: str, animal: str) -> None:
         """Sends the embed for random animal and it's fact."""
