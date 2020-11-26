@@ -1,20 +1,20 @@
-import discord
-from discord import Color, Embed
 from PIL import Image
 from io import BytesIO
-from discord.ext import commands
+from bot.bot import Friendo
+from discord import Color, Embed, File, Member
+from discord.ext.commands import Cog, Context, command
 
 
-class Pixelate(commands.Cog):
+class Pixelate(Cog):
     """Command for pixelating a user's avatar, defaults to the author if user not provided."""
 
-    def __init__(self, bot: commands.bot):
+    def __init__(self, bot: Friendo) -> None:
         self.bot = bot
 
-    @commands.command(brief="Shows the pixelated avatar of the user/author",
-                      usage=".pixelate [user (optional)]",
-                      aliases=['pixel', 'blockify', 'pix'])
-    async def pixelate(self, ctx: commands.context, user: discord.Member = None) -> None:
+    @command(brief="Shows the pixelated avatar of the user/author",
+             usage=".pixelate [user (optional)]",
+             aliases=['pixel', 'blockify', 'pix'])
+    async def pixelate(self, ctx: Context, user: Member = None) -> None:
         """Pixelate command, takes in an optional parameter user else pixelates author's avatar."""
         async with ctx.channel.typing():
             user = user
@@ -28,7 +28,7 @@ class Pixelate(commands.Cog):
             result.save(buffer, format="PNG")
             buffer.seek(0)
 
-            img_file = discord.File(buffer, filename="pixelated.png")
+            img_file = File(buffer, filename="pixelated.png")
             img_url = 'attachment://pixelated.png'
 
             img_emb = Embed(color=Color.blue())
@@ -38,6 +38,6 @@ class Pixelate(commands.Cog):
             await ctx.send(embed=img_emb, file=img_file)
 
 
-def setup(bot: commands.bot) -> None:
+def setup(bot: Friendo) -> None:
     """Sets up the Pixelate cog."""
     bot.add_cog(Pixelate(bot))
