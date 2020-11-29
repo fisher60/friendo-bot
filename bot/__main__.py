@@ -48,4 +48,7 @@ if __name__ == "__main__":
     # loads the weather cog
     bot.load_extension("bot.cogs.weather")
 
+    # loads the pixelate cog
+    bot.load_extension("bot.cogs.pixelate")
+
     bot.run(settings.TOKEN)

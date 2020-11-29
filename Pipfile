@@ -10,6 +10,8 @@ opencv-python = "4.4.0.44"
 scikit-image = "0.17.2"
 aiofiles = "~=0.5.0"
 pyyaml = "*"
+pillow = "*"
+numpy = "*"
 
 [dev-packages]
 flake8 = "~=3.8.4"
