@@ -51,4 +51,7 @@ if __name__ == "__main__":
     # loads the pixelate cog
     bot.load_extension("bot.cogs.pixelate")
 
+    # loads the advent of code cog
+    bot.load_extension("bot.cogs.advent_of_code")
+
     bot.run(settings.TOKEN)
