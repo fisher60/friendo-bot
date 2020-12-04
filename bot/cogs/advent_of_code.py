@@ -26,14 +26,17 @@ class AdventOfCode(Cog):
         stats = {k: stats[k] for k in sorted(stats, key=lambda y: stats[y])[::-1]}
         return stats
 
-    @group(name="adventofcode", aliases=('aoc', 'aoc2020'))
+    @group(name="AdventofCode",
+           aliases=('aoc', 'aoc2020'),
+           brief="Small commands for AoC 2020",
+           usage=".aoc [command]")
     async def aoc_group(self, ctx: Context) -> None:
         """Group for advent of code commands."""
         if not ctx.invoked_subcommand:
             await ctx.send("Please enter a valid command")
 
     @aoc_group.command(brief="Get the leaderboard join code in your DM's",
-                       usage=".join",
+                       usage=".aoc join",
                        aliases=("join", "join_lb", "j"))
     async def join_leaderboard(self, ctx: Context) -> None:
         """Dms the author the join code and link for the leaderboard."""
@@ -50,8 +53,8 @@ class AdventOfCode(Cog):
         except errors.Forbidden:
             await ctx.send(error_msg)
 
-    @aoc_group.command(brief="Get the leaderboard of AoC 2020 for this server",
-                       usage=".leaderboard",
+    @aoc_group.command(brief="Get the leaderboard of AoC 2020 for the Code Collective server",
+                       usage=".aoc leaderboard",
                        aliases=('lb', 'board'))
     async def leaderboard(self, ctx: Context) -> None:
         """Shows the leaderboard of code collective server for AoC 2020."""
