@@ -17,9 +17,11 @@ To get a bot token go to [Discord Developer Portal](https://discord.com/develope
 
 5. Create a [Open Weather](https://openweathermap.org/price) api account (a free account works for this)
 
-6. Create a file `bot.env` in the root project directory and fill it out using the example below
+6. Get your AoC session cookie, see how - https://github.com/wimglenn/advent-of-code-wim/issues/1
 
-7. `docker-compose up --build -d`
+7. Create a file `bot.env` in the root project directory and fill it out using the example below
+
+8. `docker-compose up --build -d`
 
 ```text
 # bot.env
@@ -29,7 +31,8 @@ MEME_USERNAME = <your imgflip api username>
 MEME_PASSWORD = <your imgflip api password>
 EVENT_API_KEY = <your ticketmaster api key>
 MUSIC_TOKEN = <your Last.fm api key>
-WEATHER_TOKEN = <you open weather token>
+WEATHER_TOKEN = <your open weather token>
+AOC_SESSION_COOKIE = <your advent of code session cookie>
 ```
 
 ## Dev Installation
