@@ -47,9 +47,9 @@ class AdventOfCode(Cog):
             f"• Use this code `{join_code}` to join the Code Collective leaderboard!"]
         error_msg = f":x: {ctx.author.mention}, please (temporarily) enable DMs to receive the join code"
 
-        await ctx.message.add_reaction("📨")
         try:
             await ctx.author.send('\n'.join(info))
+            await ctx.message.add_reaction("📨")
         except errors.Forbidden:
             await ctx.send(error_msg)
 
@@ -66,14 +66,16 @@ class AdventOfCode(Cog):
                 count = 1
 
                 for name_star, score in sorted_stats.items():
+                    length = len(str(name_star[1]))
                     msg.append(
                         f"{count} | {name_star[0] + ' '*(16-len(name_star[0]))} "
-                        f"|  {name_star[1]} ★  |   {score}")
+                        f"|  {name_star[1]}{' '*(3-length)}★"
+                        f"{' '*(7-len(str(name_star[1])+' '*(3-length)+'★'))}|   {score}")
                     count += 1
 
                 msg = '\n'.join(msg)
                 await ctx.send("🎄 Advent of Code 2020 leaderboard for Code Collective 🎄")
-                await ctx.send(f"```  | Name {' '*(16-4)}| Stars | Score\n{msg}```")
+                await ctx.send(f"```  | Name {' '*(16-4)}| Stars   | Score\n{'-'*40}\n{msg}```")
 
 
 def setup(bot: Friendo) -> None:
