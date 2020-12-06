@@ -36,7 +36,8 @@ STATUSES = {Status.online: '<:online:782636673653407744>',
 
 ACTIVITIES = {ActivityType.playing: ':video_game: Playing ',
               ActivityType.listening: ':headphones: Listening to ',
-              ActivityType.streaming: ':desktop: Streaming on '}
+              ActivityType.streaming: ':desktop: Streaming on ',
+              ActivityType.custom: ''}
 
 
 def convert_time(time: str, period: str) -> Optional[int]:
