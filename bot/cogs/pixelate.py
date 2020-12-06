@@ -1,43 +1,58 @@
-import discord
-from discord import Color, Embed
+import numpy as np
 from PIL import Image
 from io import BytesIO
-from discord.ext import commands
+from bot.bot import Friendo
+from collections import Counter
+from discord import Color, Embed, File, Member
+from discord.ext.commands import Cog, Context, command
 
 
-class Pixelate(commands.Cog):
+class Pixelate(Cog):
     """Command for pixelating a user's avatar, defaults to the author if user not provided."""
 
-    def __init__(self, bot: commands.bot):
+    def __init__(self, bot: Friendo) -> None:
         self.bot = bot
 
-    @commands.command(brief="Shows the pixelated avatar of the user/author",
-                      usage=".pixelate [user (optional)]",
-                      aliases=['pixel', 'blockify', 'pix'])
-    async def pixelate(self, ctx: commands.context, user: discord.Member = None) -> None:
+    @staticmethod
+    def dominant_color(image: Image) -> tuple:
+        """Get the most occuring color in the image in rgb form as a tuple."""
+        image = image.convert("RGB")
+        arr = np.array(image)
+        ls = []
+        for pixel in arr:
+            for rgb in pixel:
+                ls.append(tuple(rgb))
+        return Counter(ls).most_common(1)[0][0]
+
+    @command(brief="Shows the pixelated avatar of the user/author",
+             usage=".pixelate [user (optional)]",
+             aliases=['pixel', 'blockify', 'pix'])
+    async def pixelate(self, ctx: Context, user: Member = None) -> None:
         """Pixelate command, takes in an optional parameter user else pixelates author's avatar."""
         async with ctx.channel.typing():
-            user = user
-            img_bytes = ctx.author.avatar_url.read() if not user else user.avatar_url.read()
+            user = ctx.author.avatar_url if not user else user.avatar_url
+            img_bytes = user.read()
             image = Image.open(BytesIO(await img_bytes))
 
-            img_small = image.resize((16, 16), resample=Image.BILINEAR)
+            img_color = self.dominant_color(image)
+
+            img_small = image.resize((24, 24), resample=Image.BILINEAR)
             result = img_small.resize((1024, 1024), Image.NEAREST)
 
             buffer = BytesIO()
             result.save(buffer, format="PNG")
             buffer.seek(0)
 
-            img_file = discord.File(buffer, filename="pixelated.png")
+            img_file = File(buffer, filename="pixelated.png")
             img_url = 'attachment://pixelated.png'
 
-            img_emb = Embed(color=Color.blue())
-            img_emb.set_footer(text="Here is your pixelated image")
+            img_emb = Embed(color=Color.from_rgb(int(img_color[0]), int(img_color[1]), int(img_color[2])))
+            img_emb.set_author(name="Here is your pixelated Image", icon_url=user)
             img_emb.set_image(url=img_url)
 
             await ctx.send(embed=img_emb, file=img_file)
 
 
-def setup(bot: commands.bot) -> None:
+def setup(bot: Friendo) -> None:
     """Sets up the Pixelate cog."""
     bot.add_cog(Pixelate(bot))

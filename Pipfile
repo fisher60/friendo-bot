@@ -11,6 +11,8 @@ scikit-image = "0.17.2"
 aiofiles = "~=0.5.0"
 pyyaml = "*"
 python-dateutil = "*"
+pillow = "*"
+numpy = "*"
 
 [dev-packages]
 flake8 = "~=3.8.4"
