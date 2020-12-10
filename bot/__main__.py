@@ -54,4 +54,7 @@ if __name__ == "__main__":
     # loads the advent of code cog
     bot.load_extension("bot.cogs.advent_of_code")
 
+    # loads the user cog
+    bot.load_extension("bot.cogs.user")
+
     bot.run(settings.TOKEN)
