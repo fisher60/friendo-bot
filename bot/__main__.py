@@ -1,8 +1,9 @@
+from discord import Intents
 from . import settings
 from bot.bot import Friendo
 
 if __name__ == "__main__":
-    bot = Friendo(command_prefix=settings.COMMAND_PREFIX, help_command=None)
+    bot = Friendo(command_prefix=settings.COMMAND_PREFIX, help_command=None, intents=Intents.all())
 
     # load help command
     bot.load_extension("bot.cogs.help")
