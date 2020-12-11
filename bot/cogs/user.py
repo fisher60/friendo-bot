@@ -1,8 +1,9 @@
 import datetime
 
+from typing import Union
 from dateutil.relativedelta import relativedelta
 from discord import ActivityType, Embed, Member, Spotify, Status
-from discord.ext.commands import Cog, Context, command
+from discord.ext.commands import Cog, Context, MemberConverter, MemberNotFound, command
 
 from bot.bot import Friendo
 
@@ -31,6 +32,11 @@ class User(Cog):
 
     def __init__(self, bot: Friendo) -> None:
         self.bot = bot
+
+    @staticmethod
+    async def get_member(ctx: Context, member: str) -> Member:
+        """Manually convert string to Member, allows us to catch MemberNotFound if the member is invalid."""
+        return await MemberConverter().convert(ctx, member)
 
     @staticmethod
     def get_timedelta(a: datetime.datetime, b: datetime.datetime) -> list:
@@ -64,9 +70,22 @@ class User(Cog):
     @command(brief="Get the info on the user specified, defaults to the command author",
              usage=".userinfo [user (optional)]",
              aliases=('ui', 'user', 'useri', 'uinfo'))
-    async def userinfo(self, ctx: Context, user: Member = None) -> None:
+    async def userinfo(self, ctx: Context, member: Union[str, Member] = None) -> None:
         """Shows an embed containing basic info on the user."""
-        user = ctx.author if not user else user
+        if not member:
+            user = ctx.author
+        else:
+            try:
+                user = await self.get_member(ctx, member)
+            except MemberNotFound:
+                error_embed = Embed(
+                    title="User not found",
+                    description=f"No User `{member}` could be found in {ctx.guild}"
+                )
+
+                await ctx.send(embed=error_embed)
+                return
+
         spotify_emoji = '<:spotify:785113868543852584>'
         user_badges = []
         roles = []
