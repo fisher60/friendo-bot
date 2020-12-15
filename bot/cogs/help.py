@@ -28,7 +28,7 @@ class Help(Cog):
             field_body = field_body.strip()
 
             field_body += (
-                f"\n\nUsage: `%{prefix}help [Cog | Command]`. Example: `%{prefix}help greetings`"
+                f"\n\nUsage: `{prefix}help [Cog | Command]`. Example: `{prefix}help greetings`"
             )
 
             embed.add_field(name="Cogs", value=field_body, inline=False)
