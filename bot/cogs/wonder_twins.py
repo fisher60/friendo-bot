@@ -37,7 +37,12 @@ class WonderTwins(Cog):
             words[0] = new_object
         return f"{words[0]} of {words[1]}"
 
-    @command(name="formof", aliases=["wondertwins", "wondertwin", "fo"])
+    @command(name="formof",
+             brief="Get a Wonder Twins inspired phrase.",
+             usage=".wondertwins",
+             description="Shows a random Wonder Twins cartoon transformation phrase,\
+             \nExample output- `Form of a beast of water`",
+             aliases=["wondertwins", "wondertwin", "fo"])
     async def form_of(self, ctx: Context) -> None:
         """Command to send a Wonder Twins inspired phrase to the user invoking the command."""
         await ctx.send(f"Form of {self.format_phrase()}")
