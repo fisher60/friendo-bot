@@ -1,6 +1,8 @@
-import datetime
+import yaml
 
+from pathlib import Path
 from typing import Union
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from discord import ActivityType, Embed, Member, Spotify, Status
 from discord.ext.commands import Cog, Context, MemberConverter, MemberNotFound, command
@@ -8,18 +10,17 @@ from discord.ext.commands import Cog, Context, MemberConverter, MemberNotFound, 
 from bot.bot import Friendo
 
 # Dictionaries for the emojis in userinfo embed
-BADGES = {'hypesquad_bravery': '<:bravery:785001148453093386>',
-          'hypesquad_brilliance': '<:brilliance:785001159864614933>',
-          'hypesquad_balance': '<:balance:785001135676194856>',
-          'nitro': '<:nitro:785001224302362624>',
-          'verified_bot_developer': '<:dev:785001175820271657>',
-          'partner': '<:partner:785001265733566524>',
-          'early_supporter': '<:early:785001210599047199>'}
+
+with open(Path.cwd() / 'bot' / 'resources' / 'user_badges.yaml', 'r', encoding='utf-8') as f:
+    info = yaml.load(f, Loader=yaml.FullLoader)
+    BADGES = info[0]
+
 
 STATUSES = {Status.online: '<:online:785001253133484042>',
             Status.offline: '<:offline:785001240621744149>',
             Status.idle: '<:idle:785001811081035777>',
-            Status.dnd: '<:dnd:785001198159527958>'}
+            Status.dnd: '<:dnd:785001198159527958>',
+            "spotify": '<:spotify:785113868543852584>'}
 
 ACTIVITIES = {ActivityType.playing: ':video_game: Playing ',
               ActivityType.listening: ':headphones: Listening to ',
@@ -39,31 +40,27 @@ class User(Cog):
         return await MemberConverter().convert(ctx, member)
 
     @staticmethod
-    def get_timedelta(a: datetime.datetime, b: datetime.datetime) -> list:
+    def get_timedelta(a: datetime, b: datetime) -> list:
         """Static method for getting parsed time delta between 2 datetimes."""
         final = []
         delta = relativedelta(a, b)
+
         years = abs(delta.years)
         months = abs(delta.months)
         days = abs(delta.days)
         hours = abs(delta.hours)
         minutes = abs(delta.minutes)
 
-        if minutes and not months and not years:
-            final.append(f'{minutes} minutes')
+        dates = {years: "years",
+                 months: "months",
+                 days: "days",
+                 hours: "hours",
+                 months: "months",
+                 minutes: "minutes"}
 
-        if hours:
-            final.append(f'{hours} hours')
-
-        if days:
-            final.append(f'{days} days')
-
-        if months:
-            final.append(f'{months} months')
-
-        if years:
-            final.append(f'{years} years')
-        final = final[::-1]
+        for date in dates:
+            if date:
+                final.append(f"{date} {dates[date]}")
 
         return final[:3]
 
@@ -86,14 +83,13 @@ class User(Cog):
                 await ctx.send(embed=error_embed)
                 return
 
-        spotify_emoji = '<:spotify:785113868543852584>'
         user_badges = []
         roles = []
         statuses = []
         is_bot = "Bot: :x:"
 
-        create_time = ', '.join(self.get_timedelta(datetime.datetime.utcnow(), user.created_at))
-        joined_time = ', '.join(self.get_timedelta(datetime.datetime.utcnow(), user.joined_at))
+        create_time = ', '.join(self.get_timedelta(datetime.utcnow(), user.created_at))
+        joined_time = ', '.join(self.get_timedelta(datetime.utcnow(), user.joined_at))
 
         flags = user.public_flags
 
@@ -124,31 +120,30 @@ class User(Cog):
         info_emb.description = user_badges
         men, id_, nick = user.mention, user.id, user.nick
 
-        base_activity = user.activity
+        base_activity = user.activities
         if base_activity:
-            activity = ACTIVITIES[base_activity.type] + base_activity.name
+            activities = [ACTIVITIES[i.type] + i.name for i in base_activity if not isinstance(i, Spotify)]
         else:
-            activity = "No activity is being done"
+            activities = "No activity is being done"
 
-        if isinstance(base_activity, Spotify):
-            activity = "\n".join([f'{spotify_emoji} {activity[12:]}',
-                                  f"**Song**: {base_activity.title}",
-                                  f"**Artist**: {base_activity.artist}",
-                                  f"**Album**: {base_activity.album}"])
+        for activity in base_activity:
+            if isinstance(activity, Spotify):
+                activities.append("\n".join([f'{STATUSES["spotify"]} Listening to Spotify',
+                                             f"**Song**: {activity.title}",
+                                             f"**Artist**: {activity.artist}",
+                                             f"**Album**: {activity.album}"]))
+            break
 
-        info_emb.add_field(name='User Information',
-                           value=f"Created: {create_time} ago\nProfile: {men}\nID: {id_}\n{is_bot}",
-                           inline=False)
-        info_emb.add_field(name="Guild Profile",
-                           value=f"Joined: {joined_time} ago\nNick: {nick}\nRoles: {roles}",
-                           inline=False)
-        info_emb.add_field(name="Status",
-                           value=statuses,
-                           inline=False)
-        info_emb.add_field(name="Activity",
-                           value=activity,
-                           inline=False)
+        activities = "\n".join(activities)
 
+        user_info = {
+            'User Information': f'Created: {create_time} ago\nProfile: {men}\nID: {id_}\n{is_bot}',
+            'Guild Profile': f'Joined: {joined_time} ago\nNick: {nick}\nRoles: {roles}',
+            'Status': statuses,
+            'Activities': activities}
+
+        for k, v in user_info.items():
+            info_emb.add_field(name=k, value=v, inline=False)
         await ctx.send(embed=info_emb)
 
 
