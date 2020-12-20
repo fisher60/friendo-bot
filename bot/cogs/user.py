@@ -129,7 +129,7 @@ class User(Cog):
         for activity in base_activity:
             if isinstance(activity, Spotify):
                 activities.append(f'{STATUSES["spotify"]} Listening to {activity.title}, {activity.artist}')
-            break
+                break
 
         activities = "\n".join(activities)
 
