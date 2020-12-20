@@ -45,22 +45,16 @@ class User(Cog):
         final = []
         delta = relativedelta(a, b)
 
-        years = abs(delta.years)
-        months = abs(delta.months)
-        days = abs(delta.days)
-        hours = abs(delta.hours)
-        minutes = abs(delta.minutes)
+        dates = {"years": abs(delta.years),
+                 "months": abs(delta.months),
+                 "days": abs(delta.days),
+                 "hours": abs(delta.hours),
+                 "minutes": abs(delta.minutes),
+                 "seconds": abs(delta.seconds)}
 
-        dates = {years: "years",
-                 months: "months",
-                 days: "days",
-                 hours: "hours",
-                 months: "months",
-                 minutes: "minutes"}
-
-        for date in dates:
-            if date:
-                final.append(f"{date} {dates[date]}")
+        for k, v in dates.items():
+            if v:
+                final.append(f"{v} {k}")
 
         return final[:3]
 
