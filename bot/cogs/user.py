@@ -124,14 +124,11 @@ class User(Cog):
         if base_activity:
             activities = [ACTIVITIES[i.type] + i.name for i in base_activity if not isinstance(i, Spotify)]
         else:
-            activities = "No activity is being done"
+            activities = ["No activity is being done"]
 
         for activity in base_activity:
             if isinstance(activity, Spotify):
-                activities.append("\n".join([f'{STATUSES["spotify"]} Listening to Spotify',
-                                             f"**Song**: {activity.title}",
-                                             f"**Artist**: {activity.artist}",
-                                             f"**Album**: {activity.album}"]))
+                activities.append(f'{STATUSES["spotify"]} Listening to {activity.title}, {activity.artist}')
             break
 
         activities = "\n".join(activities)
