@@ -61,10 +61,12 @@ class Utilities(Cog):
         """Packs parameters into an embed and sends as a reminder."""
         if is_final_reminder:
             title = f"{context.author}'s reminder"
+            message = f"For: `{reason}`"
         else:
             title = f"I will remind {context.author}"
+            message = f"For: `{reason}` in `{time}` `{period}`"
         reminder_embed = Embed(title=title,
-                               description=f"For: `{reason}` in `{time}` `{period}`", colour=Colour.blue())
+                               description=message, colour=Colour.blue())
         await context.send(f"{context.author.mention}", embed=reminder_embed)
 
     async def reminder_wrapper(
