@@ -52,6 +52,21 @@ class Utilities(Cog):
         self.reminder_tasks = {}
         self.reminder_limit = 1
 
+    @staticmethod
+    async def send_reminder(context: Context,
+                            reason: str,
+                            time: str,
+                            period: str,
+                            is_final_reminder: bool = False) -> None:
+        """Packs parameters into an embed and sends as a reminder."""
+        if is_final_reminder:
+            title = f"{context.author}'s reminder"
+        else:
+            title = f"I will remind {context.author}"
+        reminder_embed = Embed(title=title,
+                               description=f"For: `{reason}` in `{time}` `{period}`", colour=Colour.blue())
+        await context.send(f"{context.author.mention}", embed=reminder_embed)
+
     async def reminder_wrapper(
             self,
             time: str,
@@ -82,6 +97,7 @@ class Utilities(Cog):
             Used for both regular reminders and the special 'drink' reminder.
             """
             completion_message = msg
+            custom_completion_message = None
 
             if task_type == "drink":
                 if self.drink_tasks[ctx.author.id] > 0:
@@ -90,13 +106,18 @@ class Utilities(Cog):
                 self.drink_tasks[ctx.author.id] -= 1
 
             elif task_type == "reminder":
-                completion_message = (
-                    f"{ctx.author.mention}, Reminder for: {reason if reason else ''}"
-                )
+                custom_completion_message = self.send_reminder(ctx,
+                                                               reason,
+                                                               time,
+                                                               period,
+                                                               is_final_reminder=True)
 
             if self.reminder_tasks[ctx.author.id] > 0:
                 self.reminder_tasks[ctx.author.id] -= 1
-                await ctx.send(completion_message)
+                if custom_completion_message:
+                    await custom_completion_message
+                else:
+                    await ctx.send(completion_message)
 
         if seconds:
             create_reminder.start()
@@ -115,13 +136,14 @@ class Utilities(Cog):
 
         return msg
 
-    @command(brief="[number] [unit (seconds/minutes/hours)] [reason for reminder]")
+    @command(brief="[number] [unit (seconds/minutes/hours)] [reason for reminder]", aliases=["remind"])
     async def reminder(self, ctx: Context, time: str, period: str = "minutes", *, reason: str = None) -> None:
         """Creates a reminder for the user."""
         reason = reason if reason else "nothing"
 
         if ctx.author.id not in self.reminder_tasks:
             self.reminder_tasks[ctx.author.id] = 0
+
         if self.reminder_tasks[ctx.author.id] < self.reminder_limit:
             await self.reminder_wrapper(
                 ctx=ctx, time=time, period=period, task_type="reminder", reason=reason
@@ -129,9 +151,7 @@ class Utilities(Cog):
 
             if period in VALID_PERIODS:
                 if self.reminder_tasks[ctx.author.id] > 0:
-                    await ctx.send(
-                        f"{ctx.author.mention} I will remind you about {reason} in {time} {period}"
-                    )
+                    await self.send_reminder(ctx, reason, time, period, is_final_reminder=False)
         else:
             await ctx.send(
                 f"{ctx.author.mention} you may only have {self.reminder_limit} at a time."
