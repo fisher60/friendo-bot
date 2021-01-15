@@ -2,6 +2,8 @@ from os import environ
 
 TOKEN = environ.get("FRIENDO_TOKEN")
 
+EMBED_COLOR = 0x7289da
+
 MEME_USERNAME = environ.get("MEME_USERNAME")
 
 MEME_PASSWORD = environ.get("MEME_PASSWORD")
