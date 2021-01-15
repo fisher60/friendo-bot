@@ -58,4 +58,7 @@ if __name__ == "__main__":
     # loads the user cog
     bot.load_extension("bot.cogs.user")
 
+    # loads the user cog
+    bot.load_extension("bot.cogs.trivia")
+
     bot.run(settings.TOKEN)
