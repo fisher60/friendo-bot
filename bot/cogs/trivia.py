@@ -62,7 +62,7 @@ class Trivia(commands.Cog):
                         Anime
                         Cartoons or Cartoon
                             """,
-                color = EMBED_COLOR
+                color=EMBED_COLOR
             )
             embed.set_footer(
                 text="Do .trivia (category name) to choose a category, categories are NOT case sensitive."
