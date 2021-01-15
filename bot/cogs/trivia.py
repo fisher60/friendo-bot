@@ -2,8 +2,6 @@
 import json
 import os
 
-from bot.settings import EMBED_COLOR
-
 from discord import Embed, Reaction
 from discord.abc import User
 from discord.ext import commands
@@ -61,8 +59,7 @@ class Trivia(commands.Cog):
                         Comics or Comic
                         Anime
                         Cartoons or Cartoon
-                            """,
-                color = EMBED_COLOR
+                            """
             )
             embed.set_footer(
                 text="Do .trivia (category name) to choose a category, categories are NOT case sensitive."
@@ -110,7 +107,7 @@ class Trivia(commands.Cog):
         elif category == 'cartoons' or category == 'cartoon':
             category = 32
 
-        message = await ctx.send(embed=Embed(title='Loading.....', color=EMBED_COLOR))
+        message = await ctx.send(embed=Embed(title='Loading.....'))
 
         while True:
             t_data = await self.get_trivia(category)
@@ -121,7 +118,6 @@ class Trivia(commands.Cog):
                             f"3️⃣: {t_data['answers'][2]}\n\n"
                             f"4️⃣: {t_data['answers'][3]}\n\n"
                             f"You have 15 seconds or until {ctx.author.mention} answers!",
-                color=EMBED_COLOR
             )
             embed.set_author(name=f"{t_data['difficulty']} question for {t_data['points']} points")
             embed.set_footer(text=t_data['category'])
@@ -183,8 +179,7 @@ class Trivia(commands.Cog):
 
             await message.edit(embed=Embed(
                 title=title,
-                description=description,
-                color=EMBED_COLOR
+                description=description
             ))
 
             await message.add_reaction("✅")
@@ -196,8 +191,7 @@ class Trivia(commands.Cog):
 
         message = await ctx.fetch_message(message.id)
         await message.edit(embed=Embed(
-            title="Nobody wanted to play trivia again 😞",
-            color=EMBED_COLOR
+            title="Nobody wanted to play trivia again 😞"
         ))
         for reaction in message.reactions:
             await reaction.clear()
@@ -211,14 +205,12 @@ class Trivia(commands.Cog):
         if str(ctx.author.id) in self.scores:
             await ctx.send(embed=Embed(
                 title=f"Trivia Score for {ctx.author.name}",
-                description=f"You currently have {self.scores[str(ctx.author.id)][1]} points!",
-                color=EMBED_COLOR
+                description=f"You currently have {self.scores[str(ctx.author.id)][1]} points!"
             ))
         else:
             await ctx.send(embed=Embed(
                 title="You need to play first!",
-                description="Do .trivia to play!",
-                color=EMBED_COLOR
+                description="Do .trivia to play!"
             ))
 
     @commands.command(
@@ -247,8 +239,7 @@ class Trivia(commands.Cog):
             description = "No one has played yet!"
         embed = Embed(
             title="Trivia top 25 leaderboard",
-            description=description,
-            color=EMBED_COLOR
+            description=description
         )
         if str(ctx.author.id) in self.scores:
             embed.set_footer(text=f"{ctx.author.name} you have {self.scores[str(ctx.author.id)][1]} points")

@@ -1,6 +1,6 @@
 from os import environ
 
-TOKEN = "Nzc4NjczODA2MTI1NTYzOTY1.X7Vafg.gix2jSDESqM75jSx13EDLLKVy5c"
+TOKEN = environ.get("FRIENDO_TOKEN")
 
 EMBED_COLOR = 0x7289da
 
