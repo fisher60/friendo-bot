@@ -2,7 +2,7 @@
 import json
 import os
 
-from discord import Embed, Reaction, Colour
+from discord import Colour, Embed, Reaction
 from discord.abc import User
 from discord.ext import commands
 from discord.ext.commands.bot import Bot
@@ -12,6 +12,7 @@ from html import unescape
 from asyncio import TimeoutError
 
 EMBED_COLOR = Colour.blue()
+
 
 class Trivia(commands.Cog):
     """commands for the trivia game."""
