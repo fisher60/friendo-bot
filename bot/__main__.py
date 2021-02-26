@@ -1,4 +1,4 @@
-from discord import Intents, AllowedMentions
+from discord import AllowedMentions, Intents
 from . import settings
 from bot.bot import Friendo
 
