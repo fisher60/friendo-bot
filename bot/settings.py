@@ -18,6 +18,10 @@ WEATHER_TOKEN = environ.get("WEATHER_TOKEN")
 
 AOC_SESSION_COOKIE = environ.get("AOC_SESSION_COOKIE")
 
+GRAPHQL_USER = environ.get("GRAPHQL_USER")
+
+GRAPHQL_PASS = environ.get("GRAPHQL_PASS")
+
 VERSION = "1.2"
 
 GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"

@@ -61,4 +61,7 @@ if __name__ == "__main__":
     # loads the user cog
     bot.load_extension("bot.cogs.user")
 
+    # loads the dogeboard cog
+    bot.load_extension("bot.cogs.dogeboard")
+
     bot.run(settings.TOKEN)
