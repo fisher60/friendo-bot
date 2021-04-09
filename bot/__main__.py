@@ -11,9 +11,9 @@ from bot import cogs
 
 def _get_cogs() -> Iterator[str]:
     """
-    Return an iterator going through each cog,
-    On each iteration the cog is check for having a
-    setup function raising a more readable error if not found.
+    Return an iterator going through each cog.
+
+    On each iteration the cog is check for having a setup function raising a more readable error if not found.
     """
 
     def on_error(name: str) -> NoReturn:
