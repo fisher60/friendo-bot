@@ -206,7 +206,10 @@ class DogeBoard(Cog):
                                     "use `.dogeboard channel <channel>` to start."
             else:
                 embed.add_field(name="Emoji", value=dogeboard_data.dogeboard_emoji)
-                embed.add_field(name="Channel", value=ctx.guild.get_channel(dogeboard_data.dogeboard_id))
+                embed.add_field(
+                    name="Channel",
+                    value=ctx.guild.get_channel(dogeboard_data.dogeboard_id).mention
+                )
                 embed.add_field(name="Required", value=str(dogeboard_data.dogeboard_reactions_required))
 
             await ctx.send(embed=embed)
