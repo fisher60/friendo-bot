@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, Optional, Tuple
 
 from aiohttp import ClientResponse
-from discord import Color, Embed, Member, RawReactionActionEvent, Reaction
+from discord import Color, Embed, Member, RawReactionActionEvent, Reaction, TextChannel, Message
 from discord.ext.commands import Cog, Context, group
 
 from bot import settings
@@ -126,14 +126,55 @@ class DogeBoard(Cog):
             except QueryError as e:
                 log.error(f"Query Errors: {e}")
 
+    async def send_dogeboard_message(self, message: Message, channel: TextChannel):
+        author: Member = message.author
+
+        embed = Embed(
+            title=author.display_name,
+            description=message.content + f"\n\n[Jump to message]({message.jump_url})",
+            colour=author.colour,
+        )
+
+        embed.set_thumbnail(url=author.avatar_url)
+
+        # Set the image to the first one if there is one
+        for attachment in message.attachments:
+            *_, ext = attachment.filename.split(".")
+            if ext in ["jpg", "png", "jpeg", "gif", "gifv"]:
+                embed.set_image(url=attachment.url)
+                break
+
+        await channel.send(embed=embed)
+
     @Cog.listener()
     async def on_raw_reaction_add(self, payload: RawReactionActionEvent) -> None:
         """Handle event when users add reactions."""
+
+        # Ensure the caches are ready
+        await self.bot.wait_until_ready()
+
         if self._token is None:
             await self._login()
 
-        # dogeboard_data = await self._get_guild_data(payload.guild_id)
-        # emoji = payload.emoji
+        # Test data
+        # dogeboard_data = self._get_guild_data(payload.guild_id)
+        dogeboard_data = DogeBoardData(
+            guild_id=566407576686952480,
+            channel_id=830213225806430208,
+            emoji="💩",
+            reactions_required=5,
+        )
+
+        if str(payload.emoji) == dogeboard_data.emoji:
+
+            channel = self.bot.get_channel(payload.channel_id)
+            message = await channel.fetch_message(payload.message_id)
+            reaction = next(r for r in message.reactions if r.emoji == str(payload.emoji))
+
+            if reaction.count >= dogeboard_data.reactions_required:
+                dogeboard_channel = self.bot.get_channel(dogeboard_data.channel_id)
+                await self.send_dogeboard_message(message, dogeboard_channel)
+
 
     @group(brief="Collate the best message of the server using reactions")
     async def dogeboard(self, ctx: Context) -> None:
