@@ -159,7 +159,7 @@ class Fun(Cog):
                     "`quantity` - how many to roll\n"
                     "`sides` - how many sides each die will have",
     )
-    async def dice(self, ctx: Context, n: int, sides: int) -> None:
+    async def dice(self, ctx: Context, quantity: int = 1, sides: int = 6) -> None:
         """Simply rolling a die."""
         if n <= 0:
             await ctx.send("you must roll at least one die")
