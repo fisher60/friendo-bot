@@ -186,7 +186,7 @@ class DogeBoard(Cog):
                         # it's already been DogeBoarded
                         return
 
-                elif reaction.emoji == payload.emoji:
+                elif str(reaction.emoji) == str(payload.emoji):
                     dogeboard_reaction = reaction
 
             if dogeboard_reaction:
