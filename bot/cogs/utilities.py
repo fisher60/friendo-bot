@@ -12,11 +12,15 @@ import yaml
 from bot import settings
 from bot.bot import Friendo
 
-with open(Path.cwd() / 'bot' / 'resources' / 'list_of_quotes.yaml', 'r', encoding='utf-8') as f:
-    lines = yaml.load(f, Loader=yaml.FullLoader)['lines']
+with open(
+    Path.cwd() / "bot" / "resources" / "list_of_quotes.yaml", "r", encoding="utf-8"
+) as f:
+    lines = yaml.load(f, Loader=yaml.FullLoader)["lines"]
 
 # Define the time period units user can pass
-VALID_PERIODS = "s sec secs second seconds m min mins minute minutes h hour hours".split()
+VALID_PERIODS = (
+    "s sec secs second seconds m min mins minute minutes h hour hours".split()
+)
 
 
 def convert_time(time: str, period: str) -> Optional[int]:
@@ -53,13 +57,13 @@ class Utilities(Cog):
         self.reminder_limit = 1
 
     async def reminder_wrapper(
-            self,
-            time: str,
-            period: str,
-            ctx: Context,
-            msg: str = "Reminder!",
-            task_type: str = "reminder",
-            reason: str = None
+        self,
+        time: str,
+        period: str,
+        ctx: Context,
+        msg: str = "Reminder!",
+        task_type: str = "reminder",
+        reason: str = None,
     ) -> None:
         """Wrapper function for reminders to allow the task to be created on function call."""
         seconds = convert_time(time, period)
@@ -108,7 +112,11 @@ class Utilities(Cog):
     @command(brief="Returns Friendo's Version")
     async def version(self, ctx: Context) -> str:
         """Creates a version number from settings.VERSION and most recent commit hash."""
-        commit_hash = (subprocess.check_output(["git", "rev-parse", "HEAD"]).strip().decode("ascii"))
+        commit_hash = (
+            subprocess.check_output(["git", "rev-parse", "HEAD"])
+            .strip()
+            .decode("ascii")
+        )
         msg = f"Version is {settings.VERSION}{commit_hash[-4:]}"
 
         await ctx.send(msg)
@@ -116,7 +124,9 @@ class Utilities(Cog):
         return msg
 
     @command(brief="[number] [unit (seconds/minutes/hours)] [reason for reminder]")
-    async def reminder(self, ctx: Context, time: str, period: str = "minutes", *, reason: str = None) -> None:
+    async def reminder(
+        self, ctx: Context, time: str, period: str = "minutes", *, reason: str = None
+    ) -> None:
         """Creates a reminder for the user."""
         reason = reason if reason else "nothing"
 
@@ -150,7 +160,7 @@ class Utilities(Cog):
 
             await self.reminder_wrapper(
                 ctx=ctx,
-                time='5',
+                time="5",
                 period="minutes",
                 msg=base_msg,
                 task_type="drink",
@@ -159,9 +169,10 @@ class Utilities(Cog):
 
             await self.reminder_wrapper(
                 ctx=ctx,
-                time='10',
+                time="10",
                 period="minutes",
-                msg=base_msg + "\n\nYou can run this command and have another if you'd like.",
+                msg=base_msg
+                + "\n\nYou can run this command and have another if you'd like.",
                 task_type="drink",
                 reason="drinking",
             )

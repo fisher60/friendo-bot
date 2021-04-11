@@ -3,24 +3,14 @@ import argparse
 parser = argparse.ArgumentParser()
 
 # no-api argument can be used to disable api cogs ie. events and memes currently
-parser.add_argument(
-    "--no-api",
-    help="disable api cogs in the bot",
-    action="store_true"
-)
+parser.add_argument("--no-api", help="disable api cogs in the bot", action="store_true")
 # enable argument can be used to enable certain cogs and disable all others
 parser.add_argument(
-    "--enable",
-    help="enable certain cogs in the bot",
-    default=[],
-    nargs="+"
+    "--enable", help="enable certain cogs in the bot", default=[], nargs="+"
 )
 # disable argument can be used to disable certain cogs and enable all others
 parser.add_argument(
-    "--disable",
-    help="disable certain cogs in the bot",
-    default=[],
-    nargs="+"
+    "--disable", help="disable certain cogs in the bot", default=[], nargs="+"
 )
 
 
@@ -46,7 +36,7 @@ class DisableApi:
         return self.args.disable
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     api_disabler = DisableApi()
     print(api_disabler.get_no_api())
     print(api_disabler.get_enable())

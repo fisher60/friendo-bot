@@ -6,11 +6,7 @@ from discord.ext import commands as comms
 from bot import settings
 
 SourceType = Union[
-    comms.HelpCommand,
-    comms.Command,
-    comms.Cog,
-    str,
-    comms.ExtensionNotLoaded,
+    comms.HelpCommand, comms.Command, comms.Cog, str, comms.ExtensionNotLoaded
 ]
 
 
@@ -62,8 +58,7 @@ class Source(comms.Cog):
                     description=f"Description: {src_obj.brief}",
                 )
                 embed.add_field(
-                    name="Repository",
-                    value=f"[Go To GitHub]({settings.GITHUB_REPO})",
+                    name="Repository", value=f"[Go To GitHub]({settings.GITHUB_REPO})"
                 )
                 await ctx.send(embed=embed)
             except comms.BadArgument:

@@ -34,11 +34,11 @@ def get_factorial(num: int) -> int:
 
 
 def _replace_many(
-        sentence: str,
-        replacements: dict,
-        *,
-        ignore_case: bool = False,
-        match_case: bool = False,
+    sentence: str,
+    replacements: dict,
+    *,
+    ignore_case: bool = False,
+    match_case: bool = False,
 ) -> str:
     """
     Replaces multiple substrings in a string given a mapping of strings.
@@ -156,8 +156,8 @@ class Fun(Cog):
     @command(
         brief="simulates a dice roll",
         description=".dice [quantity] [sides]\n"
-                    "`quantity` - how many to roll\n"
-                    "`sides` - how many sides each die will have",
+        "`quantity` - how many to roll\n"
+        "`sides` - how many sides each die will have",
     )
     async def dice(self, ctx: Context, n: int, sides: int) -> None:
         """Simply rolling a die."""

@@ -31,10 +31,7 @@ class Segmentation(Cog):
             if resp.status == 200:
                 file_name = f"temp_img_{len(self.img_queue)}.jpg"
                 self.img_queue.append(file_name)
-                f = await aiofiles.open(
-                    Path.cwd() / file_name,
-                    mode="wb",
-                )
+                f = await aiofiles.open(Path.cwd() / file_name, mode="wb")
                 await f.write(await resp.read())
                 await f.close()
 

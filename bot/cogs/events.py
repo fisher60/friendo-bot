@@ -11,9 +11,10 @@ class Events(Cog):
         self.bot = bot
         self.this_event = Event(bot)
 
-    @group(brief='Event command. Usage: `.events show "[*args]"`',
-           description="`.event show [keywords]` to display keyword search for related artists event\n",
-           )
+    @group(
+        brief='Event command. Usage: `.events show "[*args]"`',
+        description="`.event show [keywords]` to display keyword search for related artists event\n",
+    )
     async def events(self, ctx: Context) -> None:
         """Group commands for events."""
         pass
@@ -40,10 +41,12 @@ class Events(Cog):
                         if event_venue:
                             e_location = f"{event_venue['city']['name']}, {event_venue['country']['name']}"
 
-                            output = output + ((
-                                f"```ini\n[{event_venue['name']}]\n```"
-                                f"Location: {e_location}\nLocal-time: {event_date}"
-                            ))
+                            output = output + (
+                                (
+                                    f"```ini\n[{event_venue['name']}]\n```"
+                                    f"Location: {e_location}\nLocal-time: {event_date}"
+                                )
+                            )
 
             else:
                 output = "```md\nNo results found. Please try again.```"

@@ -3,8 +3,8 @@ from discord import errors
 from discord.ext.commands import Cog, Context, group
 from bot.settings import AOC_LEADERBOARD_LINK, AOC_SESSION_COOKIE
 
-cookie = {'session': AOC_SESSION_COOKIE}
-join_code = '442826-ab5b0efd'
+cookie = {"session": AOC_SESSION_COOKIE}
+join_code = "442826-ab5b0efd"
 
 
 class AdventOfCode(Cog):
@@ -17,49 +17,64 @@ class AdventOfCode(Cog):
     def sort_stats(stat_d: dict) -> dict:
         """Staticmethod for making a sorted dictionary of the leaderboard."""
         stats = dict()
-        for ms in stat_d['members']:
-            if stat_d['members'][ms]['name'] is None:
-                stat_d['members'][ms]['name'] = 'Anonymous'
-            stats.update({(stat_d['members'][ms]['name'],
-                         stat_d['members'][ms]['stars']): stat_d['members'][ms]['local_score']})
+        for ms in stat_d["members"]:
+            if stat_d["members"][ms]["name"] is None:
+                stat_d["members"][ms]["name"] = "Anonymous"
+            stats.update(
+                {
+                    (
+                        stat_d["members"][ms]["name"],
+                        stat_d["members"][ms]["stars"],
+                    ): stat_d["members"][ms]["local_score"]
+                }
+            )
 
         stats = {k: stats[k] for k in sorted(stats, key=lambda y: stats[y])[::-1]}
         return stats
 
-    @group(name="AdventofCode",
-           aliases=('aoc', 'aoc2020'),
-           brief="Small commands for AoC 2020",
-           usage=".aoc [command]")
+    @group(
+        name="AdventofCode",
+        aliases=("aoc", "aoc2020"),
+        brief="Small commands for AoC 2020",
+        usage=".aoc [command]",
+    )
     async def aoc_group(self, ctx: Context) -> None:
         """Group for advent of code commands."""
         if not ctx.invoked_subcommand:
             await ctx.send("Please enter a valid command")
 
-    @aoc_group.command(brief="Get the leaderboard join code in your DM's",
-                       usage=".aoc join",
-                       aliases=("join", "join_lb", "j"))
+    @aoc_group.command(
+        brief="Get the leaderboard join code in your DM's",
+        usage=".aoc join",
+        aliases=("join", "join_lb", "j"),
+    )
     async def join_leaderboard(self, ctx: Context) -> None:
         """Dms the author the join code and link for the leaderboard."""
         info = [
             "To join our leaderboard, follow these steps:",
             "• Log in on https://adventofcode.com",
             "• Head over to https://adventofcode.com/leaderboard/private",
-            f"• Use this code `{join_code}` to join the Code Collective leaderboard!"]
+            f"• Use this code `{join_code}` to join the Code Collective leaderboard!",
+        ]
         error_msg = f":x: {ctx.author.mention}, please (temporarily) enable DMs to receive the join code"
 
         await ctx.message.add_reaction("📨")
         try:
-            await ctx.author.send('\n'.join(info))
+            await ctx.author.send("\n".join(info))
         except errors.Forbidden:
             await ctx.send(error_msg)
 
-    @aoc_group.command(brief="Get the leaderboard of AoC 2020 for the Code Collective server",
-                       usage=".aoc leaderboard",
-                       aliases=('lb', 'board'))
+    @aoc_group.command(
+        brief="Get the leaderboard of AoC 2020 for the Code Collective server",
+        usage=".aoc leaderboard",
+        aliases=("lb", "board"),
+    )
     async def leaderboard(self, ctx: Context) -> None:
         """Shows the leaderboard of code collective server for AoC 2020."""
         async with ctx.channel.typing():
-            async with self.bot.session.get(AOC_LEADERBOARD_LINK, cookies=cookie) as stats:
+            async with self.bot.session.get(
+                AOC_LEADERBOARD_LINK, cookies=cookie
+            ) as stats:
                 stats = await stats.json()
                 sorted_stats = self.sort_stats(stats)
                 msg = []
@@ -68,11 +83,14 @@ class AdventOfCode(Cog):
                 for name_star, score in sorted_stats.items():
                     msg.append(
                         f"{count} | {name_star[0] + ' '*(16-len(name_star[0]))} "
-                        f"|  {name_star[1]} ★  |   {score}")
+                        f"|  {name_star[1]} ★  |   {score}"
+                    )
                     count += 1
 
-                msg = '\n'.join(msg)
-                await ctx.send("🎄 Advent of Code 2020 leaderboard for Code Collective 🎄")
+                msg = "\n".join(msg)
+                await ctx.send(
+                    "🎄 Advent of Code 2020 leaderboard for Code Collective 🎄"
+                )
                 await ctx.send(f"```  | Name {' '*(16-4)}| Stars | Score\n{msg}```")
 
 

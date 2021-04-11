@@ -62,7 +62,9 @@ class Administration(Cog):
         if str(member.id) not in save_data["admins"]:
             save_data["admins"].append(str(member.id))
 
-            async with aiofiles.open(Path.cwd() / "bot" / "save_data.json", "w") as file:
+            async with aiofiles.open(
+                Path.cwd() / "bot" / "save_data.json", "w"
+            ) as file:
                 await file.write(json.dumps(save_data))
                 msg = f"{ctx.author.mention}, {member.name} has been added to admins"
 

@@ -3,9 +3,15 @@ import yaml
 from pathlib import Path
 from discord.ext.commands import Bot, Cog, Context, command
 
-with open(Path.cwd() / 'bot' / 'resources' / 'wonder_twins.yaml', 'r', encoding='utf-8') as f:
+with open(
+    Path.cwd() / "bot" / "resources" / "wonder_twins.yaml", "r", encoding="utf-8"
+) as f:
     info = yaml.load(f, Loader=yaml.FullLoader)
-    WATER_TYPES, OBJECTS, ADJECTIVES = info['water_types'], info['objects'], info["adjectives"]
+    WATER_TYPES, OBJECTS, ADJECTIVES = (
+        info["water_types"],
+        info["objects"],
+        info["adjectives"],
+    )
 
 
 class WonderTwins(Cog):

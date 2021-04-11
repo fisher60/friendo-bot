@@ -6,7 +6,7 @@ from typing import List
 from bot.bot import Friendo
 from bot.settings import MEME_PASSWORD, MEME_USERNAME
 
-MEME_DIR = Path.cwd() / 'bot' / 'meme_api' / 'json' / 'meme_list.json'
+MEME_DIR = Path.cwd() / "bot" / "meme_api" / "json" / "meme_list.json"
 
 log = logging.getLogger(__name__)
 
@@ -75,4 +75,8 @@ class Meme:
                     final_dict[name] = meme["box_count"]
 
         if len(final_dict) > 0:
-            return "\n".join([f"Name: {x}, Text Boxes: {final_dict[x]}" for x in final_dict.keys()][:10])
+            return "\n".join(
+                [f"Name: {x}, Text Boxes: {final_dict[x]}" for x in final_dict.keys()][
+                    :10
+                ]
+            )

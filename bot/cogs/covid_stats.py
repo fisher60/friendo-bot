@@ -27,7 +27,7 @@ class CovidStats(Cog):
 
     @command(
         brief="Choose a country's COVID19 stats. `.covid_stats [slug | country code | country name]`",
-        aliases=("covidstats", "covid", "coronavirus", "covid19", "covid-19",),
+        aliases=("covidstats", "covid", "coronavirus", "covid19", "covid-19"),
     )
     async def covid_stats(self, ctx: Context, country: str) -> None:
         """Shows a summary COVID19 stats of a specific country."""
@@ -68,9 +68,9 @@ class CovidStats(Cog):
             data = []
             for _ in read:
                 if (
-                        country.lower() == _["Country"].lower()
-                        or country.lower() == _["Slug"].lower()
-                        or country.lower() == _["CountryCode"].lower()
+                    country.lower() == _["Country"].lower()
+                    or country.lower() == _["Slug"].lower()
+                    or country.lower() == _["CountryCode"].lower()
                 ):
                     for key, value in _.items():
                         if isinstance(value, int):

@@ -4,8 +4,8 @@ import logging
 import os
 from pathlib import Path
 
-LOG_FILE_PATH = Path.cwd() / 'logs'
-IMG_CACHE = Path.cwd() / 'tmp'
+LOG_FILE_PATH = Path.cwd() / "logs"
+IMG_CACHE = Path.cwd() / "tmp"
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)

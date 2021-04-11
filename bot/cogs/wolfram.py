@@ -12,13 +12,13 @@ class Wolfram(commands.Cog):
         self.bot = bot
         self.query = "http://api.wolframalpha.com/v2/{request}?{data}"
 
-    @commands.command(brief="Takes in a wolfram search and displays the result", usage=".wolfram [query]")
+    @commands.command(
+        brief="Takes in a wolfram search and displays the result",
+        usage=".wolfram [query]",
+    )
     async def wolfram(self, ctx: commands.context, *, query: str) -> None:
         """Wolfram command, takes in a search and gives the result."""
-        url_str = parse.urlencode({
-            "i": query,
-            "appid": WOLFRAM_APPID,
-        })
+        url_str = parse.urlencode({"i": query, "appid": WOLFRAM_APPID})
 
         query_final = self.query.format(request="simple", data=url_str)
 
