@@ -236,7 +236,7 @@ class TodoList(Cog):
                             async with aiofiles.open(
                                     TODO_FILE, "w+"
                             ) as update:
-                                update.write(json.dumps(todo_file_read))
+                                await update.write(json.dumps(todo_file_read))
                             await ctx.send(embed=embed_nuked_todos)
                         else:
                             await ctx.send(
