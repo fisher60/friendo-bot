@@ -4,6 +4,7 @@ import logging
 import os
 from pathlib import Path
 from typing import Tuple
+import aiofiles
 
 from discord import Colour, Embed
 from discord.ext import tasks
@@ -13,7 +14,7 @@ from bot.bot import Friendo
 
 log = logging.getLogger(__name__)
 
-TODO_FILE = Path.cwd() / 'todo_list_data.json'
+TODO_FILE = Path.cwd() / 'bot' / 'todo_list_data.json'
 
 
 async def update_of_todos(ctx: Context, todos: str) -> None:
@@ -26,8 +27,8 @@ async def update_of_todos(ctx: Context, todos: str) -> None:
         # This will check if the file is NOT empty
         if os.stat(TODO_FILE).st_size > 0:
 
-            with open(TODO_FILE, "r") as read:
-                todo_file_read = json.load(read)
+            async with aiofiles.open(TODO_FILE, "r") as read:
+                todo_file_read = json.loads(await read.read())
 
                 # If key does not exist, a new dictionary is created
                 if str(ctx.author.id) not in todo_file_read:
@@ -49,17 +50,17 @@ async def update_of_todos(ctx: Context, todos: str) -> None:
                         },
                     }
 
-            with open(TODO_FILE, "w") as update_write:
+            async with aiofiles.open(TODO_FILE, "w") as update_write:
                 # Writes newly updated dictionary and dump it to a json file.
-                json.dump(todo_file_read, fp=update_write)
+                await update_write.write(json.dumps(todo_file_read))
 
         # If file is empty, this elif block will run
         elif os.stat(TODO_FILE).st_size == 0:
-            with open(TODO_FILE, "w") as update_write:
-                json.dump({}, fp=update_write)
+            async with aiofiles.open(TODO_FILE, "w") as update_write:
+                await update_write.write(json.dumps({}))
 
-                with open(TODO_FILE, "r") as read:
-                    todo_file_read = json.load(read)
+                async with aiofiles.open(TODO_FILE, "r") as read:
+                    todo_file_read = json.loads(await read.read())
                     todo_file_read[str(ctx.author.id)] = {
                         num: todo.strip().rstrip()
                         for num, todo in enumerate(todos, start=1)
@@ -69,14 +70,14 @@ async def update_of_todos(ctx: Context, todos: str) -> None:
     # If file does not exist, a new todo list will be created
     else:
         log.info("todo_list_data.json does not exist")
-        with open(TODO_FILE, "w+") as to_write:
+        async with aiofiles.open(TODO_FILE, "w+") as to_write:
             todo_dict = {
                 ctx.author.id: {
                     num: todo.strip().rstrip()
                     for num, todo in enumerate(todos, start=1)
                 }
             }
-            json.dump(todo_dict, fp=to_write)
+            await to_write.write(json.dump(todo_dict))
 
 
 async def deletion_of_todos(ctx: Context, keys_to_delete: str) -> bool:
@@ -87,8 +88,8 @@ async def deletion_of_todos(ctx: Context, keys_to_delete: str) -> bool:
         if (
                 os.stat(TODO_FILE).st_size > 0
         ):  # This will check if the file is NOT empty
-            with open(TODO_FILE, "r") as read:
-                todo_file_read = json.load(read)
+            async with aiofiles.open(TODO_FILE, "r") as read:
+                todo_file_read = json.loads(await read.read())
                 if (
                         str(ctx.author.id)
                 ) in todo_file_read:  # If key does not exist, a new dictionary is created
@@ -102,8 +103,8 @@ async def deletion_of_todos(ctx: Context, keys_to_delete: str) -> bool:
                             todo_file_read[str(ctx.author.id)].values(), start=1
                         )
                     }
-                    with open(TODO_FILE, "w") as update:
-                        json.dump(todo_file_read, fp=update)
+                    async with aiofiles.open(TODO_FILE, "w") as update:
+                        await update.write(json.dumps(todo_file_read))
 
                 else:
                     return False  # This will be used later for ctx.send
@@ -176,13 +177,13 @@ class TodoList(Cog):
             log.info("todo_list_data.json exists")
 
         else:
-            with open(TODO_FILE, "w") as f:
-                f.write(f"{''}")
+            async with aiofiles.open(TODO_FILE, "w") as f:
+                await f.write(f"{''}")
 
         # This will check if the file is NOT empty
         if os.stat(TODO_FILE).st_size > 0:
-            with open(TODO_FILE, "r+") as read:
-                todo_file_read = json.load(read)
+            async with aiofiles.open(TODO_FILE, "r+") as read:
+                todo_file_read = json.loads(await read.read())
 
                 if str(ctx.author.id) in todo_file_read:
                     if todo_file_read[str(ctx.author.id)]:
@@ -222,8 +223,8 @@ class TodoList(Cog):
         if TODO_FILE.is_file():
             if os.stat(TODO_FILE).st_size > 0:
 
-                with open(TODO_FILE, "r+") as read:
-                    todo_file_read = json.load(read)
+                async with aiofiles.open(TODO_FILE, "r+") as read:
+                    todo_file_read = json.load(await read.read())
                     if str(ctx.author.id) in todo_file_read:
                         if todo_file_read[str(ctx.author.id)]:
                             todo_file_read[str(ctx.author.id)] = {}
@@ -232,10 +233,10 @@ class TodoList(Cog):
                                 description=f"Your todo list is now empty {ctx.author}.",
                                 color=Colour.dark_purple(),
                             )
-                            with open(
+                            async with aiofiles.open(
                                     TODO_FILE, "w+"
                             ) as update:
-                                json.dump(todo_file_read, fp=update)
+                                update.write(json.dumps(todo_file_read))
                             await ctx.send(embed=embed_nuked_todos)
                         else:
                             await ctx.send(
