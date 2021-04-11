@@ -220,8 +220,13 @@ class DogeBoard(Cog):
         dogeboard_data = await self._get_guild_data(ctx.guild.id)
 
         if not dogeboard_data:
-            await ctx.send("> DogeBoard has not been configured for this guild. "
-                           "Use `.dogeboard channel <channel>` to enable")
+            await ctx.send(
+                ">>> DogeBoard has not been configured for this guild.\n"
+                "Use `.dogeboard channel <channel>` to enable this feature.\n"
+                "You can configure the emoji and required reactions by using.\n"
+                "Use `.dogeboard emoji` to configure the emoji.\n"
+                "User `.dogeboard required <amount>` to configure the required reactions."
+            )
             return
 
         reaction_msg = await ctx.send(content="> React with the new dogeboard_emoji")
@@ -265,8 +270,13 @@ class DogeBoard(Cog):
         dogeboard_data = await self._get_guild_data(ctx.guild.id)
 
         if not dogeboard_data:
-            await ctx.send("> DogeBoard has not been configured for this guild. "
-                           "Use `.dogeboard channel <channel>` to enable")
+            await ctx.send(
+                ">>> DogeBoard has not been configured for this guild.\n"
+                "Use `.dogeboard channel <channel>` to enable this feature.\n"
+                "You can configure the emoji and required reactions by using.\n"
+                "Use `.dogeboard emoji` to configure the emoji.\n"
+                "User `.dogeboard required <amount>` to configure the required reactions."
+            )
             return
 
         dogeboard_data.dogeboard_reactions_required = amount
