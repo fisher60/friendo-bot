@@ -252,7 +252,7 @@ class DogeBoard(Cog):
         dogeboard_data = await self._get_guild_data(ctx.guild.id)
 
         if not dogeboard_data:
-            dogeboard_data = DogeBoardData(guild_id=ctx.guild.id, channel_id=channel.id)
+            dogeboard_data = DogeBoardData(guild_id=ctx.guild.id, dogeboard_id=channel.id)
         else:
             dogeboard_data.dogeboard_id = channel.id
 
