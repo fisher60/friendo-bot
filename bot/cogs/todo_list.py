@@ -178,7 +178,7 @@ class TodoList(Cog):
 
         else:
             async with aiofiles.open(TODO_FILE, "w") as f:
-                await f.write(f"{''}")
+                await f.write("")
 
         # This will check if the file is NOT empty
         if os.stat(TODO_FILE).st_size > 0:
