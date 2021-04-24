@@ -243,7 +243,7 @@ class DogeBoard(Cog):
 
         # Default Emoji or Guild dogeboard_emoji
         if not reaction.custom_emoji or reaction.emoji in ctx.guild.emojis:
-            dogeboard_data.dogeboard_emoji = reaction.emoji
+            dogeboard_data.dogeboard_emoji = str(reaction.emoji)
         else:
             await ctx.send("> Please react with a default or guild dogeboard_emoji.")
             return None
