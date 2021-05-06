@@ -41,5 +41,5 @@ class RandomCase(Cog):
 
 
 def setup(bot: Friendo) -> None:
-    """Load the Utilities cog."""
+    """Load the RandomCase cog."""
     bot.add_cog(RandomCase())
