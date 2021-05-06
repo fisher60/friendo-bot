@@ -21,7 +21,7 @@ class RandomCase(Cog):
         """
         Cycles though upper and lower, with a chance to skip.
 
-        Progressivly increases the chance to skip a cycle.
+        Progressively increases the chance to skip a cycle.
         """
         if random.random() > self.chance_to_skip:
             next(_func)
