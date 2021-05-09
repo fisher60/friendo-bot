@@ -33,6 +33,9 @@ EVENT_API_KEY = <your ticketmaster api key>
 MUSIC_TOKEN = <your Last.fm api key>
 WEATHER_TOKEN = <your open weather token>
 AOC_SESSION_COOKIE = <your advent of code session cookie>
+FRIENDO_API_USER = <your friendo api username>
+FRIENDO_API_PASS = <your friendo api password>
+FRIENDO_API_URL = <friendo api url>
 ```
 
 ## Dev Installation
