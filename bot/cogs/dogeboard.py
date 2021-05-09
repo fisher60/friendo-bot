@@ -177,6 +177,10 @@ class DogeBoard(Cog):
             channel = self.bot.get_channel(payload.channel_id)
             message = await channel.fetch_message(payload.message_id)
 
+            # Prevent bot messages from being starred
+            if message.author == self.bot.user:
+                return
+
             dogeboard_reaction: Optional[Reaction] = None
             for reaction in message.reactions:
 
