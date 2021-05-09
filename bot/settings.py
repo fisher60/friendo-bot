@@ -18,6 +18,10 @@ WEATHER_TOKEN = environ.get("WEATHER_TOKEN")
 
 AOC_SESSION_COOKIE = environ.get("AOC_SESSION_COOKIE")
 
+FRIENDO_API_USER = environ.get("FRIENDO_API_USER")
+FRIENDO_API_PASS = environ.get("FRIENDO_API_PASS")
+FRIENDO_API_URL = environ.get("FRIENDO_API_URL", "http://dev.friendo.us/api/")
+
 VERSION = "1.2"
 
 GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"

@@ -12,8 +12,8 @@ from bot.bot import Friendo
 log = logging.getLogger(__name__)
 
 
-def is_admin() -> Callable:
-    """Return whether or not the user invoking a command is an admin."""
+def is_bot_admin() -> Callable:
+    """Return whether or not the user invoking a command is an bot admin."""
 
     def predicate(ctx: Context) -> bool:
         """Opening the admin json config file."""
@@ -40,7 +40,7 @@ class Administration(Cog):
         self.bot = bot
 
     @command(brief="Kills your robotic friend")
-    @is_admin()
+    @is_bot_admin()
     async def shutdown(self, ctx: Context) -> None:
         """Cleanly shuts down the bot."""
         await ctx.send("Mr. Stark, I don't feel so good...")
@@ -50,7 +50,7 @@ class Administration(Cog):
         await self.bot.logout()
 
     @command(name="createadmin", brief="gives the @mention user admin permissions")
-    @is_admin()
+    @is_bot_admin()
     async def create_admin(self, ctx: Context, member: Member) -> None:
         """Adds a new user id to the list of admins."""
         msg = f"Could not create admin from {member.name}"
