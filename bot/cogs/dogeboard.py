@@ -44,6 +44,7 @@ class DogeBoard(Cog):
         self._cache: Dict[int, DogeBoardData] = {}
         self._token: Optional[str] = None
         self._url = settings.FRIENDO_API_URL
+        self.doged_messages = []
 
     @property
     def headers(self) -> Dict[str, str]:
@@ -193,8 +194,9 @@ class DogeBoard(Cog):
                 elif str(reaction.emoji) == str(payload.emoji):
                     dogeboard_reaction = reaction
 
-            if dogeboard_reaction:
+            if dogeboard_reaction and message.id not in self.doged_messages:
                 if dogeboard_reaction.count >= dogeboard_data.dogeboard_reactions_required:
+                    self.doged_messages.append(message.id)
                     dogeboard_channel = self.bot.get_channel(dogeboard_data.dogeboard_id)
                     await self._send_dogeboard_message(message, dogeboard_channel)
 
