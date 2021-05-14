@@ -165,7 +165,7 @@ class TodoList(Cog):
         """Creates a todo list for the user."""
         await self.todo_list_wrapper(ctx=ctx, task_type="todo_list", todos=todos)
 
-    @command(brief="Friendo deletes todos by specified keys")
+    @command(brief="Friendo deletes todos by specified keys", aliases=["deletetodos"])
     async def delete_todos(self, ctx: Context, *, todos: str = None) -> None:
         """Deletes todos from a todo list for the user."""
         await self.todo_list_wrapper(ctx=ctx, task_type="delete_todos", todos=todos)
@@ -216,35 +216,29 @@ class TodoList(Cog):
 
     @command(
         brief="Friendo will nuke your whole todo list to emptiness.",
-        aliases=["deletetodos", "nuketodos"],
+        aliases=["nuketodos"],
     )
     async def nuke_todos(self, ctx: Context) -> None:
         """This will delete the whole todo list of a specific user. Good if user has too many todos."""
+        print("delete command ran")
         if TODO_FILE.is_file():
             if os.stat(TODO_FILE).st_size > 0:
 
-                async with aiofiles.open(TODO_FILE, "r+") as read:
-                    todo_file_read = json.load(await read.read())
-                    if str(ctx.author.id) in todo_file_read:
-                        if todo_file_read[str(ctx.author.id)]:
-                            todo_file_read[str(ctx.author.id)] = {}
-                            embed_nuked_todos = Embed(
-                                title="NUKED! :exploding_head:",
-                                description=f"Your todo list is now empty {ctx.author}.",
-                                color=Colour.dark_purple(),
-                            )
-                            async with aiofiles.open(
-                                    TODO_FILE, "w+"
-                            ) as update:
-                                await update.write(json.dumps(todo_file_read))
-                            await ctx.send(embed=embed_nuked_todos)
-                        else:
-                            await ctx.send(
-                                embed=Embed(
-                                    title="You have no existing entries! Nothing to nuke :exploding_head:!",
-                                    color=Colour.red(),
-                                )
-                            )
+                async with aiofiles.open(TODO_FILE, "r+") as read_file:
+                    todo_file_read = json.loads(await read_file.read())
+                print(todo_file_read)
+
+                if str(ctx.author.id) in todo_file_read:
+                    if todo_file_read[str(ctx.author.id)]:
+                        todo_file_read[str(ctx.author.id)] = {}
+                        embed_nuked_todos = Embed(
+                            title="NUKED! :exploding_head:",
+                            description=f"Your todo list is now empty {ctx.author}.",
+                            color=Colour.dark_purple(),
+                        )
+                        async with aiofiles.open(TODO_FILE, "w+") as update:
+                            await update.write(json.dumps(todo_file_read))
+                        await ctx.send(embed=embed_nuked_todos)
                     else:
                         await ctx.send(
                             embed=Embed(
@@ -252,6 +246,13 @@ class TodoList(Cog):
                                 color=Colour.red(),
                             )
                         )
+                else:
+                    await ctx.send(
+                        embed=Embed(
+                            title="You have no existing entries! Nothing to nuke :exploding_head:!",
+                            color=Colour.red(),
+                        )
+                    )
             else:
                 await ctx.send(
                     embed=Embed(

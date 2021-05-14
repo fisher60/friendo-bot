@@ -10,6 +10,7 @@ from discord.ext.commands import Cog, Context, check, command
 
 from bot.bot import Friendo
 
+SAVE_DATA_FILE = Path.cwd() / "bot" / "save_data.JSON"
 log = logging.getLogger(__name__)
 
 
@@ -18,7 +19,7 @@ def is_bot_admin() -> Callable:
 
     async def predicate(ctx: Context) -> bool:
         """Opening the admin json config file."""
-        async with aiofiles.open(Path.cwd() / "bot" / "save_data.json", "r") as file:
+        async with aiofiles.open(SAVE_DATA_FILE, "r") as file:
             save_data = json.loads(await file.read())
 
         return str(ctx.message.author.id) in save_data["admins"]
@@ -56,13 +57,13 @@ class Administration(Cog):
         """Adds a new user id to the list of admins."""
         msg = f"Could not create admin from {member.name}"
 
-        async with aiofiles.open(Path.cwd() / "bot" / "save_data.json", "r") as file:
+        async with aiofiles.open(SAVE_DATA_FILE, "r") as file:
             save_data = json.loads(await file.read())
 
         if str(member.id) not in save_data["admins"]:
             save_data["admins"].append(str(member.id))
 
-            async with aiofiles.open(Path.cwd() / "bot" / "save_data.json", "w") as file:
+            async with aiofiles.open(SAVE_DATA_FILE, "w") as file:
                 await file.write(json.dumps(save_data))
                 msg = f"{ctx.author.mention}, {member.name} has been added to admins"
 
