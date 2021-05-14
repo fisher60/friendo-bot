@@ -2,6 +2,7 @@ import json
 import logging
 from pathlib import Path
 from typing import List
+import aiofiles
 
 from bot.bot import Friendo
 from bot.settings import MEME_PASSWORD, MEME_USERNAME
@@ -56,8 +57,8 @@ class Meme:
 
                 _json = await resp.json()
 
-                with open(MEME_DIR, "w+") as f:
-                    json.dump(_json, f)
+                async with aiofiles.open(MEME_DIR, "w+") as f:
+                    await f.write(json.dumps(_json))
 
             else:
                 log.info("Failed to update meme list, aborting...")
