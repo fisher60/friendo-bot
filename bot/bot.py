@@ -1,10 +1,12 @@
 import asyncio
 import logging
+import socket
 
 import aiohttp
 from discord.ext.commands import Bot, CommandError, Context
 
 from .disable import DisableApi
+from .graphql import GraphQLClient
 from .settings import API_COGS
 
 log = logging.getLogger(__name__)
@@ -19,14 +21,23 @@ class Friendo(Bot):
         # Setting the loop.
         self.loop = asyncio.get_event_loop()
 
-        # Creating session for web requests.
-        self.session = aiohttp.ClientSession()
+        self._resolver = aiohttp.AsyncResolver()
+        self._connector = aiohttp.TCPConnector(
+            resolver=self._resolver,
+            family=socket.AF_INET,
+        )
+        # Client.login() will call HTTPClient.static_login() which will create a session using
+        # this connector attribute.
+        self.http.connector = self._connector
+
+        self.session = aiohttp.ClientSession(connector=self._connector)
+        self.graphql = GraphQLClient(connector=self._connector)
 
     @staticmethod
     async def on_ready() -> None:
         """Runs when the bot is connected."""
         log.info('Awaiting...')
-        print("Bot Is Ready For Commands")
+        log.info("Bot Is Ready For Commands")
 
     async def on_command_error(self, ctx: Context, exception: CommandError) -> None:
         """Fired when exception happens."""
@@ -35,11 +46,21 @@ class Friendo(Bot):
             exc_info=(type(exception), exception, exception.__traceback__)
         )
 
-    async def logout(self) -> None:
-        """Making sure connections are closed properly."""
-        await self.session.close()
+    async def close(self) -> None:
+        """Make sure connections are closed properly."""
+        await super().logout()
 
-        return await super().logout()
+        if self.graphql:
+            await self.graphql.close()
+
+        if self.session:
+            await self.session.close()
+
+        if self._connector:
+            await self._connector.close()
+
+        if self._resolver:
+            await self._resolver.close()
 
     def load_extension(self, name: str) -> None:
         """Loads an extension after checking if it's disabled or not."""
