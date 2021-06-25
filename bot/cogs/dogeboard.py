@@ -1,9 +1,8 @@
 import asyncio
 import logging
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Tuple
+from typing import Dict, Optional
 
-from aiohttp import ClientResponse
 from discord import Color, Embed, Member, Message, RawReactionActionEvent, Reaction, TextChannel
 from discord.ext.commands import Cog, Context, group
 
@@ -11,15 +10,6 @@ from bot import settings
 from bot.bot import Friendo
 
 log = logging.getLogger(__name__)
-
-
-class QueryError(Exception):
-    """Error containing all query errors."""
-
-    errors: Tuple[Any]
-
-    def __init__(self, *errors, **kwargs):
-        self.errors = errors
 
 
 @dataclass
@@ -45,39 +35,6 @@ class DogeBoard(Cog):
         self._token: Optional[str] = None
         self._url = settings.FRIENDO_API_URL
 
-    @property
-    def headers(self) -> Dict[str, str]:
-        """Get headers used in API calls."""
-        if self._token:
-            return {"Authorization": f"Bearer {self._token}"}
-
-    @staticmethod
-    async def _handle_request(resp: ClientResponse) -> Dict[str, Any]:
-        """Handle the request errors and status codes."""
-        if resp.status != 200:
-            raise ConnectionError(f"Error: {resp.status} | Cannot connect to GraphQL Database")
-
-        data = await resp.json()
-        if errors := data.get("errors"):
-            raise QueryError([error["message"] for error in errors])
-        return data
-
-    async def _login(self) -> None:
-        """Login to the GraphQL database and store the token."""
-        query = """mutation {
-          login(data: { username: "%s", password: "%s" }) {
-            token
-          }
-        }
-        """ % (settings.FRIENDO_API_USER, settings.FRIENDO_API_PASS)
-
-        async with self.bot.session.post(self._url, json={"query": query}) as resp:
-            data = await self._handle_request(resp)
-            try:
-                self._token = data["data"]["login"]["token"]
-            except QueryError as e:
-                log.error(f"Couldn't login: {e}")
-
     async def _get_guild_data(self, guild_id: int) -> Optional[DogeBoardData]:
         """
         Attempt to get the dogeboard_data from cache using guild_id.
@@ -85,9 +42,6 @@ class DogeBoard(Cog):
         if the data is not in the cache, it will request it from the GraphQL DB.
         if the data doesn't exist in the database it will be created and send to GraphQL DB
         """
-        if self._token is None:
-            await self._login()
-
         if dogeboard_data := self._cache.get(guild_id):
             return dogeboard_data
         elif dogeboard_data := await self._fetch_guild_data(guild_id):
@@ -95,53 +49,50 @@ class DogeBoard(Cog):
 
     async def _fetch_guild_data(self, guild_id: int) -> Optional[DogeBoardData]:
         """Attempt to fetch guild data from the GraphQL database."""
-        query = """mutation {
-            get_guild(data: { guild_id: "%s", }) {
-                guild_id
-                dogeboard_id
-                dogeboard_emoji
-                dogeboard_reactions_required
-              }
-        }""" % guild_id
+        query = (
+            "mutation fetch_guild($guild_id: BigInt!) {"
+            "   get_guild(data: { guild_id: $guild_id }) {"
+            "    guild_id"
+            "    dogeboard_id"
+            "    dogeboard_emoji"
+            "    dogeboard_reactions_required"
+            "  }"
+            "}"
+        )
+        variables = {"guild_id": guild_id}
 
-        async with self.bot.session.post(self._url, json={"query": query}, headers=self.headers) as resp:
-            try:
-                data = await self._handle_request(resp)
+        resp = await self.bot.graphql.request(json={"query": query, "variables": variables})
+        log.info(resp)
 
-                dogeboard_data = DogeBoardData(**data["data"]["get_guild"])
-                self._cache[guild_id] = dogeboard_data
-                return dogeboard_data
-            except QueryError as e:
-                log.error(f"Query Errors: {e}")
+        dogeboard_data = DogeBoardData(**resp["data"]["get_guild"])
+        self._cache[guild_id] = dogeboard_data
+
+        return dogeboard_data
 
     async def _update_guild_data(self, dogeboard: DogeBoardData) -> None:
         """Update the cache and api with the new dogeboard data."""
-        if self._token is None:
-            await self._login()
-
-        self._cache[dogeboard.guild_id] = dogeboard
-        query = """mutation {
-            modify_guild(data: {
-                guild_id: %d,
-                dogeboard_id: %d,
-                dogeboard_emoji: "%s",
-                dogeboard_reactions_required: %d
-            }) {
-              guild_id
-          }
-        }""" % (
-            dogeboard.guild_id,
-            dogeboard.dogeboard_id,
-            dogeboard.dogeboard_emoji,
-            dogeboard.dogeboard_reactions_required
+        query = (
+            "mutation modify("
+            "   $guild_id: BigInt!,"
+            "   $dogeboard_id: Int!,"
+            "   $dogeboard_emoji: String!,"
+            "   $dogeboard_reactions_required: Int!"
+            "){"
+            "   modify_guild("
+            "       data: {"
+            "           guild_id: $guild_id,"
+            "           dogeboard_id: $dogeboard_id,"
+            "           dogeboard_emoji: $dogeboard_emoji,"
+            "           dogeboard_reactions_required: $dogeboard_reactions_required"
+            "       }"
+            "   ){"
+            "       guild_id"
+            "   }"
+            "}"
         )
 
-        async with self.bot.session.post(self._url, json={"query": query}, headers=self.headers) as resp:
-            try:
-                await self._handle_request(resp)
-                self._cache[dogeboard.guild_id] = dogeboard
-            except QueryError as e:
-                log.error(f"Query Errors: {e}")
+        await self.bot.graphql.request(json={"query": query, "variables": dogeboard})
+        self._cache[dogeboard.guild_id] = dogeboard
 
     @staticmethod
     async def _send_dogeboard_message(message: Message, channel: TextChannel) -> None:
