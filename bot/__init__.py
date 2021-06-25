@@ -18,15 +18,17 @@ if not os.path.exists(LOG_FILE_PATH):
 if not os.path.exists(IMG_CACHE):
     os.makedirs(IMG_CACHE)
 
+log_formatter = logging.Formatter("%(levelname)s:%(asctime)s:%(name)s: %(message)s")
+
 FILE_HANDLER = logging.FileHandler(
     filename=Path(LOG_FILE_PATH, "friendo.log"), encoding="utf-8", mode="w"
 )
-
-FILE_HANDLER.setFormatter(
-    logging.Formatter("%(levelname)s:%(asctime)s:%(name)s: %(message)s")
-)
-
+FILE_HANDLER.setFormatter(log_formatter)
 log.addHandler(FILE_HANDLER)
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(log_formatter)
+log.addHandler(console_handler)
 
 log.info("Cleaning out image_cache")
 
