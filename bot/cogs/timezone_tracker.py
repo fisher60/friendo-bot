@@ -18,12 +18,21 @@ class TimeZoneTracker(Cog):
     def __init__(self, bot: Friendo) -> None:
         self.bot = bot
 
-    @group(name="timezone", aliases=("tz",), invoke_without_command=True)
+    @group(
+        name="timezone",
+        aliases=("tz",),
+        invoke_without_command=True,
+        brief="The main group for timezone commands."
+    )
     async def timezone_group(self, ctx: Context) -> None:
         """The main group for timezone commands."""
         pass
 
-    @timezone_group.command(name="add", aliases=("a", "set", "s"))
+    @timezone_group.command(
+        name="add",
+        aliases=("a", "set", "s"),
+        brief="Store the given timezone against the invoker."
+    )
     async def add_timezone(self, ctx: Context, tz: str) -> None:
         """
         Store the given timezone against the invoker.
@@ -44,7 +53,11 @@ class TimeZoneTracker(Cog):
         await self._save_tz(ctx.author.id, tz)
         await ctx.send(f":+1: Successfully set your timezone to {tz}")
 
-    @timezone_group.command(name="list", aliases=("l",))
+    @timezone_group.command(
+        name="list",
+        aliases=("l",),
+        brief="List the timezone and the local time for members on record in this guild."
+    )
     async def list_timezone(self, ctx: Context) -> None:
         """List the timezone and the local time for members on record in this guild."""
         tzs = await self._get_tzs(ctx.guild)
@@ -63,7 +76,11 @@ class TimeZoneTracker(Cog):
             )
         )
 
-    @timezone_group.command(name="get", aliases=("g",))
+    @timezone_group.command(
+        name="get",
+        aliases=("g",),
+        brief="Get the local time where it is for the given user."
+    )
     async def get_timezone(self, ctx: Context, member: t.Optional[Member]) -> None:
         """Get the local time where it is for the given user."""
         user = member or ctx.author
