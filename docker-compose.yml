@@ -13,4 +13,3 @@ services:
 
     volumes:
       - ./logs:/app/bot/logs
-      - ./bot:/app/bot
