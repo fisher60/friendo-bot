@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Dict, Optional
 
 from discord import Color, Embed, Member, Message, RawReactionActionEvent, Reaction, TextChannel
@@ -63,7 +63,8 @@ class DogeBoard(Cog):
 
         resp = await self.bot.graphql.request(json={"query": query, "variables": variables})
         log.info(resp)
-
+        if resp.get("errors"):
+            return None
         dogeboard_data = DogeBoardData(**resp["data"]["get_guild"])
         self._cache[guild_id] = dogeboard_data
 
@@ -74,7 +75,7 @@ class DogeBoard(Cog):
         query = (
             "mutation modify("
             "   $guild_id: BigInt!,"
-            "   $dogeboard_id: Int!,"
+            "   $dogeboard_id: BigInt!,"
             "   $dogeboard_emoji: String!,"
             "   $dogeboard_reactions_required: Int!"
             "){"
@@ -91,7 +92,7 @@ class DogeBoard(Cog):
             "}"
         )
 
-        await self.bot.graphql.request(json={"query": query, "variables": dogeboard})
+        await self.bot.graphql.request(json={"query": query, "variables": asdict(dogeboard)})
         self._cache[dogeboard.guild_id] = dogeboard
 
     @staticmethod
