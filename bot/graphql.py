@@ -67,4 +67,6 @@ class GraphQLClient:
     async def _post(self, **kwargs) -> dict:
         """Make a GraphQL API POST call."""
         async with self.session.post(self.url, headers=self.headers, **kwargs) as resp:
-            return await resp.json()
+            resp = await resp.json()
+            log.info(resp)
+            return resp
