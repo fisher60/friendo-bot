@@ -22,7 +22,12 @@ class TimeZoneTracker(Cog):
         name="timezone",
         aliases=("tz",),
         invoke_without_command=True,
-        brief="The main group for timezone commands."
+        brief=(
+            "The main group for timezone commands.\n"
+            "Use the add subcommand to add your timezone to the database.\n"
+            "Use the get subcommand to get a user's stored timezone.\n"
+            "Use the list subcommand to list all guild member's timezones."
+        )
     )
     async def timezone_group(self, ctx: Context) -> None:
         """The main group for timezone commands."""
@@ -31,7 +36,12 @@ class TimeZoneTracker(Cog):
     @timezone_group.command(
         name="add",
         aliases=("a", "set", "s"),
-        brief="Store the given timezone against the invoker."
+        brief=(
+            "Store the given timezone against the invoker.\n"
+            "See the `TZ Database name` column here "
+            "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones "
+            "for a list of supported timezones."
+        )
     )
     async def add_timezone(self, ctx: Context, tz: str) -> None:
         """
@@ -51,12 +61,14 @@ class TimeZoneTracker(Cog):
             return
 
         await self._save_tz(ctx.author.id, tz)
-        await ctx.send(f":+1: Successfully set your timezone to {tz}")
+        await ctx.send(f":+1: Successfully set your timezone to {tz}.")
 
     @timezone_group.command(
         name="list",
         aliases=("l",),
-        brief="List the timezone and the local time for members on record in this guild."
+        brief=(
+            "List the timezone and the local time for all members on record in this guild."
+        )
     )
     async def list_timezone(self, ctx: Context) -> None:
         """List the timezone and the local time for members on record in this guild."""
@@ -66,7 +78,7 @@ class TimeZoneTracker(Cog):
         for id, tz in tzs.items():
             lines.append(
                 f"Time for {ctx.guild.get_member(id).mention} "
-                f"is {arrow.now(tz).format('HH:mm:ss')}"
+                f"is {arrow.now(tz).format('HH:mm:ss')}."
             )
         await ctx.send(
             embed=discord.Embed(
@@ -79,14 +91,14 @@ class TimeZoneTracker(Cog):
     @timezone_group.command(
         name="get",
         aliases=("g",),
-        brief="Get the local time where it is for the given user."
+        brief="Get the local time where it is for the given user, or yourself if no member is given."
     )
     async def get_timezone(self, ctx: Context, member: t.Optional[Member]) -> None:
         """Get the local time where it is for the given user."""
         user = member or ctx.author
         tz = await self._get_tz(user.id)
         if tz:
-            await ctx.send(f"The time for {user.mention} is {arrow.now(tz).format('HH:mm:ss')}")
+            await ctx.send(f"The time for {user.mention} is {arrow.now(tz).format('HH:mm:ss')}.")
         else:
             await ctx.send(f"I don't have timezone info for {user.mention}.")
 
