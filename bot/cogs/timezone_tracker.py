@@ -148,6 +148,8 @@ class TimeZoneTracker(Cog):
         guild_member_ids = {member.id for member in guild.members}
         members_with_tz = {}
         for user in resp["data"]["allUsers"]:
+            if not user["discord_id"]:
+                continue
             if int(user["discord_id"]) in guild_member_ids:
                 members_with_tz[int(user["discord_id"])] = user["timezone_name"]
         return members_with_tz
