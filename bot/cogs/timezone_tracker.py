@@ -156,6 +156,9 @@ class TimeZoneTracker(Cog):
             if not user["discord_id"]:
                 log.error(f"User found without a discord_id!\n{user}")
                 continue
+            if not user["timezone_name"]:
+                log.info(f"User doesn't have tz listed, skipping\n{user}")
+                continue
             if int(user["discord_id"]) in guild_member_ids:
                 members_with_tz[int(user["discord_id"])] = user["timezone_name"]
         return members_with_tz
