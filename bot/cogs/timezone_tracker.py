@@ -1,4 +1,5 @@
 import logging
+from operator import itemgetter
 import typing as t
 
 import arrow
@@ -74,16 +75,20 @@ class TimeZoneTracker(Cog):
         """List the timezone and the local time for members on record in this guild."""
         tzs = await self._get_tzs(ctx.guild)
 
-        lines = []
+        lines = []  # A list of tuples (embed line, timestamp)
         for id, tz in tzs.items():
-            lines.append(
-                f"Time for {ctx.guild.get_member(id).mention} "
-                f"is {arrow.now(tz).format('HH:mm:ss')}."
-            )
+            time = arrow.now(tz)
+            lines.append((
+                f"It's {time.format('HH:mm')} "
+                f"for {ctx.guild.get_member(id).mention} in {tz}.",
+                time.timestamp()
+            ))
+        # Sort by timestamp for nicer output
+        lines.sort(key=itemgetter(1))
         await ctx.send(
             embed=discord.Embed(
-                title="Timezones!",
-                description="\n".join(lines),
+                title="Local times!",
+                description="\n".join([line[0] for line in lines]),  # Only include string part in the embed.
                 colour=discord.Color(0xff7d93)
             )
         )
@@ -149,6 +154,7 @@ class TimeZoneTracker(Cog):
         members_with_tz = {}
         for user in resp["data"]["allUsers"]:
             if not user["discord_id"]:
+                log.error(f"User found without a discord_id!\n{user}")
                 continue
             if int(user["discord_id"]) in guild_member_ids:
                 members_with_tz[int(user["discord_id"])] = user["timezone_name"]
