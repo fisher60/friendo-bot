@@ -12,5 +12,5 @@ services:
     env_file: bot.env
 
     volumes:
-      - ./logs:/app/bot/logs
+      - ./logs:/app/logs
       - ./bot:/app/bot
