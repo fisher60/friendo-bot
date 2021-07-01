@@ -75,13 +75,13 @@ class TimeZoneTracker(Cog):
         """List the timezone and the local time for members on record in this guild."""
         tzs = await self._get_tzs(ctx.guild)
 
-        lines = []  # A list of tuples (embed line, timestamp)
+        lines = []  # A list of tuples (embed line, seconds since midnight)
         for id, tz in tzs.items():
             time = arrow.now(tz)
             lines.append((
                 f"It's {time.format('HH:mm')} "
                 f"for {ctx.guild.get_member(id).mention} in {tz}.",
-                time.timestamp()
+                (time - time.replace(hour=0, minute=0, second=0, microsecond=0)).seconds
             ))
         # Sort by timestamp for nicer output
         lines.sort(key=itemgetter(1))
