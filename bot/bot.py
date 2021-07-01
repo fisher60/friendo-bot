@@ -48,7 +48,7 @@ class Friendo(Bot):
 
     async def close(self) -> None:
         """Make sure connections are closed properly."""
-        await super().logout()
+        await super().close()
 
         if self.graphql:
             await self.graphql.close()
