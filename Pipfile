@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [packages]
-"discord.py" = "~=1.5.0"
+"discord.py" = "~=1.7.3"
 python-dotenv = "0.14.0"
 opencv-python = "4.4.0.44"
 scikit-image = "0.17.2"
