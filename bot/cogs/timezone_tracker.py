@@ -1,5 +1,6 @@
 import logging
-from operator import itemgetter
+from collections import defaultdict
+from datetime import timedelta
 import typing as t
 
 import arrow
@@ -75,20 +76,25 @@ class TimeZoneTracker(Cog):
         """List the timezone and the local time for members on record in this guild."""
         tzs = await self._get_tzs(ctx.guild)
 
-        lines = []  # A list of tuples (embed line, seconds since midnight)
-        for id, tz in tzs.items():
+        def tz_sorter(timezone_to_member_lookup: t.Tuple[str, t.List[int]]) -> timedelta:
+            """Returns the UTC offset given a single lookup."""
+            timezone, _ = timezone_to_member_lookup
+            return arrow.now(timezone).utcoffset()
+
+        tzs = dict(sorted(tzs.items(), key=tz_sorter))
+
+        lines = []
+        for tz, members in tzs.items():
             time = arrow.now(tz)
-            lines.append((
-                f"It's {time.format('HH:mm')} "
-                f"for {ctx.guild.get_member(id).mention} in {tz}.",
-                (time - time.replace(hour=0, minute=0, second=0, microsecond=0)).seconds
-            ))
-        # Sort by timestamp for nicer output
-        lines.sort(key=itemgetter(1))
+            lines.append(f"**{time.format('HH:mm')}** - {tz}\n")
+            for member in members:
+                lines.append(f"{ctx.guild.get_member(member).mention}\n")
+            lines.append("\n")
+
         await ctx.send(
             embed=discord.Embed(
                 title="Local times!",
-                description="\n".join([line[0] for line in lines]),  # Only include string part in the embed.
+                description="".join(lines[:-1]),  # Don't inluce the final newline char.
                 colour=discord.Color(0xff7d93)
             )
         )
@@ -151,7 +157,7 @@ class TimeZoneTracker(Cog):
             return None
 
         guild_member_ids = {member.id for member in guild.members}
-        members_with_tz = {}
+        tz_to_member = defaultdict(list)
         for user in resp["data"]["allUsers"]:
             if not user["discord_id"]:
                 log.error(f"User found without a discord_id!\n{user}")
@@ -160,8 +166,8 @@ class TimeZoneTracker(Cog):
                 log.info(f"User doesn't have tz listed, skipping\n{user}")
                 continue
             if int(user["discord_id"]) in guild_member_ids:
-                members_with_tz[int(user["discord_id"])] = user["timezone_name"]
-        return members_with_tz
+                tz_to_member[user["timezone_name"]].append(int(user["discord_id"]))
+        return tz_to_member
 
 
 def setup(bot: Friendo) -> None:
