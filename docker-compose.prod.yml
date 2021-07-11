@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+
+  bot:
+    image: ghcr.io/Fisher60/Friendo_Bot:latest
+    tty: true
+    env_file: bot.env
+    volumes:
+      - ./logs:/app/logs
+      - ./bot:/app/bot
