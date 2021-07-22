@@ -1,7 +1,7 @@
 # Contributing
 Before contributing, please either claim an existing open issue or create a new issue to discuss your proposed changes with the owners of this repo before making any changes.
 
-The overall goal for this project is provide an easy platform fo people to learn how to program, use Discord.py, and contribute to an open source project, please do not be afraid
+The overall goal for this project is provide an easy platform for people to learn how to program, use Discord.py, and contribute to an open source project, please do not be afraid
 to propose any feature at all that could add to this project. Most reasonable proposed changes will be accepted as long as they follow our guidelines.
 
 # Fork
