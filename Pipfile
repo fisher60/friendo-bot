@@ -16,6 +16,7 @@ python-dateutil = "*"
 arrow = "~=1.0.3"
 aiodns = "~=2.0"
 PyJWT = "~=2.1.0"
+infixparser = "*"
 
 [dev-packages]
 flake8 = "~=3.8.4"
