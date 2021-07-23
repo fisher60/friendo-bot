@@ -3,6 +3,8 @@ from pathlib import Path
 import random
 import subprocess
 from typing import Optional
+from InfixParser import evaluate
+from typing import Union
 
 from discord import Colour, Embed
 from discord.ext import tasks
@@ -137,6 +139,15 @@ class Utilities(Cog):
         await ctx.send(msg)
 
         return msg
+
+    @command(brief="[math expression]", aliases=["m"])
+    async def math(self, ctx: Context, infix_expression: str) -> None:
+        """Evaluates a mathmatical infix expression with the shunting yard algorithm."""
+        result: Union[float, int] = evaluate(infix_expression)
+        if result == int(result):
+            result = int(result)
+
+        await ctx.send(f"`{result}`")
 
     @command(brief="[number] [unit (seconds/minutes/hours)] [reason for reminder]", aliases=["remind"])
     async def reminder(self, ctx: Context, time: str, period: str = "minutes", *, reason: str = None) -> None:
