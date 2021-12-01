@@ -17,6 +17,7 @@ WOLFRAM_APPID = environ.get("WOLFRAM_APPID")
 WEATHER_TOKEN = environ.get("WEATHER_TOKEN")
 
 AOC_SESSION_COOKIE = environ.get("AOC_SESSION_COOKIE")
+AOC_JOIN_CODE = environ.get("AOC_JOIN_CODE")
 
 FRIENDO_API_USER = environ.get("FRIENDO_API_USER")
 FRIENDO_API_PASS = environ.get("FRIENDO_API_PASS")
@@ -26,6 +27,6 @@ VERSION = "1.2"
 
 GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"
 
-AOC_LEADERBOARD_LINK = "https://adventofcode.com/2020/leaderboard/private/view/442826.json"
+AOC_LEADERBOARD_LINK = "https://adventofcode.com/2021/leaderboard/private/view/991705.json"
 
 API_COGS = ["events", "memes"]
