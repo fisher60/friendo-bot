@@ -5,7 +5,7 @@ from bot.settings import AOC_JOIN_CODE, AOC_LEADERBOARD_LINK, AOC_SESSION_COOKIE
 
 
 class AdventOfCode(Cog):
-    """Cog for AOC 2020 for small features."""
+    """Cog for AOC 2021 for small features."""
 
     def __init__(self, bot: Friendo):
         self.bot = bot
@@ -24,8 +24,8 @@ class AdventOfCode(Cog):
         return stats
 
     @group(name="AdventofCode",
-           aliases=('aoc', 'aoc2020'),
-           brief="Small commands for AoC 2020",
+           aliases=('aoc', 'aoc2021'),
+           brief="Small commands for AoC 2021",
            usage=".aoc [command]")
     async def aoc_group(self, ctx: Context) -> None:
         """Group for advent of code commands."""
@@ -50,11 +50,11 @@ class AdventOfCode(Cog):
         except errors.Forbidden:
             await ctx.send(error_msg)
 
-    @aoc_group.command(brief="Get the leaderboard of AoC 2020 for the Code Collective server",
+    @aoc_group.command(brief="Get the leaderboard of AoC 2021 for the Code Collective server",
                        usage=".aoc leaderboard",
                        aliases=('lb', 'board'))
     async def leaderboard(self, ctx: Context) -> None:
-        """Shows the leaderboard of code collective server for AoC 2020."""
+        """Shows the leaderboard of code collective server for AoC 2021."""
         async with ctx.channel.typing():
             cookies = {'session': AOC_SESSION_COOKIE}
             async with self.bot.session.get(AOC_LEADERBOARD_LINK, cookies=cookies) as stats:
@@ -70,7 +70,7 @@ class AdventOfCode(Cog):
                     count += 1
 
                 msg = '\n'.join(msg)
-                await ctx.send("🎄 Advent of Code 2020 leaderboard for Code Collective 🎄")
+                await ctx.send("🎄 Advent of Code 2021 leaderboard for Code Collective 🎄")
                 await ctx.send(f"```  | Name {' '*(16-4)}| Stars | Score\n{msg}```")
 
 

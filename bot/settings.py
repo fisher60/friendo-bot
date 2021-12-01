@@ -27,6 +27,6 @@ VERSION = "1.2"
 
 GITHUB_REPO = "https://github.com/fisher60/Friendo_Bot"
 
-AOC_LEADERBOARD_LINK = "https://adventofcode.com/2020/leaderboard/private/view/442826.json"
+AOC_LEADERBOARD_LINK = "https://adventofcode.com/2021/leaderboard/private/view/991705.json"
 
 API_COGS = ["events", "memes"]
