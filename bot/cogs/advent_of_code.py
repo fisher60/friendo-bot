@@ -1,7 +1,7 @@
 from bot.bot import Friendo
 from discord import errors
 from discord.ext.commands import Cog, Context, group
-from bot.settings import AOC_LEADERBOARD_LINK, AOC_JOIN_CODE, AOC_SESSION_COOKIE
+from bot.settings import AOC_JOIN_CODE, AOC_LEADERBOARD_LINK, AOC_SESSION_COOKIE
 
 
 class AdventOfCode(Cog):
@@ -56,7 +56,8 @@ class AdventOfCode(Cog):
     async def leaderboard(self, ctx: Context) -> None:
         """Shows the leaderboard of code collective server for AoC 2020."""
         async with ctx.channel.typing():
-            async with self.bot.session.get(AOC_LEADERBOARD_LINK, cookies={'session': AOC_SESSION_COOKIE}) as stats:
+            cookies = {'session': AOC_SESSION_COOKIE}
+            async with self.bot.session.get(AOC_LEADERBOARD_LINK, cookies=cookies) as stats:
                 stats = await stats.json()
                 sorted_stats = self.sort_stats(stats)
                 msg = []
