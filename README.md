@@ -36,6 +36,8 @@ AOC_SESSION_COOKIE = <your advent of code session cookie>
 FRIENDO_API_USER = <your friendo api username>
 FRIENDO_API_PASS = <your friendo api password>
 FRIENDO_API_URL = <friendo api url>
+AOC_SESSION_COOKIE = <your aoc session cookie>
+AOC_JOIN_CODE = <aoc join code>
 ```
 
 ## Dev Installation

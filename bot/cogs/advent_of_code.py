@@ -1,10 +1,7 @@
 from bot.bot import Friendo
 from discord import errors
 from discord.ext.commands import Cog, Context, group
-from bot.settings import AOC_LEADERBOARD_LINK, AOC_SESSION_COOKIE
-
-cookie = {'session': AOC_SESSION_COOKIE}
-join_code = '442826-ab5b0efd'
+from bot.settings import AOC_LEADERBOARD_LINK, AOC_JOIN_CODE, AOC_SESSION_COOKIE
 
 
 class AdventOfCode(Cog):
@@ -44,7 +41,7 @@ class AdventOfCode(Cog):
             "To join our leaderboard, follow these steps:",
             "• Log in on https://adventofcode.com",
             "• Head over to https://adventofcode.com/leaderboard/private",
-            f"• Use this code `{join_code}` to join the Code Collective leaderboard!"]
+            f"• Use this code `{AOC_JOIN_CODE}` to join the Code Collective leaderboard!"]
         error_msg = f":x: {ctx.author.mention}, please (temporarily) enable DMs to receive the join code"
 
         await ctx.message.add_reaction("📨")
@@ -59,7 +56,7 @@ class AdventOfCode(Cog):
     async def leaderboard(self, ctx: Context) -> None:
         """Shows the leaderboard of code collective server for AoC 2020."""
         async with ctx.channel.typing():
-            async with self.bot.session.get(AOC_LEADERBOARD_LINK, cookies=cookie) as stats:
+            async with self.bot.session.get(AOC_LEADERBOARD_LINK, cookies={'session': AOC_SESSION_COOKIE}) as stats:
                 stats = await stats.json()
                 sorted_stats = self.sort_stats(stats)
                 msg = []
