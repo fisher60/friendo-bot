@@ -4,9 +4,9 @@ import random
 import subprocess
 from typing import Optional
 
-from discord import Colour, Embed
-from discord.ext import tasks
-from discord.ext.commands import Cog, Context, command
+from disnake import Colour, Embed
+from disnake.ext import tasks
+from disnake.ext.commands import Cog, Context, command
 import yaml
 
 from bot import settings
@@ -193,7 +193,7 @@ class Utilities(Cog):
 
             await ctx.send(msg)
 
-    @command(brief="Shows the latency between Friendo and the Discord API")
+    @command(brief="Shows the latency between Friendo and the disnake API")
     async def ping(self, ctx: Context) -> None:
         """Sends the ping between the bot and the discord API."""
         await ctx.send(f"Ping is {round(self.bot.latency * 1000)}ms")

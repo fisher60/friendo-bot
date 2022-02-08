@@ -5,8 +5,8 @@ import re
 from typing import Callable, Optional
 import aiofiles
 
-from discord import Member
-from discord.ext.commands import Cog, Context, check, command
+from disnake import Member
+from disnake.ext.commands import Cog, Context, check, command
 
 from bot.bot import Friendo
 
