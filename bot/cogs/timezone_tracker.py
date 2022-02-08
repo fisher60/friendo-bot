@@ -142,7 +142,7 @@ class TimeZoneTracker(Cog):
             return None
         return resp["data"]["user"]["timezone_name"]
 
-    async def _get_tzs(self, guild: disnake.guild) -> t.List[dict]:
+    async def _get_tzs(self, guild: disnake.Guild) -> t.List[dict]:
         """Get all of the tzs info stored the Friendo API."""
         query = (
             "query users{"

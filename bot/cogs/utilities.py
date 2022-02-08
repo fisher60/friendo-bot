@@ -193,7 +193,7 @@ class Utilities(Cog):
 
             await ctx.send(msg)
 
-    @command(brief="Shows the latency between Friendo and the disnake API")
+    @command(brief="Shows the latency between Friendo and the Discord API")
     async def ping(self, ctx: Context) -> None:
         """Sends the ping between the bot and the discord API."""
         await ctx.send(f"Ping is {round(self.bot.latency * 1000)}ms")

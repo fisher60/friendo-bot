@@ -10,7 +10,7 @@ from bot.settings import WEATHER_TOKEN
 class Weather(commands.Cog):
     """commands for the weather finder."""
 
-    def __init__(self, bot: disnake.ext.commands.bot.Bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     @commands.command(brief="Takes in a city name and returns the weather for that location")
@@ -99,6 +99,6 @@ class Weather(commands.Cog):
                 await ctx.send(embed=disnake.Embed(title=f"{args} is an invalid city name"))
 
 
-def setup(bot: disnake.ext.commands.bot.Bot) -> None:
+def setup(bot: commands.Bot) -> None:
     """Sets up the cog."""
     bot.add_cog(Weather(bot))

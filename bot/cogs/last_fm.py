@@ -8,7 +8,7 @@ from bot.settings import MUSIC_TOKEN
 class Music(commands.Cog):
     """Commands for song searching."""
 
-    def __init__(self, bot: disnake.ext.commands.bot.Bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     @commands.command(
@@ -17,7 +17,7 @@ class Music(commands.Cog):
         description="takes in song by itself or song followed by artist seperated by ; ",
         aliases=['song', 'gets', 'getlyrics', 'getl']
     )
-    async def get_lyrics(self, ctx: disnake.ext.commands.context.Context, *, song_title: str) -> None:
+    async def get_lyrics(self, ctx: commands.Context, *, song_title: str) -> None:
         """Function to return discord embed with song info and lyrics."""
         try:
             if ';' in song_title:
@@ -61,7 +61,7 @@ class Music(commands.Cog):
         description="takes in album by itself or album followed by artist seperated by ; ",
         aliases=['album', 'getal']
     )
-    async def getalbum(self, ctx: disnake.ext.commands.context.Context, *, album_title: str) -> None:
+    async def getalbum(self, ctx: commands.Context, *, album_title: str) -> None:
         """Function to return discord embed with album info."""
         try:
             if '; ' in album_title:
@@ -94,7 +94,7 @@ class Music(commands.Cog):
         description="Takes in just artist name",
         aliases=['artist', 'getar']
     )
-    async def getartist(self, ctx: disnake.ext.commands.context.Context, *, args: str) -> None:
+    async def getartist(self, ctx: commands.Context, *, args: str) -> None:
         """Function to return discord embed with artist info."""
         try:
             data = await get_artist(args)
@@ -120,7 +120,7 @@ class Music(commands.Cog):
         brief="Gets a list of the top songs on the world charts",
         aliases=['songs', 'tops']
     )
-    async def topsongs(self, ctx: disnake.ext.commands.context.Context) -> None:
+    async def topsongs(self, ctx: commands.Context) -> None:
         """Function to return discord embed with top chart songs."""
         data = await top_tracks()
         em = disnake.Embed(title='Top 10 Tracks', url='https://www.last.fm/charts')
@@ -133,7 +133,7 @@ class Music(commands.Cog):
         brief="Gets a list of the top artists on the world charts",
         aliases=['artists', 'topa']
     )
-    async def topartists(self, ctx: disnake.ext.commands.context.Context) -> None:
+    async def topartists(self, ctx: commands.Context) -> None:
         """Function to return discord embed with top chart artists."""
         data = await top_artists()
         embed = disnake.Embed(title='Top 10 Artists', url='https://www.last.fm/charts')
@@ -196,6 +196,6 @@ async def top_artists() -> list:
     return [f for f in data]
 
 
-def setup(bot: disnake.ext.commands.bot.Bot) -> None:
+def setup(bot: commands.Bot) -> None:
     """Imports the cog."""
     bot.add_cog(Music(bot))
