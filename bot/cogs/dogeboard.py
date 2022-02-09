@@ -103,7 +103,7 @@ class DogeBoard(Cog):
             description=message.content + f"\n\n[Jump to message]({message.jump_url})",
             colour=message.author.colour,
         )
-        embed.set_thumbnail(url=message.author.avatar_url)
+        embed.set_thumbnail(url=message.author.avatar.url)
 
         # Set the image to the first one if there is one
         for attachment in message.attachments:
