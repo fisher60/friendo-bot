@@ -2,10 +2,10 @@ import yaml
 
 from pathlib import Path
 from typing import Union
-from datetime import datetime
+from datetime import datetime, timezone
 from dateutil.relativedelta import relativedelta
-from discord import ActivityType, Embed, Member, Spotify, Status
-from discord.ext.commands import Cog, Context, MemberConverter, MemberNotFound, command
+from disnake import ActivityType, Embed, Member, Spotify, Status
+from disnake.ext.commands import Cog, Context, MemberConverter, MemberNotFound, command
 
 from bot.bot import Friendo
 
@@ -82,20 +82,20 @@ class User(Cog):
         statuses = []
         is_bot = "Bot: :x:"
 
-        create_time = ', '.join(self.get_timedelta(datetime.utcnow(), user.created_at))
-        joined_time = ', '.join(self.get_timedelta(datetime.utcnow(), user.joined_at))
+        create_time = ', '.join(self.get_timedelta(datetime.now(timezone.utc), user.created_at))
+        joined_time = ', '.join(self.get_timedelta(datetime.now(timezone.utc), user.joined_at))
 
         flags = user.public_flags
 
         info_emb = Embed(color=user.color,
                          title=str(user))
-        info_emb.set_thumbnail(url=user.avatar_url)
+        info_emb.set_thumbnail(url=user.avatar.url)
 
         for flag_ in flags.all():
             if str(flag_.name) in BADGES:
                 user_badges.append(BADGES[str(flag_.name)])
 
-        if user.is_avatar_animated():
+        if user.avatar.is_animated():
             user_badges.append(BADGES['nitro'])
 
         for role in user.roles[1:]:

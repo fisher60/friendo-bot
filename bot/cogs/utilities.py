@@ -4,9 +4,9 @@ import random
 import subprocess
 from typing import Optional
 
-from discord import Colour, Embed
-from discord.ext import tasks
-from discord.ext.commands import Cog, Context, command
+from disnake import Colour, Embed
+from disnake.ext import tasks
+from disnake.ext.commands import Cog, Context, command
 import yaml
 
 from bot import settings

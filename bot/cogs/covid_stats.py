@@ -1,7 +1,7 @@
 import re
 
-from discord import Colour, Embed
-from discord.ext.commands import Cog, Context, command
+from disnake import Colour, Embed
+from disnake.ext.commands import Cog, Context, command
 
 from bot.bot import Friendo
 

@@ -4,9 +4,9 @@ from datetime import timedelta
 import typing as t
 
 import arrow
-from discord import Member
-import discord
-from discord.ext.commands import Cog, Context, group
+from disnake import Member
+import disnake
+from disnake.ext.commands import Cog, Context, group
 
 from bot.bot import Friendo
 
@@ -92,10 +92,10 @@ class TimeZoneTracker(Cog):
             lines.append("\n")
 
         await ctx.send(
-            embed=discord.Embed(
+            embed=disnake.Embed(
                 title="Local times!",
                 description="".join(lines[:-1]),  # Don't inluce the final newline char.
-                colour=discord.Color(0xff7d93)
+                colour=disnake.Color(0xff7d93)
             )
         )
 
@@ -142,7 +142,7 @@ class TimeZoneTracker(Cog):
             return None
         return resp["data"]["user"]["timezone_name"]
 
-    async def _get_tzs(self, guild: discord.guild) -> t.List[dict]:
+    async def _get_tzs(self, guild: disnake.Guild) -> t.List[dict]:
         """Get all of the tzs info stored the Friendo API."""
         query = (
             "query users{"
