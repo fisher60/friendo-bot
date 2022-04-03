@@ -16,6 +16,7 @@ class HttpCodes(Cog):
         aliases=["httpcat", "statuscat", "status_cat"]
     )
     async def http_cat(self, ctx: Context, code: int) -> None:
+        """Get a cat http image from a http code."""
         await ctx.send(f"https://http.cat/{code}")
 
     @command(
@@ -23,6 +24,7 @@ class HttpCodes(Cog):
         aliases=["httpdog", "statusdog", "status_dog"]
     )
     async def http_dog(self, ctx: Context, code: int) -> None:
+        """Get a dog http image from a http code."""
         await ctx.send(f"https://http.dog/{code}.jpg")
 
     @command(
@@ -30,6 +32,7 @@ class HttpCodes(Cog):
         aliases=["status"]
     )
     async def http(self, ctx: Context, code: int) -> None:
+        """Get a dog or cat http image from a http code."""
         random_handler = choice((self.http_dog, self.http_cat))
         await random_handler(ctx, code)
 
