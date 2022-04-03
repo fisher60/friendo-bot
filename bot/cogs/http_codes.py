@@ -16,7 +16,6 @@ class HttpCodes(Cog):
         aliases=["httpcat", "statuscat", "status_cat"]
     )
     async def http_cat(self, ctx: Context, code: int) -> None:
-        """Get a http cat image from a http code."""
         await ctx.send(f"https://http.cat/{code}")
 
     @command(
@@ -24,7 +23,6 @@ class HttpCodes(Cog):
         aliases=["httpdog", "statusdog", "status_dog"]
     )
     async def http_dog(self, ctx: Context, code: int) -> None:
-        """Get a http dog image from a http code."""
         await ctx.send(f"https://http.dog/{code}.jpg")
 
     @command(
