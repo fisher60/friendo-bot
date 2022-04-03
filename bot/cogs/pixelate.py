@@ -3,8 +3,8 @@ from PIL import Image
 from io import BytesIO
 from bot.bot import Friendo
 from collections import Counter
-from discord import Color, Embed, File, Member
-from discord.ext.commands import Cog, Context, command
+from disnake import Color, Embed, File, Member
+from disnake.ext.commands import Cog, Context, command
 
 
 class Pixelate(Cog):
@@ -30,7 +30,7 @@ class Pixelate(Cog):
     async def pixelate(self, ctx: Context, user: Member = None) -> None:
         """Pixelate command, takes in an optional parameter user else pixelates author's avatar."""
         async with ctx.channel.typing():
-            user = ctx.author.avatar_url if not user else user.avatar_url
+            user = ctx.author.avatar if not user else user.avatar
             img_bytes = user.read()
             image = Image.open(BytesIO(await img_bytes))
 
@@ -47,7 +47,7 @@ class Pixelate(Cog):
             img_url = 'attachment://pixelated.png'
 
             img_emb = Embed(color=Color.from_rgb(int(img_color[0]), int(img_color[1]), int(img_color[2])))
-            img_emb.set_author(name="Here is your pixelated Image", icon_url=user)
+            img_emb.set_author(name="Here is your pixelated Image", icon_url=user.url)
             img_emb.set_image(url=img_url)
 
             await ctx.send(embed=img_emb, file=img_file)

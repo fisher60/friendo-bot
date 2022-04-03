@@ -1,7 +1,7 @@
 from pathlib import Path
 import random
 
-from discord.ext.commands import Bot, Cog, Context, command
+from disnake.ext.commands import Bot, Cog, Context, command
 import yaml
 
 

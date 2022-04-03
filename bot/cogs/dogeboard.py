@@ -3,8 +3,8 @@ import logging
 from dataclasses import asdict, dataclass
 from typing import Dict, Optional
 
-from discord import Color, Embed, Member, Message, RawReactionActionEvent, Reaction, TextChannel
-from discord.ext.commands import Cog, Context, group
+from disnake import Color, Embed, Member, Message, RawReactionActionEvent, Reaction, TextChannel
+from disnake.ext.commands import Cog, Context, group
 
 from bot import settings
 from bot.bot import Friendo
@@ -103,7 +103,7 @@ class DogeBoard(Cog):
             description=message.content + f"\n\n[Jump to message]({message.jump_url})",
             colour=message.author.colour,
         )
-        embed.set_thumbnail(url=message.author.avatar_url)
+        embed.set_thumbnail(url=message.author.avatar.url)
 
         # Set the image to the first one if there is one
         for attachment in message.attachments:

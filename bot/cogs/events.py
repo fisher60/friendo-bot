@@ -1,4 +1,4 @@
-from discord.ext.commands import Cog, Context, group
+from disnake.ext.commands import Cog, Context, group
 
 from bot.bot import Friendo
 from bot.events_api import Event

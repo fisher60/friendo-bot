@@ -2,7 +2,7 @@ import inspect
 import pkgutil
 from typing import Iterator, NoReturn
 
-from discord import AllowedMentions, Intents
+from disnake import AllowedMentions, Intents
 
 from . import settings
 from bot.bot import Friendo

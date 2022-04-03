@@ -6,9 +6,9 @@ from pathlib import Path
 from typing import Tuple
 import aiofiles
 
-from discord import Colour, Embed
-from discord.ext import tasks
-from discord.ext.commands import Cog, Context, command
+from disnake import Colour, Embed
+from disnake.ext import tasks
+from disnake.ext.commands import Cog, Context, command
 
 from bot.bot import Friendo
 
