@@ -62,7 +62,7 @@ class Friendo(Bot):
         if self._resolver:
             await self._resolver.close()
 
-    def load_extension(self, name: str) -> None:
+    async def load_extension(self, name: str) -> None:
         """Loads an extension after checking if it's disabled or not."""
         disable_api = DisableApi()
         cog_name = name.split(".")[-1]
@@ -95,4 +95,7 @@ class Friendo(Bot):
                 return
 
         # load cogs if no argument is passed
-        super().load_extension(name)
+        await super().load_extension(name)
+
+    def get_event_loop(self, param):
+        pass
