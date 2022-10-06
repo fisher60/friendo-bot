@@ -95,7 +95,7 @@ class User(Cog):
             if str(flag_.name) in BADGES:
                 user_badges.append(BADGES[str(flag_.name)])
 
-        if user.is_avatar_animated():
+        if user.avatar.is_animated():
             user_badges.append(BADGES['nitro'])
 
         for role in user.roles[1:]:
