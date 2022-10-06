@@ -74,6 +74,6 @@ class AdventOfCode(Cog):
                 await ctx.send(f"```  | Name {' '*(16-4)}| Stars | Score\n{msg}```")
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Sets up the AdventOfCode cog."""
-    bot.add_cog(AdventOfCode(bot))
+    await bot.add_cog(AdventOfCode(bot))

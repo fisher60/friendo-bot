@@ -106,6 +106,6 @@ class Segmentation(Cog):
             await ctx.send("Attach an image, mate.")
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the Image Segmentation cog."""
-    bot.add_cog(Segmentation(bot))
+    await bot.add_cog(Segmentation(bot))

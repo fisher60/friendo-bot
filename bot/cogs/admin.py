@@ -70,6 +70,6 @@ class Administration(Cog):
         await ctx.send(msg)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the Admin cog."""
-    bot.add_cog(Administration(bot))
+    await bot.add_cog(Administration(bot))

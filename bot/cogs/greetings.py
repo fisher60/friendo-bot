@@ -32,6 +32,6 @@ class Greetings(Cog):
         await ctx.send(random.choice(msgs))
 
 
-def setup(bot: Bot) -> None:
+async def setup(bot: Bot) -> None:
     """Load the Greetings cog."""
-    bot.add_cog(Greetings(bot))
+    await bot.add_cog(Greetings(bot))

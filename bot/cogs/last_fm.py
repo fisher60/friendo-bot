@@ -196,6 +196,6 @@ async def top_artists() -> list:
     return [f for f in data]
 
 
-def setup(bot: commands.Bot) -> None:
+async def setup(bot: commands.Bot) -> None:
     """Imports the cog."""
-    bot.add_cog(Music(bot))
+    await bot.add_cog(Music(bot))

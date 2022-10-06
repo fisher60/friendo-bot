@@ -170,6 +170,6 @@ class TimeZoneTracker(Cog):
         return tz_to_member
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the TimeZoneTracker cog."""
-    bot.add_cog(TimeZoneTracker(bot))
+    await bot.add_cog(TimeZoneTracker(bot))

@@ -84,6 +84,6 @@ class Help(Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot: Bot) -> None:
+async def setup(bot: Bot) -> None:
     """Adding the help cog."""
-    bot.add_cog(Help(bot))
+    await bot.add_cog(Help(bot))

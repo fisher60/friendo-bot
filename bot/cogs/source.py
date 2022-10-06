@@ -76,6 +76,6 @@ class Source(comms.Cog):
             await ctx.send(embed=embed)
 
 
-def setup(bot: comms.Bot) -> None:
+async def setup(bot: comms.Bot) -> None:
     """Load the Source cog."""
-    bot.add_cog(Source(bot))
+    await bot.add_cog(Source(bot))

@@ -242,11 +242,11 @@ class DogeBoard(Cog):
         await ctx.send(f"> Updated DogeBoard required reactions to: {amount}", delete_after=5)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Adding the help cog."""
     if not settings.FRIENDO_API_USER:
         raise EnvironmentError("Missing environment variable: FRIENDO_API_USER")
     if not settings.FRIENDO_API_PASS:
         raise EnvironmentError("Missing environment variable: FRIENDO_API_PASS")
 
-    bot.add_cog(DogeBoard(bot))
+    await bot.add_cog(DogeBoard(bot))

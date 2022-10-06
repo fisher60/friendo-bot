@@ -88,6 +88,6 @@ class CovidStats(Cog):
             return "\n".join(data)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the CovidStats cog."""
-    bot.add_cog(CovidStats(bot))
+    await bot.add_cog(CovidStats(bot))

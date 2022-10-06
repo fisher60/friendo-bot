@@ -270,6 +270,6 @@ class TodoList(Cog):
             )
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the Todo_List cog."""
-    bot.add_cog(TodoList(bot))
+    await bot.add_cog(TodoList(bot))

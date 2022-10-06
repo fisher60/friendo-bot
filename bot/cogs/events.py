@@ -54,6 +54,6 @@ class Events(Cog):
             await ctx.send("```\nNo results found. Please try again```")
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the events cog."""
-    bot.add_cog(Events(bot))
+    await bot.add_cog(Events(bot))

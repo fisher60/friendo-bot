@@ -41,6 +41,6 @@ class Wolfram(commands.Cog):
                 await ctx.send(embed=final_emb, file=image_file)
 
 
-def setup(bot: commands.bot) -> None:
+async def setup(bot: commands.bot) -> None:
     """Sets up the Wolfram cog."""
-    bot.add_cog(Wolfram(bot))
+    await bot.add_cog(Wolfram(bot))

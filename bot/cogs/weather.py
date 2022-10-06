@@ -99,6 +99,6 @@ class Weather(commands.Cog):
                 await ctx.send(embed=discord.Embed(title=f"{args} is an invalid city name"))
 
 
-def setup(bot: commands.Bot) -> None:
+async def setup(bot: commands.Bot) -> None:
     """Sets up the cog."""
-    bot.add_cog(Weather(bot))
+    await bot.add_cog(Weather(bot))

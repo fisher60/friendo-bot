@@ -9,7 +9,10 @@ class Memes(Cog):
 
     def __init__(self, bot: Friendo) -> None:
         self.bot = bot
-        self.this_meme = memegen.Meme(bot)
+        self.meme_generator = memegen.Meme()
+
+    async def cog_load(self) -> None:
+        await self.meme_generator.get_all_memes()
 
     @command(
         brief="meme generator commands. Usage: `.meme [command] [*args]`",
@@ -27,7 +30,7 @@ class Memes(Cog):
             # Creates a new meme
             name, text = args[0], args[1:]
 
-            result = await self.this_meme.generate_meme(name=name, text=text)
+            result = await self.meme_generator.generate_meme(name=name, text=text)
 
             if result:
                 await ctx.send(result)
@@ -41,7 +44,7 @@ class Memes(Cog):
 
         elif arg1 == "search":
             # searches the cached meme_list for keywords and returns matching meme names
-            result = self.this_meme.search_meme_list(args)
+            result = self.meme_generator.search_meme_list(args)
 
             if result:
                 response = await ctx.send(result)
@@ -54,6 +57,6 @@ class Memes(Cog):
                 await response.delete(delay=8)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the Memes cog."""
-    bot.add_cog(Memes(bot))
+    await bot.add_cog(Memes(bot))
