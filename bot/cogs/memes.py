@@ -12,6 +12,7 @@ class Memes(Cog):
         self.meme_generator = memegen.Meme()
 
     async def cog_load(self) -> None:
+        """Handles logic whenever this cog is loaded."""
         await self.meme_generator.get_all_memes()
 
     @command(
