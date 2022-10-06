@@ -1,6 +1,6 @@
 from random import choice
 
-from disnake.ext.commands import Cog, Context, command
+from discord.ext.commands import Cog, Context, command
 
 from bot.bot import Friendo
 

@@ -1,5 +1,5 @@
-from disnake import Embed
-from disnake.ext.commands import Cog, Context, command
+from discord import Embed
+from discord.ext.commands import Cog, Context, command
 
 from bot.bot import Bot
 from bot.settings import GITHUB_REPO

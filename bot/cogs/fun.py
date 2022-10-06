@@ -5,7 +5,7 @@ import re
 import string
 from typing import List
 
-from disnake.ext.commands import Cog, Context, command
+from discord.ext.commands import Cog, Context, command
 
 from bot.bot import Friendo
 

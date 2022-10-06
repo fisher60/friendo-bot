@@ -1,7 +1,7 @@
 from typing import Union
 
-from disnake import Colour, Embed
-from disnake.ext import commands as comms
+from discord import Colour, Embed
+from discord.ext import commands as comms
 
 from bot import settings
 

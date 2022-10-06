@@ -3,8 +3,8 @@ import logging
 from dataclasses import asdict, dataclass
 from typing import Dict, Optional
 
-from disnake import Color, Embed, Member, Message, RawReactionActionEvent, Reaction, TextChannel
-from disnake.ext.commands import Cog, Context, group
+from discord import Color, Embed, Member, Message, RawReactionActionEvent, Reaction, TextChannel
+from discord.ext.commands import Cog, Context, group
 
 from bot import settings
 from bot.bot import Friendo

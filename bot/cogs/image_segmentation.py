@@ -5,8 +5,8 @@ from typing import List, Optional
 
 import aiofiles
 from cv2 import COLOR_BGR2RGB, cvtColor, imread
-import disnake
-from disnake.ext.commands import Cog, Context, command
+import discord
+from discord.ext.commands import Cog, Context, command
 import matplotlib.pyplot as plt
 from skimage.color import rgb2hsv
 from numpy import ndarray
@@ -92,7 +92,7 @@ class Segmentation(Cog):
 
                 # Input was valid
                 if processed_image:
-                    output_image = disnake.File(Path.cwd() / processed_image)
+                    output_image = discord.File(Path.cwd() / processed_image)
                     await ctx.send(file=output_image)
 
                 self.delete_image(file_name)

@@ -3,8 +3,8 @@ from PIL import Image
 from io import BytesIO
 from bot.bot import Friendo
 from collections import Counter
-from disnake import Color, Embed, File, Member
-from disnake.ext.commands import Cog, Context, command
+from discord import Color, Embed, File, Member
+from discord.ext.commands import Cog, Context, command
 
 
 class Pixelate(Cog):

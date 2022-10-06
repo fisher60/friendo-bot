@@ -1,6 +1,6 @@
 from bot.bot import Friendo
-from disnake import errors
-from disnake.ext.commands import Cog, Context, group
+from discord import errors
+from discord.ext.commands import Cog, Context, group
 from bot.settings import AOC_JOIN_CODE, AOC_LEADERBOARD_LINK, AOC_SESSION_COOKIE
 
 

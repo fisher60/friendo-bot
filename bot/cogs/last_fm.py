@@ -1,7 +1,7 @@
-import disnake
+import discord
 import urllib
 import aiohttp
-from disnake.ext import commands
+from discord.ext import commands
 from bot.settings import MUSIC_TOKEN
 
 
@@ -42,7 +42,7 @@ class Music(commands.Cog):
                     count += 1
                     lyric_array.append(f)
 
-            embed = disnake.Embed(title=f"{data['name']} by {data['artist']['name']}", url=data['url'])
+            embed = discord.Embed(title=f"{data['name']} by {data['artist']['name']}", url=data['url'])
             embed.add_field(name='Artist', value=data['artist']['name'])
             embed.add_field(name='Album', value=data['album']['title'])
             for f in lyric_array:
@@ -51,7 +51,7 @@ class Music(commands.Cog):
             embed.set_thumbnail(url=data['album']['image'][2]['#text'])
             await ctx.send(embed=embed)
         except KeyError:
-            embed = disnake.Embed(title="Music Cog", color=disnake.Colour.blue())
+            embed = discord.Embed(title="Music Cog", color=discord.Colour.blue())
             embed.add_field(name="Error", value=f"Could not find song with title {song_title}")
             await ctx.send(embed=embed)
 
@@ -71,7 +71,7 @@ class Music(commands.Cog):
                 data = await get_album(album_title)
 
             title = f"{data['album']['name']} by {data['album']['artist']}"
-            embed = disnake.Embed(title=title, url=data['album']['url'])
+            embed = discord.Embed(title=title, url=data['album']['url'])
             embed.add_field(name='Artist', value=data['album']['artist'])
             embed.set_thumbnail(url=data['album']['image'][2]['#text'])
 
@@ -84,7 +84,7 @@ class Music(commands.Cog):
             await ctx.send(embed=embed)
 
         except (KeyError, IndexError):
-            embed = disnake.Embed(title="Music Cog", color=disnake.Colour.blue())
+            embed = discord.Embed(title="Music Cog", color=discord.Colour.blue())
             embed.add_field(name="Error", value=f"Could not find album with title {album_title}")
             await ctx.send(embed=embed)
 
@@ -103,7 +103,7 @@ class Music(commands.Cog):
             bio = data['bio']['summary'].split('\n', 2)[0].split('<a', 1)[0]
             if bio == '':
                 bio = data['bio']['summary'].split('\n', 2)[1].split('<a', 1)[0]
-            embed = disnake.Embed(title=data['name'], url=data['url'], description=bio)
+            embed = discord.Embed(title=data['name'], url=data['url'], description=bio)
             embed.set_thumbnail(url=album_data[0]['image'][2]['#text'])
             top_albums = "\n".join([x["name"] for x in album_data[:10]])
             similar = "\n".join([x["name"] for x in data["similar"]["artist"]])
@@ -123,7 +123,7 @@ class Music(commands.Cog):
     async def topsongs(self, ctx: commands.Context) -> None:
         """Function to return discord embed with top chart songs."""
         data = await top_tracks()
-        em = disnake.Embed(title='Top 10 Tracks', url='https://www.last.fm/charts')
+        em = discord.Embed(title='Top 10 Tracks', url='https://www.last.fm/charts')
         for count, song in enumerate(data[:10], 1):
             em.add_field(name=str(count), value=f"{song['name']} by {song['artist']['name']}", inline=False)
         await ctx.send(embed=em)
@@ -136,7 +136,7 @@ class Music(commands.Cog):
     async def topartists(self, ctx: commands.Context) -> None:
         """Function to return discord embed with top chart artists."""
         data = await top_artists()
-        embed = disnake.Embed(title='Top 10 Artists', url='https://www.last.fm/charts')
+        embed = discord.Embed(title='Top 10 Artists', url='https://www.last.fm/charts')
         for count, artist in enumerate(data[:10], 1):
             embed.add_field(name=str(count), value=artist['name'], inline=False)
         await ctx.send(embed=embed)

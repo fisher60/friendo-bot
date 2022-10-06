@@ -3,7 +3,7 @@ import logging
 import socket
 
 import aiohttp
-from disnake.ext.commands import Bot, CommandError, Context
+from discord.ext.commands import Bot, CommandError, Context
 
 from .disable import DisableApi
 from .graphql import GraphQLClient

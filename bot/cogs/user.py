@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Union
 from datetime import datetime, timezone
 from dateutil.relativedelta import relativedelta
-from disnake import ActivityType, Embed, Member, Spotify, Status
-from disnake.ext.commands import Cog, Context, MemberConverter, MemberNotFound, command
+from discord import ActivityType, Embed, Member, Spotify, Status
+from discord.ext.commands import Cog, Context, MemberConverter, MemberNotFound, command
 
 from bot.bot import Friendo
 

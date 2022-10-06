@@ -1,7 +1,7 @@
-import disnake
+import discord
 from io import BytesIO
 from urllib import parse
-from disnake.ext import commands
+from discord.ext import commands
 from bot.settings import WOLFRAM_APPID
 
 
@@ -27,14 +27,14 @@ class Wolfram(commands.Cog):
                 assert response.status == 200, response.raise_for_status()
                 image_bytes = await response.read()
 
-                image_file = disnake.File(BytesIO(image_bytes), filename="image.png")
+                image_file = discord.File(BytesIO(image_bytes), filename="image.png")
                 image_url = "attachment://image.png"
 
                 message = ""
                 footer = "View original for a bigger picture."
-                color = disnake.Colour.orange()
+                color = discord.Colour.orange()
 
-                final_emb = disnake.Embed(title=message, color=color)
+                final_emb = discord.Embed(title=message, color=color)
                 final_emb.set_image(url=image_url)
                 final_emb.set_footer(text=footer)
 
