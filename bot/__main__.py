@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 import pkgutil
 from typing import Iterator, NoReturn
@@ -28,13 +29,18 @@ def _get_cogs() -> Iterator[str]:
         yield module.name
 
 
-if __name__ == "__main__":
+async def start_bot() -> None:
+    """Load in extensions and start running the bot."""
     bot = Friendo(
         command_prefix=settings.COMMAND_PREFIX, help_command=None, intents=Intents.all(),
         allowed_mentions=AllowedMentions(everyone=False),
     )
 
     for cog in _get_cogs():
-        bot.load_extension(cog)
+        await bot.load_extension(cog)
 
-    bot.run(settings.TOKEN)
+    async with bot:
+        await bot.start(settings.TOKEN)
+
+if __name__ == "__main__":
+    asyncio.run(start_bot())
