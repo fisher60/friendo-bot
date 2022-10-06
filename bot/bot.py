@@ -79,7 +79,7 @@ class Friendo(Bot):
 
             # If cog is not disabled, load it
             else:
-                super().load_extension(name)
+                await super().load_extension(name)
                 return
 
         enabled_list = disable_api.get_enable()
@@ -87,7 +87,7 @@ class Friendo(Bot):
         if enabled_list:
             # If cog is enabled, load it
             if cog_name in enabled_list:
-                super().load_extension(name)
+                await super().load_extension(name)
                 return
 
             # Don't load cogs not passed along with enable
@@ -96,6 +96,3 @@ class Friendo(Bot):
 
         # load cogs if no argument is passed
         await super().load_extension(name)
-
-    def get_event_loop(self, param):
-        pass
