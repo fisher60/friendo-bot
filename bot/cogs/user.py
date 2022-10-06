@@ -89,7 +89,7 @@ class User(Cog):
 
         info_emb = Embed(color=user.color,
                          title=str(user))
-        info_emb.set_thumbnail(url=user.avatar_url)
+        info_emb.set_thumbnail(url=user.avatar)
 
         for flag_ in flags.all():
             if str(flag_.name) in BADGES:

@@ -30,7 +30,7 @@ class Pixelate(Cog):
     async def pixelate(self, ctx: Context, user: Member = None) -> None:
         """Pixelate command, takes in an optional parameter user else pixelates author's avatar."""
         async with ctx.channel.typing():
-            user = ctx.author.avatar_url if not user else user.avatar_url
+            user = ctx.author.avatar if not user else user.avatar
             img_bytes = user.read()
             image = Image.open(BytesIO(await img_bytes))
 
