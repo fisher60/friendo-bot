@@ -21,7 +21,7 @@ AOC_JOIN_CODE = environ.get("AOC_JOIN_CODE")
 
 FRIENDO_API_USER = environ.get("FRIENDO_API_USER")
 FRIENDO_API_PASS = environ.get("FRIENDO_API_PASS")
-FRIENDO_API_URL = environ.get("FRIENDO_API_URL", "http://dev.friendo.us/api/")
+FRIENDO_API_URL = environ.get("FRIENDO_API_URL", "http://dev.friendo.dev/api/")
 
 VERSION = "1.2"
 
