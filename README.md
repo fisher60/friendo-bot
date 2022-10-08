@@ -21,7 +21,7 @@ To get a bot token go to [Discord Developer Portal](https://discord.com/develope
 
 7. Create a file `bot.env` in the root project directory and fill it out using the example below
 
-8. `docker run -d --env-file bot.env ghcr.io/fisher60/friendo-bot:latest`
+8. `docker-compose up --build -d`
 
 ```text
 # bot.env
