@@ -6,9 +6,9 @@ from pathlib import Path
 from typing import Tuple
 import aiofiles
 
-from disnake import Colour, Embed
-from disnake.ext import tasks
-from disnake.ext.commands import Cog, Context, command
+from discord import Colour, Embed
+from discord.ext import tasks
+from discord.ext.commands import Cog, Context, command
 
 from bot.bot import Friendo
 
@@ -270,6 +270,6 @@ class TodoList(Cog):
             )
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the Todo_List cog."""
-    bot.add_cog(TodoList(bot))
+    await bot.add_cog(TodoList(bot))

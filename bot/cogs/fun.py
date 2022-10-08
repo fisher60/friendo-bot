@@ -5,7 +5,7 @@ import re
 import string
 from typing import List
 
-from disnake.ext.commands import Cog, Context, command
+from discord.ext.commands import Cog, Context, command
 
 from bot.bot import Friendo
 
@@ -345,6 +345,6 @@ class Fun(Cog):
                         await ctx.send("PUSH!")
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the Fun cog."""
-    bot.add_cog(Fun(bot))
+    await bot.add_cog(Fun(bot))

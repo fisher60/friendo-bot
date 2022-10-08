@@ -3,14 +3,10 @@ version: "3.7"
 services:
 
   bot:
-    build:
-      context: .
-      dockerfile: Dockerfile
-
+    image: ghcr.io/Fisher60/Friendo_Bot:latest
     tty: true
-
-    env_file: .env
-
+    env_file: bot.env
+    restart: unless-stopped
     volumes:
       - ./logs:/app/logs
       - ./bot:/app/bot

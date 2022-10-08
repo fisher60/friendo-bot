@@ -5,8 +5,8 @@ import re
 from typing import Callable, Optional
 import aiofiles
 
-from disnake import Member
-from disnake.ext.commands import Cog, Context, check, command
+from discord import Member
+from discord.ext.commands import Cog, Context, check, command
 
 from bot.bot import Friendo
 
@@ -70,6 +70,6 @@ class Administration(Cog):
         await ctx.send(msg)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the Admin cog."""
-    bot.add_cog(Administration(bot))
+    await bot.add_cog(Administration(bot))

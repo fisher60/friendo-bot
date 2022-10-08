@@ -4,9 +4,9 @@ import random
 import subprocess
 from typing import Optional
 
-from disnake import Colour, Embed
-from disnake.ext import tasks
-from disnake.ext.commands import Cog, Context, command
+from discord import Colour, Embed
+from discord.ext import tasks
+from discord.ext.commands import Cog, Context, command
 import yaml
 
 from bot import settings
@@ -206,6 +206,6 @@ class Utilities(Cog):
         await ctx.send(embed=embed_quote)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the Utilities cog."""
-    bot.add_cog(Utilities(bot))
+    await bot.add_cog(Utilities(bot))

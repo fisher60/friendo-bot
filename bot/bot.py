@@ -3,7 +3,7 @@ import logging
 import socket
 
 import aiohttp
-from disnake.ext.commands import Bot, CommandError, Context
+from discord.ext.commands import Bot, CommandError, Context
 
 from .disable import DisableApi
 from .graphql import GraphQLClient
@@ -62,7 +62,7 @@ class Friendo(Bot):
         if self._resolver:
             await self._resolver.close()
 
-    def load_extension(self, name: str) -> None:
+    async def load_extension(self, name: str) -> None:
         """Loads an extension after checking if it's disabled or not."""
         disable_api = DisableApi()
         cog_name = name.split(".")[-1]
@@ -79,7 +79,7 @@ class Friendo(Bot):
 
             # If cog is not disabled, load it
             else:
-                super().load_extension(name)
+                await super().load_extension(name)
                 return
 
         enabled_list = disable_api.get_enable()
@@ -87,7 +87,7 @@ class Friendo(Bot):
         if enabled_list:
             # If cog is enabled, load it
             if cog_name in enabled_list:
-                super().load_extension(name)
+                await super().load_extension(name)
                 return
 
             # Don't load cogs not passed along with enable
@@ -95,4 +95,4 @@ class Friendo(Bot):
                 return
 
         # load cogs if no argument is passed
-        super().load_extension(name)
+        await super().load_extension(name)

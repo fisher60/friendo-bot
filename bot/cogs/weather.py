@@ -1,8 +1,8 @@
 """Commands for the weather module."""
 import aiohttp
-import disnake
+import discord
 
-from disnake.ext import commands
+from discord.ext import commands
 
 from bot.settings import WEATHER_TOKEN
 
@@ -18,10 +18,10 @@ class Weather(commands.Cog):
         """Weather command takes in a city name and sends embed."""
         if not args:
             description = 'This should be done like `.weather city name`'
-            await ctx.send(embed=disnake.Embed(title='Please give a city name', description=description))
+            await ctx.send(embed=discord.Embed(title='Please give a city name', description=description))
         else:
             try:
-                embed = disnake.Embed(title=f"Weather in {args}")
+                embed = discord.Embed(title=f"Weather in {args}")
 
                 url = "http://api.openweathermap.org/data/2.5/weather?q="
 
@@ -96,9 +96,9 @@ class Weather(commands.Cog):
 
                 await ctx.send(embed=embed)
             except KeyError:
-                await ctx.send(embed=disnake.Embed(title=f"{args} is an invalid city name"))
+                await ctx.send(embed=discord.Embed(title=f"{args} is an invalid city name"))
 
 
-def setup(bot: commands.Bot) -> None:
+async def setup(bot: commands.Bot) -> None:
     """Sets up the cog."""
-    bot.add_cog(Weather(bot))
+    await bot.add_cog(Weather(bot))

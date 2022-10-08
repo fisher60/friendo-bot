@@ -1,5 +1,5 @@
-from disnake import Embed
-from disnake.ext.commands import Cog, Context, command
+from discord import Embed
+from discord.ext.commands import Cog, Context, command
 
 from bot.bot import Bot
 from bot.settings import GITHUB_REPO
@@ -84,6 +84,6 @@ class Help(Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot: Bot) -> None:
+async def setup(bot: Bot) -> None:
     """Adding the help cog."""
-    bot.add_cog(Help(bot))
+    await bot.add_cog(Help(bot))

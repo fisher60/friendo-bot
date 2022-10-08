@@ -4,7 +4,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [packages]
-disnake = "~=2.3.1"
 python-dotenv = "~=0.19.2"
 opencv-python-headless = "~=4.5.5.62"
 scikit-image = "~=0.19.1"
@@ -17,6 +16,7 @@ arrow = "~=1.2.2"
 aiodns = "~=3.0.0"
 PyJWT = "~=2.3.0"
 matplotlib = "*"
+"discord.py" = "*"
 
 [dev-packages]
 flake8 = "~=4.0.1"

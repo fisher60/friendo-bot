@@ -1,7 +1,7 @@
 import re
 
-from disnake import Colour, Embed
-from disnake.ext.commands import Cog, Context, command
+from discord import Colour, Embed
+from discord.ext.commands import Cog, Context, command
 
 from bot.bot import Friendo
 
@@ -88,6 +88,6 @@ class CovidStats(Cog):
             return "\n".join(data)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the CovidStats cog."""
-    bot.add_cog(CovidStats(bot))
+    await bot.add_cog(CovidStats(bot))

@@ -1,7 +1,7 @@
 import random
 import yaml
 from pathlib import Path
-from disnake.ext.commands import Bot, Cog, Context, command
+from discord.ext.commands import Bot, Cog, Context, command
 
 with open(Path.cwd() / 'bot' / 'resources' / 'wonder_twins.yaml', 'r', encoding='utf-8') as f:
     info = yaml.load(f, Loader=yaml.FullLoader)
@@ -43,6 +43,6 @@ class WonderTwins(Cog):
         await ctx.send(f"Form of {self.format_phrase()}")
 
 
-def setup(bot: Bot) -> None:
+async def setup(bot: Bot) -> None:
     """Load the WonderTwins cog."""
-    bot.add_cog(WonderTwins(bot))
+    await bot.add_cog(WonderTwins(bot))
