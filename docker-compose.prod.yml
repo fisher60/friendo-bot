@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   bot:
-    image: ghcr.io/Fisher60/Friendo_Bot:latest
+    image: ghcr.io/Fisher60/friendo-bot:latest
     tty: true
     env_file: bot.env
     restart: unless-stopped

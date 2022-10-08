@@ -18,7 +18,7 @@ class Help(Cog):
         prefix = self.bot.command_prefix
 
         embed = Embed(
-            title=f"{'-' * (char_repeat // 2)}Friendo_Bot{'-' * (char_repeat // 2)}",
+            title=f"{'-' * (char_repeat // 2)}friendo-bot{'-' * (char_repeat // 2)}",
             url=GITHUB_REPO,
         )
 
