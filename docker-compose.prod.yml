@@ -7,6 +7,3 @@ services:
     tty: true
     env_file: bot.env
     restart: unless-stopped
-    volumes:
-      - ./logs:/app/logs
-      - ./bot:/app/bot
