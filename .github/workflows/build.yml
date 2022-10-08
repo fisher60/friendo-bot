@@ -29,7 +29,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          path: Friendo_Bot
+          path: friendo-bot
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -44,13 +44,13 @@ jobs:
       - name: Build and Push to ghcr
         uses: docker/build-push-action@v2
         with:
-          context: Friendo_Bot/
-          file: Friendo_Bot/Dockerfile
+          context: friendo-bot/
+          file: friendo-bot/Dockerfile
           push: true
-          cache-from: type=registry,ref=ghcr.io/fisher60/Friendo_Bot:latest
+          cache-from: type=registry,ref=ghcr.io/fisher60/friendo-bot:latest
           cache-to: type=inline
           tags: |
-            ghcr.io/fisher60/Friendo_Bot:latest
-            ghcr.io/fisher60/Friendo_Bot:${{ steps.sha_tag.outputs.tag }}
+            ghcr.io/fisher60/friendo-bot:latest
+            ghcr.io/fisher60/friendo-bot:${{ steps.sha_tag.outputs.tag }}
           build-args: |
             git_sha=${{ github.sha }}
