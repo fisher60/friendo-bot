@@ -1,7 +1,7 @@
 from typing import Union
 
-from disnake import Colour, Embed
-from disnake.ext import commands as comms
+from discord import Colour, Embed
+from discord.ext import commands as comms
 
 from bot import settings
 
@@ -76,6 +76,6 @@ class Source(comms.Cog):
             await ctx.send(embed=embed)
 
 
-def setup(bot: comms.Bot) -> None:
+async def setup(bot: comms.Bot) -> None:
     """Load the Source cog."""
-    bot.add_cog(Source(bot))
+    await bot.add_cog(Source(bot))

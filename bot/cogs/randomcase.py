@@ -1,6 +1,6 @@
 import random
 
-from disnake.ext.commands import Cog, Context, command
+from discord.ext.commands import Cog, Context, command
 
 from bot.bot import Friendo
 
@@ -21,6 +21,6 @@ class RandomCase(Cog):
         await ctx.send(f">>> {randomized_string}")
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the Utilities cog."""
-    bot.add_cog(RandomCase(bot))
+    await bot.add_cog(RandomCase(bot))

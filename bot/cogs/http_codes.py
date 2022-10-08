@@ -1,6 +1,6 @@
 from random import choice
 
-from disnake.ext.commands import Cog, Context, command
+from discord.ext.commands import Cog, Context, command
 
 from bot.bot import Friendo
 
@@ -37,6 +37,6 @@ class HttpCodes(Cog):
         await random_handler(ctx, code)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the HttpCodes cog."""
-    bot.add_cog(HttpCodes(bot))
+    await bot.add_cog(HttpCodes(bot))

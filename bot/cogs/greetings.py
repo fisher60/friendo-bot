@@ -1,7 +1,7 @@
 from pathlib import Path
 import random
 
-from disnake.ext.commands import Bot, Cog, Context, command
+from discord.ext.commands import Bot, Cog, Context, command
 import yaml
 
 
@@ -32,6 +32,6 @@ class Greetings(Cog):
         await ctx.send(random.choice(msgs))
 
 
-def setup(bot: Bot) -> None:
+async def setup(bot: Bot) -> None:
     """Load the Greetings cog."""
-    bot.add_cog(Greetings(bot))
+    await bot.add_cog(Greetings(bot))

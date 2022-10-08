@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Union
 from datetime import datetime, timezone
 from dateutil.relativedelta import relativedelta
-from disnake import ActivityType, Embed, Member, Spotify, Status
-from disnake.ext.commands import Cog, Context, MemberConverter, MemberNotFound, command
+from discord import ActivityType, Embed, Member, Spotify, Status
+from discord.ext.commands import Cog, Context, MemberConverter, MemberNotFound, command
 
 from bot.bot import Friendo
 
@@ -89,13 +89,13 @@ class User(Cog):
 
         info_emb = Embed(color=user.color,
                          title=str(user))
-        info_emb.set_thumbnail(url=user.avatar.url)
+        info_emb.set_thumbnail(url=user.avatar)
 
         for flag_ in flags.all():
             if str(flag_.name) in BADGES:
                 user_badges.append(BADGES[str(flag_.name)])
 
-        if user.avatar.is_animated():
+        if (user.avatar and user.avatar.is_animated()) or user.premium_since:
             user_badges.append(BADGES['nitro'])
 
         for role in user.roles[1:]:
@@ -138,6 +138,6 @@ class User(Cog):
         await ctx.send(embed=info_emb)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Load the User cog."""
-    bot.add_cog(User(bot))
+    await bot.add_cog(User(bot))

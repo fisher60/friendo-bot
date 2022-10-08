@@ -3,8 +3,8 @@ import logging
 from dataclasses import asdict, dataclass
 from typing import Dict, Optional
 
-from disnake import Color, Embed, Member, Message, RawReactionActionEvent, Reaction, TextChannel
-from disnake.ext.commands import Cog, Context, group
+from discord import Color, Embed, Member, Message, RawReactionActionEvent, Reaction, TextChannel
+from discord.ext.commands import Cog, Context, group
 
 from bot import settings
 from bot.bot import Friendo
@@ -242,11 +242,11 @@ class DogeBoard(Cog):
         await ctx.send(f"> Updated DogeBoard required reactions to: {amount}", delete_after=5)
 
 
-def setup(bot: Friendo) -> None:
+async def setup(bot: Friendo) -> None:
     """Adding the help cog."""
     if not settings.FRIENDO_API_USER:
         raise EnvironmentError("Missing environment variable: FRIENDO_API_USER")
     if not settings.FRIENDO_API_PASS:
         raise EnvironmentError("Missing environment variable: FRIENDO_API_PASS")
 
-    bot.add_cog(DogeBoard(bot))
+    await bot.add_cog(DogeBoard(bot))
