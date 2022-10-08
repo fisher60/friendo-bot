@@ -46,10 +46,10 @@ the above environment variables must be added to the system or a file named `.en
 
 ```bash
 # Clone the repository on the develop branch
-$ git clone -b "develop" https://github.com/fisher60/Friendo_Bot.git
+$ git clone -b "develop" https://github.com/fisher60/friendo-bot.git
 
 # Navigate to the repository directory
-$ cd Friendo_Bot
+$ cd friendo-bot
 
 # Install pipenv through pip or your package manager
 $ pip install pipenv
