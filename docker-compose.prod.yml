@@ -6,6 +6,7 @@ services:
     image: ghcr.io/Fisher60/Friendo_Bot:latest
     tty: true
     env_file: bot.env
+    restart: unless-stopped
     volumes:
       - ./logs:/app/logs
       - ./bot:/app/bot
