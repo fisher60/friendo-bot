@@ -68,5 +68,10 @@ class GraphQLClient:
         """Make a GraphQL API POST call."""
         async with self.session.post(self.url, headers=self.headers, **kwargs) as resp:
             resp = await resp.json()
-            log.info(resp)
+
+            # remove api token from response to prevent token from existing in logs
+            censored_logging_response = resp.copy()
+            censored_logging_response["data"]["login"]["token"] = "token_redacted_for_security"
+            log.info(censored_logging_response)
+
             return resp
