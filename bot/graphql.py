@@ -1,4 +1,5 @@
 import asyncio
+import copy
 import logging
 
 import aiohttp
@@ -69,9 +70,15 @@ class GraphQLClient:
         async with self.session.post(self.url, headers=self.headers, **kwargs) as resp:
             resp = await resp.json()
 
+            logging_response_copy = copy.deepcopy(resp)
+
+            log.info(logging_response_copy)
+
             # remove api token from response to prevent token from existing in logs
-            censored_logging_response = resp.copy()
-            censored_logging_response["data"]["login"]["token"] = "token_redacted_for_security"
-            log.info(censored_logging_response)
+            # if data was returned and the resp is for a login, censor the token
+            if logging_response_copy["data"] and "login" in logging_response_copy["data"]:
+                logging_response_copy["data"]["login"]["token"] = "token_redacted_for_security"
+
+            log.info(f"Copy Response: {logging_response_copy}")
 
             return resp
