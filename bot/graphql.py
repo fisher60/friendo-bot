@@ -72,13 +72,11 @@ class GraphQLClient:
 
             logging_response_copy = copy.deepcopy(resp)
 
-            log.info(logging_response_copy)
-
             # remove api token from response to prevent token from existing in logs
             # if data was returned and the resp is for a login, censor the token
             if logging_response_copy["data"] and "login" in logging_response_copy["data"]:
                 logging_response_copy["data"]["login"]["token"] = "token_redacted_for_security"
 
-            log.info(f"Copy Response: {logging_response_copy}")
+            log.info(logging_response_copy)
 
             return resp
