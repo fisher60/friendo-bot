@@ -1,4 +1,7 @@
+import logging
 from os import environ
+
+log = logging.getLogger(__name__)
 
 TOKEN = environ.get("FRIENDO_TOKEN")
 
@@ -22,6 +25,8 @@ AOC_JOIN_CODE = environ.get("AOC_JOIN_CODE")
 FRIENDO_API_USER = environ.get("FRIENDO_API_USER")
 FRIENDO_API_PASS = environ.get("FRIENDO_API_PASS")
 FRIENDO_API_URL = environ.get("FRIENDO_API_URL", "http://dev.friendo.dev/api/")
+
+log.info(f"Using {FRIENDO_API_URL} for backend...")
 
 VERSION = "1.2"
 
