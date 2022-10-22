@@ -56,13 +56,17 @@ class GraphQLClient:
 
     async def refresh_later(self) -> None:
         """Wait until 2 days before token expires and get a new one."""
-        exp = jwt.decode(self.token, options={"verify_signature": False})["exp"]
-        seconds_to_exp = int(exp - arrow.utcnow().timestamp())
-        sleep_time = seconds_to_exp - 60*60*24*2
-        log.info(f"Will refresh token in {sleep_time} seconds.")
+        try:
+            exp = jwt.decode(self.token, options={"verify_signature": False})["exp"]
+            seconds_to_exp = int(exp - arrow.utcnow().timestamp())
+            sleep_time = seconds_to_exp - 60*60*24*2
+            log.info(f"Will refresh token in {sleep_time} seconds.")
 
-        await asyncio.sleep(sleep_time)
-        await self.refresh_token()
+            await asyncio.sleep(sleep_time)
+            await self.refresh_token()
+        except jwt.DecodeError:
+            log.exception(f"Login Failed. JWT returned from API was invalid. Token: {self.token}")
+            raise
 
     async def request(self, **kwargs) -> dict:
         """
@@ -71,6 +75,7 @@ class GraphQLClient:
         This ensures we have a token before calling.
         """
         if not self.token:
+            log.info("Access token does not exist, attempting to login...")
             await self.refresh_token()
         return await self._post(**kwargs)
 
@@ -78,7 +83,5 @@ class GraphQLClient:
         """Make a GraphQL API POST call."""
         async with self.session.post(self.url, headers=self.headers, **kwargs) as resp:
             resp = await resp.json()
-
             log.info(resp)
-
             return resp
