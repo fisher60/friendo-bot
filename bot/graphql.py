@@ -9,8 +9,10 @@ from bot import settings
 
 
 class LoginTokenLoggingFilter(logging.Filter):
-    """Logging filter to remove api token from logging for friendo api requests"""
-    def filter(self, record):
+    """Logging filter to remove api token from logging for friendo api requests."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        """Returns False if login token is in logging record."""
         return "token" not in record.getMessage()
 
 
