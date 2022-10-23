@@ -1,13 +1,11 @@
-import asyncio
 import logging
-import socket
 
 import aiohttp
 from discord.ext.commands import Bot, CommandError, Context
 
-from .disable import DisableApi
-from .graphql import GraphQLClient
-from .settings import API_COGS
+from bot.disable import DisableApi
+from bot.graphql import GraphQLClient
+from bot.settings import API_COGS
 
 log = logging.getLogger(__name__)
 
@@ -15,23 +13,24 @@ log = logging.getLogger(__name__)
 class Friendo(Bot):
     """Base Class for the discord bot."""
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(
+        self,
+        session: aiohttp.ClientSession,
+        connector: aiohttp.TCPConnector,
+        resolver: aiohttp.AsyncResolver,
+        *args,
+        **kwargs,
+    ) -> None:
         super().__init__(*args, **kwargs)
 
-        # Setting the loop.
-        self.loop = asyncio.get_event_loop()
-
-        self._resolver = aiohttp.AsyncResolver()
-        self._connector = aiohttp.TCPConnector(
-            resolver=self._resolver,
-            family=socket.AF_INET,
-        )
         # Client.login() will call HTTPClient.static_login() which will create a session using
         # this connector attribute.
-        self.http.connector = self._connector
+        self.http.connector = connector
 
-        self.session = aiohttp.ClientSession(connector=self._connector)
-        self.graphql = GraphQLClient(connector=self._connector)
+        self.session = session
+        self._connector = connector
+        self._resolver = resolver
+        self.graphql = GraphQLClient(session=session)
 
     @staticmethod
     async def on_ready() -> None:

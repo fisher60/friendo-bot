@@ -1,9 +1,10 @@
-import aiohttp
 import json
 import logging
 from pathlib import Path
 from typing import List
+
 import aiofiles
+import aiohttp
 
 from bot.settings import MEME_PASSWORD, MEME_USERNAME
 

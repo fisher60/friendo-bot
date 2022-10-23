@@ -1,7 +1,12 @@
-from bot.bot import Friendo
+import logging
+
 from discord import errors
 from discord.ext.commands import Cog, Context, group
+
+from bot.bot import Friendo
 from bot.settings import AOC_JOIN_CODE, AOC_LEADERBOARD_LINK, AOC_SESSION_COOKIE
+
+log = logging.getLogger(__name__)
 
 
 class AdventOfCode(Cog):

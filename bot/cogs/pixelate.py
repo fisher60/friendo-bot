@@ -1,10 +1,12 @@
-import numpy as np
-from PIL import Image
-from io import BytesIO
-from bot.bot import Friendo
 from collections import Counter
+from io import BytesIO
+
+import numpy as np
 from discord import Color, Embed, File, Member
 from discord.ext.commands import Cog, Context, command
+from PIL import Image
+
+from bot.bot import Friendo
 
 
 class Pixelate(Cog):

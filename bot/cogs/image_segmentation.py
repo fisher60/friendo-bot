@@ -4,12 +4,12 @@ from pathlib import Path
 from typing import List, Optional
 
 import aiofiles
-from cv2 import COLOR_BGR2RGB, cvtColor, imread
 import discord
-from discord.ext.commands import Cog, Context, command
 import matplotlib.pyplot as plt
-from skimage.color import rgb2hsv
+from cv2 import COLOR_BGR2RGB, cvtColor, imread
+from discord.ext.commands import Cog, Context, command
 from numpy import ndarray
+from skimage.color import rgb2hsv
 
 from bot.bot import Friendo
 

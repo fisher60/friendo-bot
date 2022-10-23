@@ -23,8 +23,8 @@ log.addFilter(LoginTokenLoggingFilter())
 class GraphQLClient:
     """Friendo GraphQL API wrapper."""
 
-    def __init__(self, **session_kwargs):
-        self.session = aiohttp.ClientSession(raise_for_status=True, **session_kwargs)
+    def __init__(self, session: aiohttp.ClientSession):
+        self.session = session
         self.token = None
         self.url = settings.FRIENDO_API_URL
         self.headers = None
@@ -44,10 +44,9 @@ class GraphQLClient:
         )
         variables = {
             "username": settings.FRIENDO_API_USER,
-            "password": settings.FRIENDO_API_PASS
+            "password": settings.FRIENDO_API_PASS,
         }
         resp = await self._post(json={"query": query, "variables": variables})
-
         self.token = resp["data"]["login"]["token"]
         self.headers = {
             "Authorization": f"Bearer {self.token}"
@@ -78,7 +77,5 @@ class GraphQLClient:
         """Make a GraphQL API POST call."""
         async with self.session.post(self.url, headers=self.headers, **kwargs) as resp:
             resp = await resp.json()
-
             log.info(resp)
-
             return resp
