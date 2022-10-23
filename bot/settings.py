@@ -26,6 +26,8 @@ FRIENDO_API_USER = environ.get("FRIENDO_API_USER")
 FRIENDO_API_PASS = environ.get("FRIENDO_API_PASS")
 FRIENDO_API_URL = environ.get("FRIENDO_API_URL", "http://dev.friendo.dev/api/")
 
+GIT_SHA = environ.get("GIT_SHA", "development")
+
 log.info(f"Using {FRIENDO_API_URL} for backend...")
 
 VERSION = "1.2"

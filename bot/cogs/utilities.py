@@ -1,7 +1,6 @@
 from asyncio import sleep
 from pathlib import Path
 import random
-import subprocess
 from typing import Optional
 
 from discord import Colour, Embed
@@ -129,14 +128,9 @@ class Utilities(Cog):
             await ctx.send(msg)
 
     @command(brief="Returns Friendo's Version")
-    async def version(self, ctx: Context) -> str:
+    async def version(self, ctx: Context) -> None:
         """Creates a version number from settings.VERSION and most recent commit hash."""
-        commit_hash = (subprocess.check_output(["git", "rev-parse", "HEAD"]).strip().decode("ascii"))
-        msg = f"Version is {settings.VERSION}{commit_hash[-4:]}"
-
-        await ctx.send(msg)
-
-        return msg
+        await ctx.send(f"Version is {settings.VERSION}+{settings.GIT_SHA}")
 
     @command(brief="[number] [unit (seconds/minutes/hours)] [reason for reminder]", aliases=["remind"])
     async def reminder(self, ctx: Context, time: str, period: str = "minutes", *, reason: str = None) -> None:

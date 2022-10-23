@@ -1,7 +1,5 @@
 FROM python:3.9-slim
 
-RUN apt-get update && apt-get -y install git
-
 # Set pip to have cleaner logs and no saved cache
 ENV PIP_NO_CACHE_DIR=false \
     PIPENV_IGNORE_VIRTUALENVS=1 \
