@@ -1,5 +1,6 @@
 """The main bot module, contains all code for the bot application."""
 
+import asyncio
 import logging
 import os
 from pathlib import Path
@@ -29,6 +30,10 @@ log.addHandler(FILE_HANDLER)
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(log_formatter)
 log.addHandler(console_handler)
+
+# On Windows, the selector event loop is required for aiodns.
+if os.name == "nt":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 log.info("Cleaning out image_cache")
 
