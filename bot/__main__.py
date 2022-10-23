@@ -1,8 +1,10 @@
 import asyncio
 import inspect
 import pkgutil
+import socket
 from typing import Iterator, NoReturn
 
+import aiohttp
 from discord import AllowedMentions, Intents
 
 from . import settings
@@ -31,16 +33,24 @@ def _get_cogs() -> Iterator[str]:
 
 async def start_bot() -> None:
     """Load in extensions and start running the bot."""
-    bot = Friendo(
-        command_prefix=settings.COMMAND_PREFIX, help_command=None, intents=Intents.all(),
-        allowed_mentions=AllowedMentions(everyone=False),
+    resolver = aiohttp.AsyncResolver()
+    connector = aiohttp.TCPConnector(
+        resolver=resolver,
+        family=socket.AF_INET,
     )
+    async with aiohttp.ClientSession(connector=connector) as session:
+        bot = Friendo(
+            command_prefix=settings.COMMAND_PREFIX, help_command=None, intents=Intents.all(),
+            allowed_mentions=AllowedMentions(everyone=False),
+            session=session,
+            connector=connector,
+            resolver=resolver,
+        )
+        for cog in _get_cogs():
+            await bot.load_extension(cog)
 
-    for cog in _get_cogs():
-        await bot.load_extension(cog)
-
-    async with bot:
-        await bot.start(settings.TOKEN)
+        async with bot:
+            await bot.start(settings.TOKEN)
 
 if __name__ == "__main__":
     asyncio.run(start_bot())
