@@ -1,12 +1,12 @@
+import random
 from asyncio import sleep
 from pathlib import Path
-import random
 from typing import Optional
 
+import yaml
 from discord import Colour, Embed
 from discord.ext import tasks
 from discord.ext.commands import Cog, Context, command
-import yaml
 
 from bot import settings
 from bot.bot import Friendo

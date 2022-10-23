@@ -3,9 +3,9 @@ import logging
 import aiohttp
 from discord.ext.commands import Bot, CommandError, Context
 
-from .disable import DisableApi
-from .graphql import GraphQLClient
-from .settings import API_COGS
+from bot.disable import DisableApi
+from bot.graphql import GraphQLClient
+from bot.settings import API_COGS
 
 log = logging.getLogger(__name__)
 

@@ -1,7 +1,9 @@
-import discord
 from io import BytesIO
 from urllib import parse
+
+import discord
 from discord.ext import commands
+
 from bot.settings import WOLFRAM_APPID
 
 

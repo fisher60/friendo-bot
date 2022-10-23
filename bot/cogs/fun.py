@@ -1,8 +1,8 @@
 import functools
-from itertools import product
-from random import choice, randint, shuffle
 import re
 import string
+from itertools import product
+from random import choice, randint, shuffle
 from typing import List
 
 from discord.ext.commands import Cog, Context, command

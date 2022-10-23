@@ -7,9 +7,9 @@ from typing import Iterator, NoReturn
 import aiohttp
 from discord import AllowedMentions, Intents
 
-from . import settings
-from bot.bot import Friendo
 from bot import cogs
+from bot import settings
+from bot.bot import Friendo
 
 
 def _get_cogs() -> Iterator[str]:

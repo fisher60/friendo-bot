@@ -1,15 +1,14 @@
 import logging
+import typing as t
 from collections import defaultdict
 from datetime import timedelta
-import typing as t
 
 import arrow
-from discord import Member
 import discord
+from discord import Member
 from discord.ext.commands import Cog, Context, group
 
 from bot.bot import Friendo
-
 
 log = logging.getLogger(__name__)
 
