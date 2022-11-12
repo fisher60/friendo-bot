@@ -34,6 +34,7 @@ class Friendo(Bot):
         self.graphql = GraphQLClient(session=session)
 
     async def setup_hook(self) -> None:
+        """Sync the application command tree before bot connects for commands."""
         await self.tree.sync()
 
     @staticmethod
