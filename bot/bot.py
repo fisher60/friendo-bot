@@ -1,7 +1,7 @@
 import logging
 
 import aiohttp
-import discord
+
 from discord.ext.commands import Bot, CommandError, Context
 
 from bot.disable import DisableApi
