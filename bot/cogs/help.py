@@ -1,5 +1,5 @@
 from discord import Embed
-from discord.ext.commands import Cog, Context, command
+from discord.ext.commands import Cog, Context, hybrid_command
 
 from bot.bot import Bot
 from bot.settings import GITHUB_REPO
@@ -11,7 +11,7 @@ class Help(Cog):
     def __init__(self, bot: Bot) -> None:
         self.bot = bot
 
-    @command()
+    @hybrid_command()
     async def help(self, ctx: Context, *, name: str = None) -> None:
         """Giving the user help for a command, or just the bot in general."""
         char_repeat = 20

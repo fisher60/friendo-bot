@@ -1,6 +1,7 @@
 import logging
 
 import aiohttp
+
 from discord.ext.commands import Bot, CommandError, Context
 
 from bot.disable import DisableApi
@@ -31,6 +32,9 @@ class Friendo(Bot):
         self._connector = connector
         self._resolver = resolver
         self.graphql = GraphQLClient(session=session)
+
+    async def setup_hook(self) -> None:
+        await self.tree.sync()
 
     @staticmethod
     async def on_ready() -> None:
