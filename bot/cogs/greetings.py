@@ -1,9 +1,8 @@
-from pathlib import Path
 import random
+from pathlib import Path
 
-from discord.ext.commands import Bot, Cog, Context, command
 import yaml
-
+from discord.ext.commands import Bot, Cog, Context, command
 
 with open(Path.cwd() / 'bot' / 'resources' / 'greetings.yaml', 'r', encoding='utf-8') as f:
     info = yaml.load(f, Loader=yaml.FullLoader)

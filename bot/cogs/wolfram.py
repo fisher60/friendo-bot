@@ -1,7 +1,9 @@
-import discord
 from io import BytesIO
 from urllib import parse
+
+import discord
 from discord.ext import commands
+
 from bot.settings import WOLFRAM_APPID
 
 
@@ -12,7 +14,11 @@ class Wolfram(commands.Cog):
         self.bot = bot
         self.query = "http://api.wolframalpha.com/v2/{request}?{data}"
 
-    @commands.command(brief="Takes in a wolfram search and displays the result", usage=".wolfram [query]")
+    @commands.command(
+        brief="Takes in a wolfram search and displays the result",
+        usage=".wolfram [query]",
+        aliases=("wa", "wolframalpha"),
+    )
     async def wolfram(self, ctx: commands.context, *, query: str) -> None:
         """Wolfram command, takes in a search and gives the result."""
         url_str = parse.urlencode({
