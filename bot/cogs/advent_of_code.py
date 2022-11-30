@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 
 class AdventOfCode(Cog):
-    """Cog for AOC 2021 for small features."""
+    """Commands for Advent of Code."""
 
     def __init__(self, bot: Friendo):
         self.bot = bot
@@ -29,8 +29,8 @@ class AdventOfCode(Cog):
         return stats
 
     @group(name="AdventofCode",
-           aliases=('aoc', 'aoc2021'),
-           brief="Small commands for AoC 2021",
+           aliases=("aoc", "advent"),
+           brief="Commands for our AoC leaderboard",
            usage=".aoc [command]")
     async def aoc_group(self, ctx: Context) -> None:
         """Group for advent of code commands."""
@@ -55,11 +55,11 @@ class AdventOfCode(Cog):
         except errors.Forbidden:
             await ctx.send(error_msg)
 
-    @aoc_group.command(brief="Get the leaderboard of AoC 2021 for the Code Collective server",
+    @aoc_group.command(brief="Get the Friendo leaderboard for the most recent Advent of Code",
                        usage=".aoc leaderboard",
                        aliases=('lb', 'board'))
     async def leaderboard(self, ctx: Context) -> None:
-        """Shows the leaderboard of code collective server for AoC 2021."""
+        """Shows Friendo's Advent of Code leaderboard."""
         async with ctx.channel.typing():
             cookies = {'session': AOC_SESSION_COOKIE}
             async with self.bot.session.get(AOC_LEADERBOARD_LINK, cookies=cookies) as stats:
@@ -70,13 +70,13 @@ class AdventOfCode(Cog):
 
                 for name_star, score in sorted_stats.items():
                     msg.append(
-                        f"{count} | {name_star[0] + ' '*(16-len(name_star[0]))} "
+                        f"{count} | {name_star[0] + ' ' * (16-len(name_star[0]))} "
                         f"|  {name_star[1]} ★  |   {score}")
                     count += 1
 
                 msg = '\n'.join(msg)
-                await ctx.send("🎄 Advent of Code 2021 leaderboard for Code Collective 🎄")
-                await ctx.send(f"```  | Name {' '*(16-4)}| Stars | Score\n{msg}```")
+                await ctx.send("🎄 Advent of Code 2022 leaderboard for Friendo 🎄")
+                await ctx.send(f"```  | Name {' ' * 12}| Stars | Score\n{msg}```")
 
 
 async def setup(bot: Friendo) -> None:
