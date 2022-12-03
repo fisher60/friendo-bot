@@ -35,7 +35,7 @@ class Friendo(Bot):
         self.graphql = GraphQLClient(session=session)
 
     async def setup_hook(self) -> None:
-        """Assign a error handler for Interaction commands."""
+        """Assign an error handler for Interaction commands."""
         self.tree.on_error = self.on_command_error
 
     async def on_ready(self) -> None:
