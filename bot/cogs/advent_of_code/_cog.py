@@ -4,11 +4,11 @@ from itertools import cycle
 from operator import attrgetter
 
 import discord
-from discord import app_commands, Embed, Color
+from discord import Color, Embed, app_commands
 from discord.ext import commands
 
 from bot.bot import Friendo
-from bot.settings import AOC_JOIN_CODE, AOC_SESSION_COOKIE, AOC_LEADERBOARD_ID
+from bot.settings import AOC_JOIN_CODE, AOC_LEADERBOARD_ID, AOC_SESSION_COOKIE
 from ._types import Leaderboard, LeaderboardMember
 
 logger = logging.getLogger("advent_of_code")
@@ -63,7 +63,7 @@ class AdventOfCode(commands.GroupCog):
             year: app_commands.Range[int, 2015, None] = None,
             amount: app_commands.Range[int, 0, None] = 10
     ) -> None:
-        """ Get the current Advent of Code leaderboard """
+        """Get the current Advent of Code leaderboard."""
         if year is None:
             year = datetime.now().year
         elif year > datetime.now().year:  # Don't allow years that haven't happened yet
