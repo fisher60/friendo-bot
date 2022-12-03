@@ -85,7 +85,7 @@ class AdventOfCode(commands.GroupCog):
         embed = Embed(
             title=f"Advent of Code {leaderboard.year}",
             description=self._create_leaderboard_message(all_member, amount),
-            url="https://adventofcode.com",
+            url=f"https://adventofcode.com/{leaderboard.year}",
             colour=Color.gold(),
         )
         embed.add_field(
