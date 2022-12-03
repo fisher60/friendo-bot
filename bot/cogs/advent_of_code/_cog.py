@@ -42,10 +42,13 @@ class AdventOfCode(commands.GroupCog):
 
         get_line_color = cycle([red, green])
 
+        largest_name = max(len(m.name) for m in members)
+
         formatted_message = f"Here is our top {amount} ranking and star count.\n```ansi\n"
         for rank, member in enumerate(members[:amount], start=1):
+            member_name = format(member.name, f"<{largest_name}")
             formatted_message += (
-                f"{next(get_line_color)}{rank:0>2} » {member.name} {yellow}{member.stars:>2}★{reset}\n"
+                f"{next(get_line_color)}{rank:0>2}{reset} » {member_name} {yellow}{member.stars:>2}★{reset}\n"
             )
 
         formatted_message += "```"
