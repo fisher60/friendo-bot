@@ -64,9 +64,13 @@ class AdventOfCode(commands.GroupCog):
             amount: app_commands.Range[int, 0, None] = 10
     ) -> None:
         """Get the current Advent of Code leaderboard."""
-        if year is None:
-            year = datetime.now().year
-        elif year > datetime.now().year:  # Don't allow years that haven't happened yet
+        now = datetime.now()
+
+        if year is None and now.month == 12:  # If in December, show current year
+            year = now.year
+        elif year is None:  # If in any month other than Decemeber, show previous year
+            year = now.year - 1
+        elif year > now.year:  # Don't allow years that haven't happened yet
             await interaction.response.send_message(
                 f"> Please select a valid year 2015 - {datetime.now().year}",
                 ephemeral=True
