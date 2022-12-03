@@ -42,10 +42,10 @@ class AdventOfCode(commands.GroupCog):
 
         get_line_color = cycle([red, green])
 
-        formatted_message = f"Here is our top {amount}\n```ansi\n"
+        formatted_message = f"Here is our top {amount} ranking and star count.\n```ansi\n"
         for rank, member in enumerate(members[:amount], start=1):
             formatted_message += (
-                f"{next(get_line_color)}{rank:0>2} {yellow}★{reset} {member.name} ({member.local_score})\n"
+                f"{next(get_line_color)}{rank:0>2} » {member.name} {yellow}{member.stars:>2}★{reset}\n"
             )
 
         formatted_message += "```"
@@ -75,8 +75,8 @@ class AdventOfCode(commands.GroupCog):
 
         leaderboard = await self.fetch_leaderboard(year)
 
-        all_member = list(filter(attrgetter("local_score"), leaderboard.members.values()))
-        all_member.sort(key=attrgetter("local_score"), reverse=True)
+        all_member = list(filter(attrgetter("stars"), leaderboard.members.values()))
+        all_member.sort(key=attrgetter("stars"), reverse=True)
 
         embed = Embed(
             title=f"Advent of Code {leaderboard.year}",
