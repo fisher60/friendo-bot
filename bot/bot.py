@@ -41,8 +41,8 @@ class Friendo(Bot):
     async def on_ready(self) -> None:
         """Runs when the bot is connected. Sync Interaction/app_commands when connected to the gateway."""
         log.info('Awaiting...')
-        log.info("Bot Is Ready For Commands")
         await self.tree.sync()
+        log.info("Bot Is Ready For Commands")
 
     async def on_command_error(
             self,
