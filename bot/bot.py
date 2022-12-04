@@ -1,7 +1,8 @@
 import logging
+from typing import Union
 
 import aiohttp
-
+import discord
 from discord.ext.commands import Bot, CommandError, Context
 
 from bot.disable import DisableApi
@@ -34,16 +35,20 @@ class Friendo(Bot):
         self.graphql = GraphQLClient(session=session)
 
     async def setup_hook(self) -> None:
-        """Sync the application command tree before bot connects for commands."""
-        await self.tree.sync()
+        """Assign an error handler for Interaction commands."""
+        self.tree.on_error = self.on_command_error
 
-    @staticmethod
-    async def on_ready() -> None:
-        """Runs when the bot is connected."""
+    async def on_ready(self) -> None:
+        """Runs when the bot is connected. Sync Interaction/app_commands when connected to the gateway."""
         log.info('Awaiting...')
+        await self.tree.sync()
         log.info("Bot Is Ready For Commands")
 
-    async def on_command_error(self, ctx: Context, exception: CommandError) -> None:
+    async def on_command_error(
+            self,
+            ctx: Union[Context, discord.Interaction],
+            exception: Union[CommandError, discord.app_commands.AppCommandError]
+    ) -> None:
         """Fired when exception happens."""
         log.error(
             "Exception happened while executing command",

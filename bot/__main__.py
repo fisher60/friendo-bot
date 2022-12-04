@@ -1,4 +1,5 @@
 import asyncio
+import importlib
 import inspect
 import pkgutil
 import socket
@@ -23,9 +24,12 @@ def _get_cogs() -> Iterator[str]:
         raise ImportError(name=name)
 
     for module in pkgutil.walk_packages(cogs.__path__, f"{cogs.__name__}.", onerror=on_error):
+        if any(name.startswith("_") for name in module.name.split(".")):
+            continue  # Ignore modules/packages with a name starting with _
+
         if module.ispkg:
-            _import = __import__(module.name)
-            if not inspect.isfunction(getattr(_import, "setup", None)):
+            imported = importlib.import_module(module.name)
+            if not inspect.isfunction(getattr(imported, "setup", None)):
                 continue
 
         yield module.name
