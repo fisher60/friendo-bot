@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -14,7 +15,7 @@ class LeaderboardMember(BaseModel):
     """Member data on the leaderboard."""
 
     id: int
-    name: str
+    name: Optional[str] = "Anonymous"
     stars: int
     local_score: int
     global_score: int
