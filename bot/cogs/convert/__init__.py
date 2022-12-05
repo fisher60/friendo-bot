@@ -1,9 +1,5 @@
-import logging
-
 from bot.bot import Friendo
 from ._cog import Convert
-
-logger = logging.getLogger("convert")
 
 
 async def setup(bot: Friendo) -> None:

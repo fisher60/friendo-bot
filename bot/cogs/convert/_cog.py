@@ -1,13 +1,9 @@
-import logging
-
 import discord
 from discord import Color, Embed, app_commands
 from discord.ext import commands
 from discord.utils import snowflake_time
 
 from bot.bot import Friendo
-
-logger = logging.getLogger("convert")
 
 
 class Convert(commands.GroupCog):
