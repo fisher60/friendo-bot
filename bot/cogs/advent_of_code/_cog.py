@@ -83,7 +83,7 @@ class AdventOfCode(commands.GroupCog):
         leaderboard = await self.fetch_leaderboard(year)
 
         all_member = list(filter(attrgetter("stars"), leaderboard.members.values()))
-        all_member.sort(key=attrgetter("stars"), reverse=True)
+        all_member.sort(key=attrgetter("local_score"), reverse=True)
 
         embed = Embed(
             title=f"Advent of Code {leaderboard.year}",
