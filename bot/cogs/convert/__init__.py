@@ -7,5 +7,5 @@ logger = logging.getLogger("convert")
 
 
 async def setup(bot: Friendo) -> None:
-    """Sets up the Covert cog."""
+    """Sets up the Convert cog."""
     await bot.add_cog(Convert(bot))
