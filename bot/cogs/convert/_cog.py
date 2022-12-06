@@ -33,14 +33,14 @@ class Convert(commands.GroupCog):
         except ValueError:
             await interaction.response.send_message(
                 "> Provided input was not a valid snowflake.",
-                ephemeral=ephemeral
+                ephemeral=True
             )
             return
 
         snowflake_timestamp = round(snowflake_time(snowflake).timestamp())
         await interaction.response.send_message(
             f"> Snowflake `{snowflake}` was <t:{snowflake_timestamp}:R>",
-            ephemeral=True
+            ephemeral=ephemeral
         )
 
     @app_commands.command()
