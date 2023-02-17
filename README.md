@@ -1,5 +1,12 @@
 # Friendo Bot
-This is a Discord bot that comforts you when you are lonely, is there for you in the middle of the night, keeps you hydrated, and does all of your bidding like a ~~sexy~~ butler with a true passion for what they do.
+This is a Discord bot that comforts you when you are lonely, is there for you in the middle of the night, 
+keeps you hydrated, and does all of your bidding like a ~~sexy~~ butler with a true passion for what they do.
+
+More usefully described, Friendo is a multi-purpose Discord bot that provides a unique assortment of tools and
+entertainment to users in your server.
+
+If you are a Friendo user, consider utilizing the official [Friendo Website](https://friendo.dev/) for extra
+capabilities of the hosted version of the bot.
 
 ## Discord Bot Setup
 
