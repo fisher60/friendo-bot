@@ -19,6 +19,7 @@ NOTIF_COOLDOWN = timedelta(hours=3)
 
 class NotifyMember:
     """Class for storing RSS notification data."""
+
     def __init__(self, search: str, member: discord.Member, channel: discord.TextChannel):
         self.search_term: str = search
         self.member: discord.Member = member
@@ -30,7 +31,8 @@ notifications: Dict[int, Dict[str, NotifyMember]] = {}
 
 
 def data_to_ping_from_rss(search_term: str, feed_data: List[dict]) -> Optional[str]:
-    """Return the first entry from RSS data feed to match a search term within the defined time window.
+    """
+    Return the first entry from RSS data feed to match a search term within the defined time window.
 
     Returns None if no matches were found between now and the notif_cooldown window.
     """
@@ -62,7 +64,7 @@ class RSS(Cog):
         self.rss_background_task.cancel()
 
     @tasks.loop(seconds=10.0)
-    async def rss_background_task(self):
+    async def rss_background_task(self) -> None:
         """Retrieve RSS data and notify appropriate members every 10 seconds."""
         rss_data = feedparser.parse(await self.pull_rss_feed(RPI_RSS_FEED_URL))["entries"][:10]
 
@@ -75,7 +77,8 @@ class RSS(Cog):
                     await notif.notify_channel.send(f"{notif.member.mention}--{ping_member_data}")
 
     async def pull_rss_feed(self, url: str) -> str:
-        """Download the latest RSS feed with spoofed client headers.
+        """
+        Download the latest RSS feed with spoofed client headers.
 
         Headers should not need to be spoofed, but it seems the RPi locator CF settings are incorrect.
         """
@@ -87,7 +90,7 @@ class RSS(Cog):
         aliases=("create_notification", "notification")
     )
     async def notify(self, ctx: Context, search_term: str, delete: bool = False) -> None:
-        """Add a keyword to notify you on when it appears in the RSS feed"""
+        """Add a keyword to notify you on when it appears in the RSS feed."""
         if delete:
             if ctx.author.id in notifications and search_term in notifications[ctx.author.id]:
                 del notifications[ctx.author.id][search_term]
