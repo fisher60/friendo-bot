@@ -18,6 +18,7 @@ NOTIF_COOLDOWN = timedelta(hours=3)
 
 
 class NotifyMember:
+    """Class for storing RSS notification data."""
     def __init__(self, search: str, member: discord.Member, channel: discord.TextChannel):
         self.search_term: str = search
         self.member: discord.Member = member
@@ -29,6 +30,10 @@ notifications: Dict[int, Dict[str, NotifyMember]] = {}
 
 
 def data_to_ping_from_rss(search_term: str, feed_data: List[dict]) -> Optional[str]:
+    """Return the first entry from RSS data feed to match a search term within the defined time window.
+
+    Returns None if no matches were found between now and the notif_cooldown window.
+    """
     now = arrow.utcnow()
     for entry in feed_data:
         time_fmt = "ddd, DD MMM YYYY HH:mm:ss"  # Time format: Mon, 01 May 2023 15:19:40 GMT
@@ -48,15 +53,17 @@ class RSS(Cog):
     This cog is not safe and needs to be modified before trusting arbitrary RSS feeds
     """
 
-    def __init__(self, bot: Bot):
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
         self.rss_background_task.start()
 
-    def cog_unload(self):
+    def cog_unload(self) -> None:
+        """Stop RSS feed updates when cog unloads."""
         self.rss_background_task.cancel()
 
     @tasks.loop(seconds=10.0)
     async def rss_background_task(self):
+        """Retrieve RSS data and notify appropriate members every 10 seconds."""
         rss_data = feedparser.parse(await self.pull_rss_feed(RPI_RSS_FEED_URL))["entries"][:10]
 
         for user_id in notifications:
@@ -68,6 +75,10 @@ class RSS(Cog):
                     await notif.notify_channel.send(f"{notif.member.mention}--{ping_member_data}")
 
     async def pull_rss_feed(self, url: str) -> str:
+        """Download the latest RSS feed with spoofed client headers.
+
+        Headers should not need to be spoofed, but it seems the RPi locator CF settings are incorrect.
+        """
         async with self.bot.session.get(url, headers=RPI_RSS_HEADERS) as response:
             return await response.text()
 
