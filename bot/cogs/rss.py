@@ -14,7 +14,7 @@ RPI_RSS_HEADERS = {
                   "Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
 }
 
-NOTIF_COOLDOWN = timedelta(hours=48)
+NOTIF_COOLDOWN = timedelta(hours=3)
 
 
 class NotifyMember:
