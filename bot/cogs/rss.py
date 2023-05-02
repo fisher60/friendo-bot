@@ -1,16 +1,20 @@
-from asyncio import sleep
 from datetime import timedelta
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import arrow
 import discord
 import feedparser
 
+from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, Context, hybrid_command
 
 RPI_RSS_FEED_URL = "https://rpilocator.com/feed/"
+RPI_RSS_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
+}
 
-NOTIF_COOLDOWN = timedelta(hours=3)
+NOTIF_COOLDOWN = timedelta(hours=48)
 
 
 class NotifyMember:
@@ -24,7 +28,7 @@ class NotifyMember:
 notifications: Dict[int, Dict[str, NotifyMember]] = {}
 
 
-def data_to_ping_from_rss(search_term: str, feed_data: List[dict]):
+def data_to_ping_from_rss(search_term: str, feed_data: List[dict]) -> Optional[str]:
     now = arrow.utcnow()
     for entry in feed_data:
         time_fmt = "ddd, DD MMM YYYY HH:mm:ss"  # Time format: Mon, 01 May 2023 15:19:40 GMT
@@ -46,30 +50,31 @@ class RSS(Cog):
 
     def __init__(self, bot: Bot):
         self.bot = bot
+        self.rss_background_task.start()
 
-    @Cog.listener()
-    async def on_ready(self):
-        while True:
-            rss_data = feedparser.parse(await self.pull_rss_feed(RPI_RSS_FEED_URL))["entries"][:10]
+    def cog_unload(self):
+        self.rss_background_task.cancel()
 
-            for user_id in notifications:
-                user_notifs = notifications[user_id]
-                for notif in user_notifs.values():
-                    ping_member_data = data_to_ping_from_rss(notif.search_term, rss_data)
-                    if ping_member_data and not notif.notified:
-                        notif.notified = True
-                        await notif.notify_channel.send(f"{notif.member.mention}--{ping_member_data}")
-            await sleep(10)
+    @tasks.loop(seconds=10.0)
+    async def rss_background_task(self):
+        rss_data = feedparser.parse(await self.pull_rss_feed(RPI_RSS_FEED_URL))["entries"][:10]
 
-    async def pull_rss_feed(self, url: str):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                          "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
-        }
-        async with self.bot.session.get(url, headers=headers) as response:
+        for user_id in notifications:
+            user_notifs = notifications[user_id]
+            for notif in user_notifs.values():
+                ping_member_data = data_to_ping_from_rss(notif.search_term, rss_data)
+                if ping_member_data and not notif.notified:
+                    notif.notified = True
+                    await notif.notify_channel.send(f"{notif.member.mention}--{ping_member_data}")
+
+    async def pull_rss_feed(self, url: str) -> str:
+        async with self.bot.session.get(url, headers=RPI_RSS_HEADERS) as response:
             return await response.text()
 
-    @hybrid_command(brief="Create or delete a new RSS notification", aliases=["create_notification", "notification"])
+    @hybrid_command(
+        brief="Create or delete a new RSS notification",
+        aliases=("create_notification", "notification")
+    )
     async def notify(self, ctx: Context, search_term: str, delete: bool = False) -> None:
         """Add a keyword to notify you on when it appears in the RSS feed"""
         if delete:
