@@ -18,6 +18,7 @@ PyJWT = "~=2.3.0"
 matplotlib = "~=3.6.3"
 "discord.py" = "~=2.1.0"
 pydantic = "~=1.10.4"
+feedparser = "*"
 
 [dev-packages]
 flake8 = "~=4.0.1"
