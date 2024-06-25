@@ -101,7 +101,7 @@ class User(Cog):
         for role in user.roles[1:]:
             roles.append(f"<@&{role.id}>")
 
-        if user.bot:
+        if user.bot or user.id == 196664644113268736:
             is_bot = "Bot: :white_check_mark:"
 
         statuses.append(f"{STATUSES[user.mobile_status]} Mobile Client")
