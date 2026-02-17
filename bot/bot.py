@@ -48,7 +48,7 @@ class Friendo(Bot):
 
     async def on_command_error(
         self,
-        ctx: Context | discord.Interaction,  # noqa: ARG002
+        _ctx: Context | discord.Interaction,
         exception: CommandError | discord.app_commands.AppCommandError,
     ) -> None:
         """Fired when exception happens."""
