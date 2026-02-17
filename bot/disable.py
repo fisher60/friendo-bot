@@ -1,5 +1,7 @@
 import argparse
+import logging
 
+logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser()
 
 # no-api argument can be used to disable api cogs ie. events and memes currently
@@ -35,3 +37,6 @@ class DisableApi:
 
 if __name__ == "__main__":
     api_disabler = DisableApi()
+    logger.info(api_disabler.get_no_api())
+    logger.info(api_disabler.get_enable())
+    logger.info(api_disabler.get_disable())
