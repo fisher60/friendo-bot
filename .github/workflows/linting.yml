@@ -15,60 +15,29 @@ jobs:
   lint:
     name: Linting
     runs-on: ubuntu-latest
-    env:
-      # Configure pip to cache dependencies and do a user install
-      PIP_NO_CACHE_DIR: false
-      PIP_USER: 1
-
-      # Hide the graphical elements from pipenv's output
-      PIPENV_HIDE_EMOJIS: 1
-      PIPENV_NOSPIN: 1
-
-      # Make sure pipenv does not try reuse an environment it's running in
-      PIPENV_IGNORE_VIRTUALENVS: 1
-
-      # Specify explicit paths for python dependencies and the pre-commit
-      # environment so we know which directories to cache
-      PYTHONUSERBASE: ${{ github.workspace }}/.cache/py-user-base
-      PRE_COMMIT_HOME: ${{ github.workspace }}/.cache/pre-commit-cache
     steps:
-      - name: Add custom PYTHONUSERBASE to PATH
-        run: echo '${{ env.PYTHONUSERBASE }}/bin/' >> $GITHUB_PATH
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
         with:
-          python-version: '3.9'
+          enable-cache: true
+          resolution-strategy: "lowest"
+          cache-dependency-glob: "uv.lock"
+          activate-environment: true
 
-      - name: Python Dependency Caching
-        uses: actions/cache@v2
-        id: python_cache
+      - name: "Set up Python"
+        uses: actions/setup-python@v6
         with:
-          path: ${{ env.PYTHONUSERBASE }}
-          key: "python-0-${{ runner.os }}-${{ env.PYTHONUSERBASE }}-\
-          ${{ steps.python.outputs.python-version }}-\
-          ${{ hashFiles('./Pipfile', './Pipfile.lock') }}"
+          python-version-file: "pyproject.toml"
 
-      # Install deps, skipping if we hit a cache
-      - name: Install dependencies
-        if: steps.python_cache.outputs.cache-hit != 'true'
-        run: |
-          pip install pipenv
-          pipenv install --dev --deploy --system
-
-      - name: Pre-commit Environment Caching
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.PRE_COMMIT_HOME }}
-          key: "precommit-0-${{ runner.os }}-${{ env.PRE_COMMIT_HOME }}-\
-          ${{ steps.python.outputs.python-version }}-\
-          ${{ hashFiles('./.pre-commit-config.yaml') }}"
+      - name: Install the project
+        run: uv sync --all-groups
 
       - name: Run pre-commit hooks
-        run: export PIP_USER=0; SKIP=flake8 pre-commit run --all-files
+        run: SKIP=ruff prek run --all-files
 
-      - name: Lint Flake8
-        run: |
-          flake8 .
+      # Run `ruff` using github formatting to enable automatic inline annotations.
+      - name: Run ruff
+        run: "ruff check --output-format=github ."
