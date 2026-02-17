@@ -3,14 +3,16 @@ import importlib
 import inspect
 import pkgutil
 import socket
-from typing import Iterator, NoReturn
+from typing import NoReturn, TYPE_CHECKING
 
 import aiohttp
 from discord import AllowedMentions, Intents
 
-from bot import cogs
-from bot import settings
+from bot import cogs, settings
 from bot.bot import Friendo
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 def _get_cogs() -> Iterator[str]:
@@ -44,7 +46,9 @@ async def start_bot() -> None:
     )
     async with aiohttp.ClientSession(connector=connector) as session:
         bot = Friendo(
-            command_prefix=settings.COMMAND_PREFIX, help_command=None, intents=Intents.all(),
+            command_prefix=settings.COMMAND_PREFIX,
+            help_command=None,
+            intents=Intents.all(),
             allowed_mentions=AllowedMentions(everyone=False),
             session=session,
             connector=connector,
@@ -55,6 +59,7 @@ async def start_bot() -> None:
 
         async with bot:
             await bot.start(settings.TOKEN)
+
 
 if __name__ == "__main__":
     asyncio.run(start_bot())

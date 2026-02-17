@@ -1,17 +1,18 @@
 from functools import partial
-from os import remove
 from pathlib import Path
-from typing import List, Optional
+from typing import TYPE_CHECKING
 
 import aiofiles
 import discord
 import matplotlib.pyplot as plt
 from cv2 import COLOR_BGR2RGB, cvtColor, imread
 from discord.ext.commands import Cog, Context, command
-from numpy import ndarray
 from skimage.color import rgb2hsv
 
-from bot.bot import Friendo
+if TYPE_CHECKING:
+    from numpy import ndarray
+
+    from bot.bot import Friendo
 
 
 class Segmentation(Cog):
@@ -21,7 +22,7 @@ class Segmentation(Cog):
         self.bot = bot
         self.img_queue = []
 
-    async def download_image(self, url: str) -> Optional[str]:
+    async def download_image(self, url: str) -> str | None:
         """
         Download a discord attachment using the CDN url.
 
@@ -39,14 +40,15 @@ class Segmentation(Cog):
                 await f.close()
 
                 return file_name
+        return None
 
     @staticmethod
     def delete_image(file_name: str) -> None:
         """Deletes an image."""
-        remove(Path.cwd() / file_name)
+        (Path.cwd() / file_name).unlink(missing_ok=True)
 
     @staticmethod
-    def save_image(file_name: str, array: List[str]) -> None:
+    def save_image(file_name: str, array: list[str]) -> None:
         """Saves the image from the MatPlotLib plot."""
         plt.imsave(Path.cwd() / file_name, array)
 
@@ -69,7 +71,7 @@ class Segmentation(Cog):
         brief="Send an image and get a segmented one back",
         description="Invoke this command and specify your options to get a segmented image back.",
     )
-    async def segment(self, ctx: Context, img_format: str = None) -> None:
+    async def segment(self, ctx: Context, img_format: str | None = None) -> None:
         """
         Takes a discord attachment and an optional argument 'img_format'.
 

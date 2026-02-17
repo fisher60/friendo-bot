@@ -1,0 +1,68 @@
+[project]
+authors = [
+    { name = "Kyler", email = "info@kylerr.com" },
+    { name = "Chris Lovering", email = "chris@jb3.dev" },
+]
+license = {text = "MIT"}
+requires-python = "~=3.14.0"
+name = "friendo-bot"
+version = "0.0.1"
+dependencies = [
+    "aiodns~=4.0.0",
+    "aiofiles~=25.1.0",
+    "arrow~=1.4.0",
+    "discord.py~=2.6.4",
+    "feedparser~=6.0.12",
+    "matplotlib~=3.10.8",
+    "numpy~=2.4.2",
+    "opencv-python-headless~=4.13.0",
+    "pillow~=12.1.1",
+    "pydantic~=2.12.5",
+    "pyjwt~=2.11.0",
+    "python-dateutil~=2.8.2",
+    "python-dotenv~=1.2.1",
+    "pyyaml~=6.0",
+    "scikit-image~=0.26.0",
+]
+
+[dependency-groups]
+dev = [
+    "prek>=0.2.29",
+    "ruff>=0.15.1",
+]
+
+[tool.ruff]
+target-version = "py314"
+extend-exclude = [".cache"]
+line-length = 110
+unsafe-fixes = true
+output-format = "concise"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN002", "ANN003", "ANN204", "ANN206", "ANN401",
+    "B904",
+    "C401", "C408",
+    "C901",
+    "CPY001",
+    "D100", "D104", "D105", "D107", "D203", "D212", "D214", "D215", "D301",
+    "D400", "D401", "D402", "D404", "D405", "D406", "D407", "D408", "D409", "D410", "D411", "D412", "D413", "D414", "D416", "D417",
+    "E731",
+    "RET504",
+    "RUF005",
+    "S311", "S506",
+    "SIM102", "SIM108",
+    "PD",
+    "PLR",
+    "DTZ003",
+
+    # Rules suggested to be ignored when using ruff format
+    "COM812", "D206", "E111", "E114", "E117", "E501", "ISC001", "Q000", "Q001", "Q002", "Q003", "W191",
+]
+
+
+[tool.ruff.lint.isort]
+order-by-type = false
+case-sensitive = true
+combine-as-imports = true

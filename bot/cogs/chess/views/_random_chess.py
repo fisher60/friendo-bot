@@ -2,7 +2,7 @@ import random
 
 import discord
 
-from .._types import Piece, Player
+from bot.cogs.chess._types import Piece, Player
 
 
 class RandomChess(discord.ui.View):
@@ -19,13 +19,13 @@ class RandomChess(discord.ui.View):
     def select_random_move(self) -> None:
         """Select a random move from the available moves list, if empty repopulate the list."""
         if len(self.available_moves) == 0:
-            list(Piece)
+            self.available_moves = list(Piece)
 
         self.current_move = random.choice(self.available_moves)
         self.available_moves.remove(self.current_move)
 
-    @discord.ui.button(label='Next Move', style=discord.ButtonStyle.success)
-    async def next_move(self, interaction: discord.Interaction, _: discord.ui.Button) -> None:
+    @discord.ui.button(label="Next Move", style=discord.ButtonStyle.success)
+    async def next_move(self, interaction: discord.Interaction, _button: discord.ui.Button) -> None:
         """Next move button handler."""
         if self.current_player is Player.Black:
             self.turn_number += 1
@@ -37,8 +37,8 @@ class RandomChess(discord.ui.View):
         await interaction.response.defer()
         await interaction.message.edit(embed=self.generate_embed(), view=self)
 
-    @discord.ui.button(label='Invalid Move', style=discord.ButtonStyle.danger)
-    async def invalid_move(self, interaction: discord.Interaction, _: discord.ui.Button) -> None:
+    @discord.ui.button(label="Invalid Move", style=discord.ButtonStyle.danger)
+    async def invalid_move(self, interaction: discord.Interaction, _button: discord.ui.Button) -> None:
         """Invalid move button handler."""
         self.select_random_move()
         await interaction.response.defer()

@@ -32,7 +32,7 @@ FRIENDO_API_URL = environ.get("FRIENDO_API_URL", "http://dev.friendo.dev/api/")
 
 GIT_SHA = environ.get("GIT_SHA", "development")
 
-log.info(f"Using {FRIENDO_API_URL} for backend...")
+log.info("Using %s for backend...", FRIENDO_API_URL)
 
 VERSION = "1.2"
 

@@ -1,15 +1,19 @@
 import logging
-from datetime import datetime
+from datetime import UTC, datetime
 from itertools import cycle
 from operator import attrgetter
+from typing import TYPE_CHECKING
 
 import discord
 from discord import Color, Embed, app_commands
 from discord.ext import commands
 
-from bot.bot import Friendo
 from bot.settings import AOC_JOIN_CODE, AOC_LEADERBOARD_ID, AOC_SESSION_COOKIE
+
 from ._types import Leaderboard, LeaderboardMember
+
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 logger = logging.getLogger("advent_of_code")
 
@@ -24,10 +28,10 @@ class AdventOfCode(commands.GroupCog):
     async def fetch_leaderboard(self, year: int) -> Leaderboard:
         """Get the leaderboard's state for a specified year."""
         url = f"https://adventofcode.com/{year}/leaderboard/private/view/{AOC_LEADERBOARD_ID}.json"
-        cookies = {'session': AOC_SESSION_COOKIE}
+        cookies = {"session": AOC_SESSION_COOKIE}
 
         # AoC Author has requested applications to provide a url to the tool in the User-Agent
-        headers = {'User-Agent': 'github.com/fisher60/friendo-bot'}
+        headers = {"User-Agent": "github.com/fisher60/friendo-bot"}
 
         async with self.bot.session.get(url, cookies=cookies, headers=headers) as response:
             data = await response.json()
@@ -35,10 +39,10 @@ class AdventOfCode(commands.GroupCog):
 
     @staticmethod
     def _create_leaderboard_message(members: list[LeaderboardMember], amount: int) -> str:
-        reset = "[0m"
-        red = "[1;31m"
-        green = "[1;32m"
-        yellow = "[1;33m"
+        reset = "\x1b[0m"
+        red = "\x1b[1;31m"
+        green = "\x1b[1;32m"
+        yellow = "\x1b[1;33m"
 
         get_line_color = cycle([red, green])
 
@@ -58,16 +62,16 @@ class AdventOfCode(commands.GroupCog):
     @app_commands.command()
     @app_commands.describe(
         year="View the leaderboard from a specific year, defaults to the current year",
-        amount="How many members to view, defaults to 10"
+        amount="How many members to view, defaults to 10",
     )
     async def leaderboard(
-            self,
-            interaction: discord.Interaction,
-            year: app_commands.Range[int, 2015, None] = None,
-            amount: app_commands.Range[int, 0, None] = 10
+        self,
+        interaction: discord.Interaction,
+        year: app_commands.Range[int, 2015, None] = None,
+        amount: app_commands.Range[int, 0, None] = 10,
     ) -> None:
         """Get the current Advent of Code leaderboard."""
-        now = datetime.now()
+        now = datetime.now(UTC)
 
         if year is None and now.month == 12:  # If in December, show current year
             year = now.year
@@ -75,8 +79,7 @@ class AdventOfCode(commands.GroupCog):
             year = now.year - 1
         elif year > now.year:  # Don't allow years that haven't happened yet
             await interaction.response.send_message(
-                f"> Please select a valid year 2015 - {datetime.now().year}",
-                ephemeral=True
+                f"> Please select a valid year 2015 - {now.year}", ephemeral=True
             )
             return
 
@@ -91,10 +94,7 @@ class AdventOfCode(commands.GroupCog):
             url=f"https://adventofcode.com/{leaderboard.year}",
             colour=Color.gold(),
         )
-        embed.add_field(
-            name="\u200b",
-            value="Join the fun with `/advent-of-code join`"
-        )
+        embed.add_field(name="\u200b", value="Join the fun with `/advent-of-code join`")
 
         await interaction.response.send_message(embed=embed)
 
@@ -106,5 +106,5 @@ class AdventOfCode(commands.GroupCog):
             "\t1. Log in on https://adventofcode.com\n"
             "\t2. Head over to https://adventofcode.com/leaderboard/private\n"
             f"\t3. Use this code `{AOC_JOIN_CODE}`",
-            ephemeral=True
+            ephemeral=True,
         )

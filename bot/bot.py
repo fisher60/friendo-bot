@@ -1,13 +1,15 @@
 import logging
-from typing import Union
+from typing import TYPE_CHECKING
 
-import aiohttp
-import discord
 from discord.ext.commands import Bot, CommandError, Context
 
 from bot.disable import DisableApi
 from bot.graphql import GraphQLClient
 from bot.settings import API_COGS
+
+if TYPE_CHECKING:
+    import aiohttp
+    import discord
 
 log = logging.getLogger(__name__)
 
@@ -40,19 +42,19 @@ class Friendo(Bot):
 
     async def on_ready(self) -> None:
         """Runs when the bot is connected. Sync Interaction/app_commands when connected to the gateway."""
-        log.info('Awaiting...')
+        log.info("Awaiting...")
         await self.tree.sync()
         log.info("Bot Is Ready For Commands")
 
     async def on_command_error(
-            self,
-            ctx: Union[Context, discord.Interaction],
-            exception: Union[CommandError, discord.app_commands.AppCommandError]
+        self,
+        _ctx: Context | discord.Interaction,
+        exception: CommandError | discord.app_commands.AppCommandError,
     ) -> None:
         """Fired when exception happens."""
         log.error(
             "Exception happened while executing command",
-            exc_info=(type(exception), exception, exception.__traceback__)
+            exc_info=(type(exception), exception, exception.__traceback__),
         )
 
     async def close(self) -> None:
@@ -74,7 +76,7 @@ class Friendo(Bot):
     async def load_extension(self, name: str) -> None:
         """Loads an extension after checking if it's disabled or not."""
         disable_api = DisableApi()
-        cog_name = name.split(".")[-1]
+        cog_name = name.rsplit(".", maxsplit=1)[-1]
 
         # If no-api is passed disable API_COGS ie. memes and events
         if disable_api.get_no_api() and cog_name in API_COGS:
@@ -87,9 +89,8 @@ class Friendo(Bot):
                 return
 
             # If cog is not disabled, load it
-            else:
-                await super().load_extension(name)
-                return
+            await super().load_extension(name)
+            return
 
         enabled_list = disable_api.get_enable()
 
@@ -100,8 +101,7 @@ class Friendo(Bot):
                 return
 
             # Don't load cogs not passed along with enable
-            else:
-                return
+            return
 
         # load cogs if no argument is passed
         await super().load_extension(name)

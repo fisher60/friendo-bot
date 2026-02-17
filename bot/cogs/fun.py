@@ -3,11 +3,12 @@ import re
 import string
 from itertools import product
 from random import choice, randint, shuffle
-from typing import List
+from typing import TYPE_CHECKING
 
 from discord.ext.commands import Cog, Context, command
 
-from bot.bot import Friendo
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 UWU_WORDS = {
     "fi": "fwi",
@@ -34,11 +35,11 @@ def get_factorial(num: int) -> int:
 
 
 def _replace_many(
-        sentence: str,
-        replacements: dict,
-        *,
-        ignore_case: bool = False,
-        match_case: bool = False,
+    sentence: str,
+    replacements: dict,
+    *,
+    ignore_case: bool = False,
+    match_case: bool = False,
 ) -> str:
     """
     Replaces multiple substrings in a string given a mapping of strings.
@@ -63,15 +64,13 @@ def _replace_many(
     https://github.com/CharlieADavies/seasonalbot/blob/master/bot/utils/__init__.py
     """
     if ignore_case:
-        replacements = dict(
-            (word.lower(), replacement) for word, replacement in replacements.items()
-        )
+        replacements = {word.lower(): replacement for word, replacement in replacements.items()}
 
     words_to_replace = sorted(replacements, key=lambda s: (-len(s), s))
 
     # Join and compile words to replace into a regex
     pattern = "|".join(re.escape(word) for word in words_to_replace)
-    regex = re.compile(pattern, re.I if ignore_case else 0)
+    regex = re.compile(pattern, re.IGNORECASE if ignore_case else 0)
 
     def _repl(match: re.Match) -> str:
         """Returns replacement depending on `ignore_case` and `match_case`."""
@@ -86,11 +85,10 @@ def _replace_many(
         if cleaned_word.isupper():
             return replacement.upper()
 
-        elif cleaned_word[0].isupper():
+        if cleaned_word[0].isupper():
             return replacement.capitalize()
 
-        else:
-            return replacement.lower()
+        return replacement.lower()
 
     return regex.sub(_repl, sentence)
 
@@ -109,9 +107,7 @@ class Fun(Cog):
             return
 
         result = await self.bot.loop.run_in_executor(None, get_factorial, number)
-        await ctx.send(
-            f"The factorial of **{number}** is **{result}** ({number}! = {result})"
-        )
+        await ctx.send(f"The factorial of **{number}** is **{result}** ({number}! = {result})")
 
     @command(
         brief="Alternate case of inputted text",
@@ -156,8 +152,8 @@ class Fun(Cog):
     @command(
         brief="simulates a dice roll",
         description=".dice [quantity] [sides]\n"
-                    "`quantity` - how many to roll\n"
-                    "`sides` - how many sides each die will have",
+        "`quantity` - how many to roll\n"
+        "`sides` - how many sides each die will have",
     )
     async def dice(self, ctx: Context, n: int, sides: int) -> None:
         """Simply rolling a die."""
@@ -255,11 +251,11 @@ class Fun(Cog):
     async def blackjack(self, ctx: Context) -> None:
         """Simple blackjack game."""
 
-        def display_hand(hand: List[str]) -> str:
+        def display_hand(hand: list[str]) -> str:
             """Returns the value of a hand."""
             return f"{' '.join(hand)}, value: {hand_value(hand)}"
 
-        def hand_value(hand: List[str]) -> int:
+        def hand_value(hand: list[str]) -> int:
             """Helper function to calculate the value of a hand."""
             convert = {str(i): i for i in range(2, 11)}
             convert.update({"A": 1, "J": 10, "Q": 10, "K": 10})
@@ -308,9 +304,7 @@ class Fun(Cog):
                 if message.content == "hit":
                     new_card = cards.pop()
                     player_hand.append(new_card)
-                    await ctx.send(
-                        f"your new card: {new_card}, hand score: {hand_value(player_hand)}"
-                    )
+                    await ctx.send(f"your new card: {new_card}, hand score: {hand_value(player_hand)}")
                 else:
                     await ctx.send(f"final hand: {display_hand(player_hand)}")
                     not_standing = False

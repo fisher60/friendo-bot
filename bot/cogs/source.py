@@ -1,17 +1,9 @@
-from typing import Union
-
 from discord import Colour, Embed
 from discord.ext import commands as comms
 
 from bot import settings
 
-SourceType = Union[
-    comms.HelpCommand,
-    comms.Command,
-    comms.Cog,
-    str,
-    comms.ExtensionNotLoaded,
-]
+SourceType = comms.HelpCommand | comms.Command | comms.Cog | str | comms.ExtensionNotLoaded
 
 
 class SourceConverter(comms.Converter):
@@ -35,12 +27,11 @@ class SourceConverter(comms.Converter):
 
         if not tags_cog:
             show_tag = False
-        elif argument.lower() in tags_cog._cache:
+        elif argument.lower() in tags_cog._cache:  # noqa: SLF001
             return argument.lower()
 
-        raise comms.BadArgument(
-            f"Unable to convert `{argument}` to valid command{', tag,' if show_tag else ''} or Cog."
-        )
+        msg = f"Unable to convert `{argument}` to valid command{', tag,' if show_tag else ''} or Cog."
+        raise comms.BadArgument(msg)
 
 
 class Source(comms.Cog):
@@ -50,7 +41,7 @@ class Source(comms.Cog):
         self.bot = bot
 
     @comms.command(name="source", brief="Send a link to Friendo's GitHub repo")
-    async def send_source(self, ctx: comms.Context, arg1: str = None) -> None:
+    async def send_source(self, ctx: comms.Context, arg1: str | None = None) -> None:
         """Send the source url in an embed."""
         src_conv = SourceConverter()
         if arg1:
@@ -70,9 +61,7 @@ class Source(comms.Cog):
                 await ctx.send("That command could not be found.")
         else:
             embed = Embed(title="Friendo's GitHub Repo", colour=Colour.blue())
-            embed.add_field(
-                name="Repository", value=f"[Go To GitHub]({settings.GITHUB_REPO})"
-            )
+            embed.add_field(name="Repository", value=f"[Go To GitHub]({settings.GITHUB_REPO})")
             await ctx.send(embed=embed)
 
 

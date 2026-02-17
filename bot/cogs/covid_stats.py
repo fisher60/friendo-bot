@@ -1,9 +1,11 @@
 import re
+from typing import TYPE_CHECKING
 
 from discord import Colour, Embed
 from discord.ext.commands import Cog, Context, command
 
-from bot.bot import Friendo
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 COVID_URL = "https://api.covid19api.com/summary"
 
@@ -27,7 +29,7 @@ class CovidStats(Cog):
 
     @command(
         brief="Choose a country's COVID19 stats. `.covid_stats [slug | country code | country name]`",
-        aliases=("covidstats", "covid", "coronavirus", "covid19", "covid-19",),
+        aliases=("covidstats", "covid", "coronavirus", "covid19", "covid-19"),
     )
     async def covid_stats(self, ctx: Context, country: str) -> None:
         """Shows a summary COVID19 stats of a specific country."""
@@ -62,25 +64,21 @@ class CovidStats(Cog):
     async def covid_country_stats(self, country: str) -> str:
         """Acquires Covid statistics about a specific country."""
         async with self.bot.session.get(COVID_URL) as resp:
-            assert resp.status == 200, resp.raise_for_status()
+            resp.raise_for_status()
             read = (await resp.json())["Countries"]
 
             data = []
             for _ in read:
                 if (
-                        country.lower() == _["Country"].lower()
-                        or country.lower() == _["Slug"].lower()
-                        or country.lower() == _["CountryCode"].lower()
+                    country.lower() == _["Country"].lower()
+                    or country.lower() == _["Slug"].lower()
+                    or country.lower() == _["CountryCode"].lower()
                 ):
                     for key, value in _.items():
                         if isinstance(value, int):
-                            data.append(
-                                f"{' '.join(re.findall('[A-Z][^A-Z]*', key))}: {value:,.0f}"
-                            )
+                            data.append(f"{' '.join(re.findall('[A-Z][^A-Z]*', key))}: {value:,.0f}")
                         elif isinstance(value, str):
-                            data.append(
-                                f"{' '.join(re.findall('[A-Z][^A-Z]*', key))}: {value}"
-                            )
+                            data.append(f"{' '.join(re.findall('[A-Z][^A-Z]*', key))}: {value}")
                         else:
                             continue
                     break
