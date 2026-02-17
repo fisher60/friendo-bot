@@ -28,7 +28,7 @@ class DogeBoardData:
 
 
 class DogeBoard(Cog):
-    """Starboard Copy.""" ""
+    """Starboard Copy."""
 
     def __init__(self, bot: Friendo) -> None:
         self.bot = bot
