@@ -18,7 +18,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 FROM python:$python_version
 
-# Define Git SHA build argument for sentry
 ARG git_sha="development"
 ENV GIT_SHA=$git_sha
 
