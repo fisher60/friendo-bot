@@ -1,7 +1,4 @@
-version: "3.7"
-
 services:
-
   bot:
     image: ghcr.io/fisher60/friendo-bot:latest
     tty: true

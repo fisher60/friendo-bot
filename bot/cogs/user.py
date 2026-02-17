@@ -1,31 +1,37 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Union
+from typing import TYPE_CHECKING
 
 import yaml
 from dateutil.relativedelta import relativedelta
 from discord import ActivityType, Embed, Member, Spotify, Status
 from discord.ext.commands import Cog, Context, MemberConverter, MemberNotFound, command
 
-from bot.bot import Friendo
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 # Dictionaries for the emojis in userinfo embed
 
-with open(Path.cwd() / 'bot' / 'resources' / 'user_badges.yaml', 'r', encoding='utf-8') as f:
+yaml_path = Path.cwd() / "bot" / "resources" / "user_badges.yaml"
+with yaml_path.open("r", encoding="utf-8") as f:
     info = yaml.load(f, Loader=yaml.FullLoader)
     BADGES = info[0]
 
 
-STATUSES = {Status.online: '<:online:785001253133484042>',
-            Status.offline: '<:offline:785001240621744149>',
-            Status.idle: '<:idle:785001811081035777>',
-            Status.dnd: '<:dnd:785001198159527958>',
-            "spotify": '<:spotify:785113868543852584>'}
+STATUSES = {
+    Status.online: "<:online:785001253133484042>",
+    Status.offline: "<:offline:785001240621744149>",
+    Status.idle: "<:idle:785001811081035777>",
+    Status.dnd: "<:dnd:785001198159527958>",
+    "spotify": "<:spotify:785113868543852584>",
+}
 
-ACTIVITIES = {ActivityType.playing: ':video_game: Playing ',
-              ActivityType.listening: ':headphones: Listening to ',
-              ActivityType.streaming: ':desktop: Streaming on ',
-              ActivityType.custom: ''}
+ACTIVITIES = {
+    ActivityType.playing: ":video_game: Playing ",
+    ActivityType.listening: ":headphones: Listening to ",
+    ActivityType.streaming: ":desktop: Streaming on ",
+    ActivityType.custom: "",
+}
 
 
 class User(Cog):
@@ -45,12 +51,14 @@ class User(Cog):
         final = []
         delta = relativedelta(a, b)
 
-        dates = {"years": abs(delta.years),
-                 "months": abs(delta.months),
-                 "days": abs(delta.days),
-                 "hours": abs(delta.hours),
-                 "minutes": abs(delta.minutes),
-                 "seconds": abs(delta.seconds)}
+        dates = {
+            "years": abs(delta.years),
+            "months": abs(delta.months),
+            "days": abs(delta.days),
+            "hours": abs(delta.hours),
+            "minutes": abs(delta.minutes),
+            "seconds": abs(delta.seconds),
+        }
 
         for k, v in dates.items():
             if v:
@@ -58,10 +66,12 @@ class User(Cog):
 
         return final[:3]
 
-    @command(brief="Get the info on the user specified, defaults to the command author",
-             usage=".userinfo [user (optional)]",
-             aliases=('ui', 'user', 'useri', 'uinfo'))
-    async def userinfo(self, ctx: Context, member: Union[str, Member] = None) -> None:
+    @command(
+        brief="Get the info on the user specified, defaults to the command author",
+        usage=".userinfo [user (optional)]",
+        aliases=("ui", "user", "useri", "uinfo"),
+    )
+    async def userinfo(self, ctx: Context, member: str | Member = None) -> None:
         """Shows an embed containing basic info on the user."""
         if not member:
             user = ctx.author
@@ -70,8 +80,7 @@ class User(Cog):
                 user = await self.get_member(ctx, member)
             except MemberNotFound:
                 error_embed = Embed(
-                    title="User not found",
-                    description=f"No User `{member}` could be found in {ctx.guild}"
+                    title="User not found", description=f"No User `{member}` could be found in {ctx.guild}"
                 )
 
                 await ctx.send(embed=error_embed)
@@ -82,24 +91,20 @@ class User(Cog):
         statuses = []
         is_bot = "Bot: :x:"
 
-        create_time = ', '.join(self.get_timedelta(datetime.now(timezone.utc), user.created_at))
-        joined_time = ', '.join(self.get_timedelta(datetime.now(timezone.utc), user.joined_at))
+        create_time = ", ".join(self.get_timedelta(datetime.now(UTC), user.created_at))
+        joined_time = ", ".join(self.get_timedelta(datetime.now(UTC), user.joined_at))
 
         flags = user.public_flags
 
-        info_emb = Embed(color=user.color,
-                         title=str(user))
+        info_emb = Embed(color=user.color, title=str(user))
         info_emb.set_thumbnail(url=user.avatar)
 
-        for flag_ in flags.all():
-            if str(flag_.name) in BADGES:
-                user_badges.append(BADGES[str(flag_.name)])
+        user_badges = [BADGES[str(flag_.name)] for flag_ in flags.all() if str(flag_.name) in BADGES]
 
         if (user.avatar and user.avatar.is_animated()) or user.premium_since:
-            user_badges.append(BADGES['nitro'])
+            user_badges.append(BADGES["nitro"])
 
-        for role in user.roles[1:]:
-            roles.append(f"<@&{role.id}>")
+        roles = [f"<@&{role.id}>" for role in user.roles[1:]]
 
         if user.bot or user.id == 196664644113268736:
             is_bot = "Bot: :white_check_mark:"
@@ -108,9 +113,9 @@ class User(Cog):
         statuses.append(f"{STATUSES[user.web_status]} Web Client")
         statuses.append(f"{STATUSES[user.desktop_status]} Desktop Client")
 
-        roles = ', '.join(roles)
+        roles = ", ".join(roles)
         user_badges = " ".join(user_badges)
-        statuses = '\n'.join(statuses)
+        statuses = "\n".join(statuses)
         info_emb.description = user_badges
         men, id_, nick = user.mention, user.id, user.nick
 
@@ -122,16 +127,17 @@ class User(Cog):
 
         for activity in base_activity:
             if isinstance(activity, Spotify):
-                activities.append(f'{STATUSES["spotify"]} Listening to {activity.title}, {activity.artist}')
+                activities.append(f"{STATUSES['spotify']} Listening to {activity.title}, {activity.artist}")
                 break
 
         activities = "\n".join(activities)
 
         user_info = {
-            'User Information': f'Created: {create_time} ago\nProfile: {men}\nID: {id_}\n{is_bot}',
-            'Guild Profile': f'Joined: {joined_time} ago\nNick: {nick}\nRoles: {roles}',
-            'Status': statuses,
-            'Activities': activities}
+            "User Information": f"Created: {create_time} ago\nProfile: {men}\nID: {id_}\n{is_bot}",
+            "Guild Profile": f"Joined: {joined_time} ago\nNick: {nick}\nRoles: {roles}",
+            "Status": statuses,
+            "Activities": activities,
+        }
 
         for k, v in user_info.items():
             info_emb.add_field(name=k, value=v, inline=False)

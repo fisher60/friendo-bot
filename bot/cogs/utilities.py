@@ -1,7 +1,7 @@
 import random
 from asyncio import sleep
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING
 
 import yaml
 from discord import Colour, Embed
@@ -9,16 +9,33 @@ from discord.ext import tasks
 from discord.ext.commands import Cog, Context, command
 
 from bot import settings
-from bot.bot import Friendo
 
-with open(Path.cwd() / 'bot' / 'resources' / 'list_of_quotes.yaml', 'r', encoding='utf-8') as f:
-    lines = yaml.load(f, Loader=yaml.FullLoader)['lines']
+if TYPE_CHECKING:
+    from bot.bot import Friendo
+
+yaml_path = Path.cwd() / "bot" / "resources" / "list_of_quotes.yaml"
+with yaml_path.open("r", encoding="utf-8") as f:
+    lines = yaml.load(f, Loader=yaml.FullLoader)["lines"]
 
 # Define the time period units user can pass
-VALID_PERIODS = "s sec secs second seconds m min mins minute minutes h hour hours".split()
+VALID_PERIODS = [
+    "s",
+    "sec",
+    "secs",
+    "second",
+    "seconds",
+    "m",
+    "min",
+    "mins",
+    "minute",
+    "minutes",
+    "h",
+    "hour",
+    "hours",
+]
 
 
-def convert_time(time: str, period: str) -> Optional[int]:
+def convert_time(time: str, period: str) -> int | None:
     """Converts the given time and period (i.e 10 minutes) to seconds."""
     try:
         # Strip at most one trailing s (if the string is not just "s")
@@ -35,7 +52,7 @@ def convert_time(time: str, period: str) -> Optional[int]:
             return time * 60
 
         if period in ("h", "hour"):
-            return time * (60 ** 2)
+            return time * (60**2)
 
     except ValueError:
         pass
@@ -52,11 +69,14 @@ class Utilities(Cog):
         self.reminder_limit = 1
 
     @staticmethod
-    async def send_reminder(context: Context,
-                            reason: str,
-                            time: str,
-                            period: str,
-                            is_final_reminder: bool = False) -> None:
+    async def send_reminder(
+        context: Context,
+        reason: str,
+        time: str,
+        period: str,
+        *,
+        is_final_reminder: bool = False,
+    ) -> None:
         """Packs parameters into an embed and sends as a reminder."""
         if is_final_reminder:
             title = f"{context.author}'s reminder"
@@ -64,18 +84,17 @@ class Utilities(Cog):
         else:
             title = f"I will remind {context.author}"
             message = f"For: `{reason}` in `{time}` `{period}`"
-        reminder_embed = Embed(title=title,
-                               description=message, colour=Colour.blue())
+        reminder_embed = Embed(title=title, description=message, colour=Colour.blue())
         await context.send(f"{context.author.mention}", embed=reminder_embed)
 
     async def reminder_wrapper(
-            self,
-            time: str,
-            period: str,
-            ctx: Context,
-            msg: str = "Reminder!",
-            task_type: str = "reminder",
-            reason: str = None
+        self,
+        time: str,
+        period: str,
+        ctx: Context,
+        msg: str = "Reminder!",
+        task_type: str = "reminder",
+        reason: str | None = None,
     ) -> None:
         """Wrapper function for reminders to allow the task to be created on function call."""
         seconds = convert_time(time, period)
@@ -107,11 +126,9 @@ class Utilities(Cog):
                 self.drink_tasks[ctx.author.id] -= 1
 
             elif task_type == "reminder":
-                custom_completion_message = self.send_reminder(ctx,
-                                                               reason,
-                                                               time,
-                                                               period,
-                                                               is_final_reminder=True)
+                custom_completion_message = self.send_reminder(
+                    ctx, reason, time, period, is_final_reminder=True
+                )
 
             if self.reminder_tasks[ctx.author.id] > 0:
                 self.reminder_tasks[ctx.author.id] -= 1
@@ -133,9 +150,11 @@ class Utilities(Cog):
         await ctx.send(f"Version is {settings.VERSION}+{settings.GIT_SHA}")
 
     @command(brief="[number] [unit (seconds/minutes/hours)] [reason for reminder]", aliases=["remind"])
-    async def reminder(self, ctx: Context, time: str, period: str = "minutes", *, reason: str = None) -> None:
+    async def reminder(
+        self, ctx: Context, time: str, period: str = "minutes", *, reason: str | None = None
+    ) -> None:
         """Creates a reminder for the user."""
-        reason = reason if reason else "nothing"
+        reason = reason or "nothing"
 
         if ctx.author.id not in self.reminder_tasks:
             self.reminder_tasks[ctx.author.id] = 0
@@ -149,9 +168,7 @@ class Utilities(Cog):
                 if self.reminder_tasks[ctx.author.id] > 0:
                     await self.send_reminder(ctx, reason, time, period, is_final_reminder=False)
         else:
-            await ctx.send(
-                f"{ctx.author.mention} you may only have {self.reminder_limit} at a time."
-            )
+            await ctx.send(f"{ctx.author.mention} you may only have {self.reminder_limit} at a time.")
 
     @command(brief="Starts a 10 minute drink session to stay hydrated")
     async def drink(self, ctx: Context) -> None:
@@ -166,7 +183,7 @@ class Utilities(Cog):
 
             await self.reminder_wrapper(
                 ctx=ctx,
-                time='5',
+                time="5",
                 period="minutes",
                 msg=base_msg,
                 task_type="drink",
@@ -175,7 +192,7 @@ class Utilities(Cog):
 
             await self.reminder_wrapper(
                 ctx=ctx,
-                time='10',
+                time="10",
                 period="minutes",
                 msg=base_msg + "\n\nYou can run this command and have another if you'd like.",
                 task_type="drink",

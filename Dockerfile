@@ -1,26 +1,39 @@
-FROM python:3.9-slim
+ARG python_version=3.14-slim
 
-# Set pip to have cleaner logs and no saved cache
-ENV PIP_NO_CACHE_DIR=false \
-    PIPENV_IGNORE_VIRTUALENVS=1 \
-    PIPENV_NOSPIN=1
+FROM python:$python_version AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.9 /uv /bin/
 
-WORKDIR /app
+ENV UV_COMPILE_BYTECODE=1 \
+  UV_LINK_MODE=copy
 
-# Install pipenv
-RUN pip install pipenv
+# Install project dependencies with build tools available
+WORKDIR /build
 
-# Copy deps and lockfile
-COPY Pipfile Pipfile.lock /app/
+RUN --mount=type=cache,target=/root/.cache/uv \
+  --mount=type=bind,source=uv.lock,target=uv.lock \
+  --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+  uv sync --frozen --no-install-project
 
-# Install project deps
-RUN pipenv install --system --deploy
+# -------------------------------------------------------------------------------
 
-# Set SHA build argument
+FROM python:$python_version
+
 ARG git_sha="development"
 ENV GIT_SHA=$git_sha
 
-# Copy in rest of code last, for caching
-COPY . /app/
+# Define version build argument
+ARG version="development"
+ENV VERSION=$version
 
-CMD ["python3", "-m", "bot"]
+# Install dependencies from build cache
+# .venv not put in /app so that it doesn't conflict with the dev
+# volume we use to avoid rebuilding image every code change locally
+COPY --from=builder /build /build
+ENV PATH="/build/.venv/bin:$PATH"
+
+# Copy the source code in last to optimize rebuilding the image
+WORKDIR /app
+COPY bot .
+
+ENTRYPOINT ["python", "-m"]
+CMD ["bot"]

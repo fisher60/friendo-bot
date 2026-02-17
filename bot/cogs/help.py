@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
+
 from discord import Embed
 from discord.ext.commands import Cog, Context, hybrid_command
 
-from bot.bot import Bot
 from bot.settings import GITHUB_REPO
+
+if TYPE_CHECKING:
+    from bot.bot import Bot
 
 
 class Help(Cog):
@@ -12,7 +16,7 @@ class Help(Cog):
         self.bot = bot
 
     @hybrid_command()
-    async def help(self, ctx: Context, *, name: str = None) -> None:
+    async def help(self, ctx: Context, *, name: str | None = None) -> None:
         """Giving the user help for a command, or just the bot in general."""
         char_repeat = 20
         prefix = self.bot.command_prefix
@@ -27,9 +31,7 @@ class Help(Cog):
             field_body = "\n".join(cogs)
             field_body = field_body.strip()
 
-            field_body += (
-                f"\n\nUsage: `{prefix}help [Cog | Command]`. Example: `{prefix}help greetings`"
-            )
+            field_body += f"\n\nUsage: `{prefix}help [Cog | Command]`. Example: `{prefix}help greetings`"
 
             embed.add_field(name="Cogs", value=field_body, inline=False)
 
@@ -46,17 +48,13 @@ class Help(Cog):
                     field_body = (
                         c.description
                         if c.description != ""
-                        else c.brief if c.brief != "" else "This command has no description."
+                        else c.brief
+                        if c.brief != ""
+                        else "This command has no description."
                     )
-                    field_body += "\n" + (
-                        "Usage: `" + c.usage + "`"
-                        if c.usage is not None
-                        else ""
-                    )
+                    field_body += "\n" + ("Usage: `" + c.usage + "`" if c.usage is not None else "")
 
-                    embed.add_field(
-                        name=c.name, value=field_body.strip(), inline=False
-                    )
+                    embed.add_field(name=c.name, value=field_body.strip(), inline=False)
                 else:
                     field_body = (
                         f"Error: Cog or command `{name}` not found! Use `{prefix}help` to see a list of cogs"
@@ -69,15 +67,11 @@ class Help(Cog):
                     brief = c.brief if c.brief is not None else ""
                     usage = ("Usage: `" + c.usage + "`") if c.usage is not None else ""
 
-                    field_body = f'{brief}\n{usage}'.strip()
+                    field_body = f"{brief}\n{usage}".strip()
 
                     embed.add_field(
                         name=c.name,
-                        value=(
-                            field_body + "\n"
-                            if field_body != ""
-                            else "This command has no help message"
-                        ),
+                        value=(field_body + "\n" if field_body != "" else "This command has no help message"),
                         inline=False,
                     )
 

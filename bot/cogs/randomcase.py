@@ -1,8 +1,10 @@
 import random
+from typing import TYPE_CHECKING
 
 from discord.ext.commands import Cog, Context, command
 
-from bot.bot import Friendo
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 
 class RandomCase(Cog):
@@ -12,11 +14,9 @@ class RandomCase(Cog):
         self.bot = bot
 
     @command(brief="Randomize case of string")
-    async def randomcase(self, ctx: Context, *, string: str = None) -> None:
+    async def randomcase(self, ctx: Context, *, string: str | None = None) -> None:
         """Scrambles a string."""
-        randomized_string = "".join(
-            [random.choice((_.upper(), _.lower())) for _ in string]
-        )
+        randomized_string = "".join([random.choice((_.upper(), _.lower())) for _ in string])
 
         await ctx.send(f">>> {randomized_string}")
 

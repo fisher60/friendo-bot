@@ -1,11 +1,14 @@
 import asyncio
 import logging
+from typing import TYPE_CHECKING
 
-import aiohttp
 import arrow
 import jwt
 
 from bot import settings
+
+if TYPE_CHECKING:
+    import aiohttp
 
 
 class LoginTokenLoggingFilter(logging.Filter):
@@ -29,6 +32,8 @@ class GraphQLClient:
         self.url = settings.FRIENDO_API_URL
         self.headers = None
 
+        self.refresh_task: asyncio.Task = None
+
     async def close(self) -> None:
         """Close the aiohttp session."""
         await self.session.close()
@@ -48,17 +53,15 @@ class GraphQLClient:
         }
         resp = await self._post(json={"query": query, "variables": variables})
         self.token = resp["data"]["login"]["token"]
-        self.headers = {
-            "Authorization": f"Bearer {self.token}"
-        }
-        asyncio.create_task(self.refresh_later())
+        self.headers = {"Authorization": f"Bearer {self.token}"}
+        self.refresh_task = asyncio.create_task(self.refresh_later())
 
     async def refresh_later(self) -> None:
         """Wait until 2 days before token expires and get a new one."""
         exp = jwt.decode(self.token, options={"verify_signature": False})["exp"]
         seconds_to_exp = int(exp - arrow.utcnow().timestamp())
-        sleep_time = seconds_to_exp - 60*60*24*2
-        log.info(f"Will refresh token in {sleep_time} seconds.")
+        sleep_time = seconds_to_exp - 60 * 60 * 24 * 2
+        log.info("Will refresh token in %d seconds.", sleep_time)
 
         await asyncio.sleep(sleep_time)
         await self.refresh_token()
@@ -76,6 +79,6 @@ class GraphQLClient:
     async def _post(self, **kwargs) -> dict:
         """Make a GraphQL API POST call."""
         async with self.session.post(self.url, headers=self.headers, **kwargs) as resp:
-            resp = await resp.json()
-            log.info(resp)
-            return resp
+            resp_json = await resp.json()
+            log.info("GraphQL response: %s", resp_json)
+            return resp_json

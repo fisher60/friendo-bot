@@ -26,14 +26,14 @@ To get a bot token go to [Discord Developer Portal](https://discord.com/develope
 
 6. Get your AoC session cookie, see how - https://github.com/wimglenn/advent-of-code-wim/issues/1
 
-7. Create a file `bot.env` in the root project directory and fill it out using the example below
+7. Create a file `.env` in the root project directory and fill it out using the example below
 
-8. `docker-compose pull bot`
+8. `docker compose pull bot`
 
-9. `docker-compose up --build -d`
+9. `docker compose up --build -d`
 
 ```text
-# bot.env
+# .env
 
 FRIENDO_TOKEN = <your token here>
 MEME_USERNAME = <your imgflip api username>
@@ -50,31 +50,19 @@ AOC_JOIN_CODE = <aoc join code>
 ```
 
 ## Dev Installation
-* You can use the above docker method to run in a dev environment or the following pipenv (if using pipenv
-the above environment variables must be added to the system or a file named `.env`).*
+You can use the above docker method to run in a dev environment or use uv.
+(if using uv for local development, the above environment variables must be added to the system or a file named `.env`).*
 
 ```bash
 # Clone the repository on the develop branch
 $ git clone -b "develop" https://github.com/fisher60/friendo-bot.git
 
-# Navigate to the repository directory
-$ cd friendo-bot
-
-# Install pipenv through pip or your package manager
-$ pip install pipenv
-
-# Install the development and project dependencies
-$ pipenv sync --dev
-
-# Install pre-commit hooks
-$ pipenv run pre-commit install
+# Create a .venv & install dependencies using the make target
+$ make
 
 # Optionally: run pre-commit hooks to initialize them
-$ pipenv run pre-commit run --all-files
-
-# Enter the pipenv shell
-$ pipenv shell
+$ make lint
 
 # Run the bot
-$ pipenv run python -m bot
+$ uv run python -m bot
 ```

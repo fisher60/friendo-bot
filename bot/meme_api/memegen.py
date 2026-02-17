@@ -1,14 +1,13 @@
 import json
 import logging
 from pathlib import Path
-from typing import List
 
 import aiofiles
 import aiohttp
 
 from bot.settings import MEME_PASSWORD, MEME_USERNAME
 
-MEME_DIR = Path.cwd() / 'bot' / 'meme_api' / 'json' / 'meme_list.json'
+MEME_DIR = Path.cwd() / "bot" / "meme_api" / "json" / "meme_list.json"
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ class Meme:
         self.user_name = MEME_USERNAME
         self.password = MEME_PASSWORD
 
-    async def generate_meme(self, *, name: str, text: str = None) -> str:
+    async def generate_meme(self, *, name: str, text: str | None = None) -> str:
         """Creates a meme given the name of a template."""
         data = {"username": self.user_name, "password": self.password}
 
@@ -46,6 +45,7 @@ class Meme:
             if resp.status == 200:
                 _json = await resp.json()
                 return _json["data"]["url"]
+        return None
 
     async def get_all_memes(self) -> None:
         """Gets the names of all available meme templates."""
@@ -65,17 +65,17 @@ class Meme:
             else:
                 log.info("Failed to update meme list, aborting...")
 
-    def search_meme_list(self, search_words: List[str]) -> str:
+    def search_meme_list(self, search_words: list[str]) -> str:
         """Checks if the input search_words matches any available meme templates."""
         final_dict = {}
 
         for meme in self.meme_dict:
             name = meme["name"]
             for each in meme["name"].split(" "):
-
                 # Check if any word in the search words matches in a meme name, lazy search
                 if any(word in each.lower() for word in search_words):
                     final_dict[name] = meme["box_count"]
 
         if len(final_dict) > 0:
-            return "\n".join([f"Name: {x}, Text Boxes: {final_dict[x]}" for x in final_dict.keys()][:10])
+            return "\n".join([f"Name: {x}, Text Boxes: {final_dict[x]}" for x in final_dict][:10])
+        return None
