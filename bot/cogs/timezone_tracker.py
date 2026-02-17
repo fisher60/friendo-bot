@@ -15,6 +15,10 @@ if t.TYPE_CHECKING:
 log = logging.getLogger(__name__)
 
 
+class APIError(Exception):
+    """An error occurred when making a request to the Friendo API."""
+
+
 class TimeZoneTracker(Cog):
     """A command that randomizes the cases of every letter of a word or words."""
 
@@ -113,30 +117,32 @@ class TimeZoneTracker(Cog):
     async def _save_tz(self, user_id: int, tz: str) -> None:
         """Save the given tz against the user in the Friendo API."""
         query = (
-            "mutation mod_user ($user_id: String!, $tz: String!) {"
+            "mutation mod_user ($user_id: BigInt!, $tz: String!) {"
             "   modify_user(data: { discord_id: $user_id, timezone_name:$tz }) {"
             "       discord_id"
             "   }"
             "}"
         )
-        # Convert to string because Fisher stores UserIDs as strings :-(
-        variables = {"user_id": str(user_id), "tz": tz}
-        await self.bot.graphql.request(json={"query": query, "variables": variables})
+        variables = {"user_id": user_id, "tz": tz}
+        resp = await self.bot.graphql.request(json={"query": query, "variables": variables})
+        if resp.get("errors"):
+            msg = f"Error saving tz to API: {resp['errors']}"
+            raise APIError(msg)
 
-    async def _get_tz(self, user_id: int) -> str | None:
+    async def _get_tz(self, user_id: int) -> str:
         """Get the tz stored against the user in the Friendo API."""
         query = (
-            "mutation get_user ($user_id: String!) {"
+            "mutation get_user ($user_id: BigInt!) {"
             "   user(data: { discord_id: $user_id}) {"
             "       timezone_name"
             "   }"
             "}"
         )
-        # Convert to string because Fisher stores UserIDs as strings :-(
-        variables = {"user_id": str(user_id)}
+        variables = {"user_id": user_id}
         resp = await self.bot.graphql.request(json={"query": query, "variables": variables})
         if resp.get("errors"):
-            return None
+            msg = f"Error getting tz from API: {resp['errors']}"
+            raise APIError(msg)
         return resp["data"]["user"]["timezone_name"]
 
     async def _get_tzs(self, guild: discord.Guild) -> list[dict]:
@@ -144,7 +150,8 @@ class TimeZoneTracker(Cog):
         query = "query users{   allUsers{       discord_id       timezone_name   }}"
         resp = await self.bot.graphql.request(json={"query": query})
         if resp.get("errors"):
-            return None
+            msg = f"Error getting tzs from API: {resp['errors']}"
+            raise APIError(msg)
 
         guild_member_ids = {member.id for member in guild.members}
         tz_to_member = defaultdict(list)
