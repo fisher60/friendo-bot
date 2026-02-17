@@ -1,13 +1,14 @@
-import asyncio
 import logging
 from dataclasses import asdict, dataclass
-from typing import Dict, Optional
+from typing import TYPE_CHECKING
 
 from discord import Color, Embed, Member, Message, RawReactionActionEvent, Reaction, TextChannel
 from discord.ext.commands import Cog, Context, group
 
 from bot import settings
-from bot.bot import Friendo
+
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 log = logging.getLogger(__name__)
 
@@ -27,28 +28,29 @@ class DogeBoardData:
 
 
 class DogeBoard(Cog):
-    """Starboard Copy."""""
+    """Starboard Copy.""" ""
 
     def __init__(self, bot: Friendo) -> None:
         self.bot = bot
-        self._cache: Dict[int, DogeBoardData] = {}
-        self._token: Optional[str] = None
+        self._cache: dict[int, DogeBoardData] = {}
+        self._token: str | None = None
         self._url = settings.FRIENDO_API_URL
         self.doged_messages = []
 
-    async def _get_guild_data(self, guild_id: int) -> Optional[DogeBoardData]:
+    async def _get_guild_data(self, guild_id: int) -> DogeBoardData | None:
         """
         Attempt to get the dogeboard_data from cache using guild_id.
 
         if the data is not in the cache, it will request it from the GraphQL DB.
         if the data doesn't exist in the database it will be created and send to GraphQL DB
         """
-        if dogeboard_data := self._cache.get(guild_id):
+        if (dogeboard_data := self._cache.get(guild_id)) or (
+            dogeboard_data := await self._fetch_guild_data(guild_id)
+        ):
             return dogeboard_data
-        elif dogeboard_data := await self._fetch_guild_data(guild_id):
-            return dogeboard_data
+        return None
 
-    async def _fetch_guild_data(self, guild_id: int) -> Optional[DogeBoardData]:
+    async def _fetch_guild_data(self, guild_id: int) -> DogeBoardData | None:
         """Attempt to fetch guild data from the GraphQL database."""
         query = (
             "mutation fetch_guild($guild_id: BigInt!) {"
@@ -126,7 +128,6 @@ class DogeBoard(Cog):
             return
 
         if str(payload.emoji) == dogeboard_data.dogeboard_emoji:
-
             channel = self.bot.get_channel(payload.channel_id)
             message = await channel.fetch_message(payload.message_id)
 
@@ -134,9 +135,8 @@ class DogeBoard(Cog):
             if message.author == self.bot.user:
                 return
 
-            dogeboard_reaction: Optional[Reaction] = None
+            dogeboard_reaction: Reaction | None = None
             for reaction in message.reactions:
-
                 if reaction.emoji == "✅":
                     if self.bot.user in await reaction.users().flatten():
                         # If the bot has set a checkmark reaction to this message,
@@ -160,13 +160,13 @@ class DogeBoard(Cog):
             embed = Embed(title="DogeBoard", color=Color.blurple())
 
             if not dogeboard_data:
-                embed.description = "DogeBoard is not configured, " \
-                                    "use `.dogeboard channel <channel>` to start."
+                embed.description = (
+                    "DogeBoard is not configured, use `.dogeboard channel <channel>` to start."
+                )
             else:
                 embed.add_field(name="Emoji", value=dogeboard_data.dogeboard_emoji)
                 embed.add_field(
-                    name="Channel",
-                    value=ctx.guild.get_channel(dogeboard_data.dogeboard_id).mention
+                    name="Channel", value=ctx.guild.get_channel(dogeboard_data.dogeboard_id).mention
                 )
                 embed.add_field(name="Required", value=str(dogeboard_data.dogeboard_reactions_required))
 
@@ -185,7 +185,7 @@ class DogeBoard(Cog):
                 "Use `.dogeboard emoji` to configure the emoji.\n"
                 "User `.dogeboard required <amount>` to configure the required reactions."
             )
-            return
+            return None
 
         reaction_msg = await ctx.send(content="> React with the new dogeboard_emoji")
 
@@ -193,8 +193,8 @@ class DogeBoard(Cog):
             return member == ctx.author and reaction_msg == reaction.message
 
         try:
-            reaction, member = await self.bot.wait_for("reaction_add", check=check, timeout=60)
-        except asyncio.TimeoutError:
+            reaction, _member = await self.bot.wait_for("reaction_add", check=check, timeout=60)
+        except TimeoutError:
             return await reaction_msg.edit(content="> You didn't react, Canceling dogeboard_emoji change.")
         finally:
             await reaction_msg.delete(delay=10)
@@ -208,6 +208,7 @@ class DogeBoard(Cog):
 
         await ctx.send(f"> Updated your emoji to {dogeboard_data.dogeboard_emoji}")
         await self._update_guild_data(dogeboard_data)
+        return None
 
     @dogeboard.command(brief="Set the channel for DogeBoard messages to be sent to.")
     async def channel(self, ctx: Context, channel: TextChannel) -> None:
@@ -245,8 +246,10 @@ class DogeBoard(Cog):
 async def setup(bot: Friendo) -> None:
     """Adding the help cog."""
     if not settings.FRIENDO_API_USER:
-        raise EnvironmentError("Missing environment variable: FRIENDO_API_USER")
+        msg = "Missing environment variable: FRIENDO_API_USER"
+        raise OSError(msg)
     if not settings.FRIENDO_API_PASS:
-        raise EnvironmentError("Missing environment variable: FRIENDO_API_PASS")
+        msg = "Missing environment variable: FRIENDO_API_PASS"
+        raise OSError(msg)
 
     await bot.add_cog(DogeBoard(bot))

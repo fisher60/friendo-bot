@@ -1,8 +1,12 @@
 import logging
+from typing import TYPE_CHECKING
 
-from bot.bot import Friendo
 from bot.settings import AOC_JOIN_CODE
+
 from ._cog import AdventOfCode
+
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 logger = logging.getLogger("advent_of_code")
 

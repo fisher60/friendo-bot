@@ -5,25 +5,21 @@ import logging
 import os
 from pathlib import Path
 
-LOG_FILE_PATH = Path.cwd() / 'logs'
-IMG_CACHE = Path.cwd() / 'tmp'
+LOG_FILE_PATH = Path.cwd() / "logs"
+IMG_CACHE = Path.cwd() / "tmp"
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 
 # create log directory
-if not os.path.exists(LOG_FILE_PATH):
-    os.makedirs(LOG_FILE_PATH)
+LOG_FILE_PATH.mkdir(exist_ok=True, parents=True)
 
 # create image cache tmp directory
-if not os.path.exists(IMG_CACHE):
-    os.makedirs(IMG_CACHE)
+IMG_CACHE.mkdir(exist_ok=True, parents=True)
 
 log_formatter = logging.Formatter("%(levelname)s:%(asctime)s:%(name)s: %(message)s")
 
-FILE_HANDLER = logging.FileHandler(
-    filename=Path(LOG_FILE_PATH, "friendo.log"), encoding="utf-8", mode="w"
-)
+FILE_HANDLER = logging.FileHandler(filename=Path(LOG_FILE_PATH, "friendo.log"), encoding="utf-8", mode="w")
 FILE_HANDLER.setFormatter(log_formatter)
 log.addHandler(FILE_HANDLER)
 
@@ -37,7 +33,6 @@ if os.name == "nt":
 
 log.info("Cleaning out image_cache")
 
-img_dir = os.listdir(IMG_CACHE)
-for file in img_dir:
-    if file.endswith(".jpg"):
-        os.remove(os.path.join(IMG_CACHE, file))
+for file in IMG_CACHE.iterdir():
+    if file.suffix == ".jpg":
+        file.unlink()

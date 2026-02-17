@@ -1,7 +1,11 @@
+from typing import TYPE_CHECKING
+
 from discord.ext.commands import Cog, Context, command
 
-from bot.bot import Friendo
 from bot.meme_api import memegen
+
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 
 class Memes(Cog):
@@ -18,10 +22,10 @@ class Memes(Cog):
     @command(
         brief="meme generator commands. Usage: `.meme [command] [*args]`",
         description="`.meme search [keywords]` to keyword search for related memes\n"
-                    "`.meme create [valid meme name]; [text]; [text]; ...` to create a new meme\n"
-                    "find a valid meme name with `meme search` before using `meme create`\n"
-                    "supply more arguments to add text boxes in the meme\n"
-                    "exceeding the max text boxes will cause generation to fail",
+        "`.meme create [valid meme name]; [text]; [text]; ...` to create a new meme\n"
+        "find a valid meme name with `meme search` before using `meme create`\n"
+        "supply more arguments to add text boxes in the meme\n"
+        "exceeding the max text boxes will cause generation to fail",
     )
     async def meme(self, ctx: Context, arg1: str, *, args: str) -> None:
         """The main command, used to parse and process the command arguments."""

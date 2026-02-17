@@ -1,17 +1,18 @@
 from datetime import timedelta
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING
 
 import arrow
-import discord
 import feedparser
-
 from discord.ext import tasks
 from discord.ext.commands import Bot, Cog, Context, hybrid_command
+
+if TYPE_CHECKING:
+    import discord
 
 RPI_RSS_FEED_URL = "https://rpilocator.com/feed/"
 RPI_RSS_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                  "Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
+    "Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
 }
 
 NOTIF_COOLDOWN = timedelta(hours=3)
@@ -27,10 +28,10 @@ class NotifyMember:
         self.notified: bool = False
 
 
-notifications: Dict[int, Dict[str, NotifyMember]] = {}
+notifications: dict[int, dict[str, NotifyMember]] = {}
 
 
-def data_to_ping_from_rss(search_term: str, feed_data: List[dict]) -> Optional[str]:
+def data_to_ping_from_rss(search_term: str, feed_data: list[dict]) -> str | None:
     """
     Return the first entry from RSS data feed to match a search term within the defined time window.
 
@@ -68,8 +69,7 @@ class RSS(Cog):
         """Retrieve RSS data and notify appropriate members every 10 seconds."""
         rss_data = feedparser.parse(await self.pull_rss_feed(RPI_RSS_FEED_URL))["entries"][:10]
 
-        for user_id in notifications:
-            user_notifs = notifications[user_id]
+        for user_notifs in notifications.values():
             for notif in user_notifs.values():
                 ping_member_data = data_to_ping_from_rss(notif.search_term, rss_data)
                 if ping_member_data and not notif.notified:
@@ -86,10 +86,9 @@ class RSS(Cog):
             return await response.text()
 
     @hybrid_command(
-        brief="Create or delete a new RSS notification",
-        aliases=("create_notification", "notification")
+        brief="Create or delete a new RSS notification", aliases=("create_notification", "notification")
     )
-    async def notify(self, ctx: Context, search_term: str, delete: bool = False) -> None:
+    async def notify(self, ctx: Context, search_term: str, *, delete: bool = False) -> None:
         """Add a keyword to notify you on when it appears in the RSS feed."""
         if delete:
             if ctx.author.id in notifications and search_term in notifications[ctx.author.id]:

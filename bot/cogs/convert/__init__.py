@@ -1,5 +1,9 @@
-from bot.bot import Friendo
+from typing import TYPE_CHECKING
+
 from ._cog import Convert
+
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 
 async def setup(bot: Friendo) -> None:

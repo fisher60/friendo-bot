@@ -4,9 +4,10 @@ from pathlib import Path
 import yaml
 from discord.ext.commands import Bot, Cog, Context, command
 
-with open(Path.cwd() / 'bot' / 'resources' / 'wonder_twins.yaml', 'r', encoding='utf-8') as f:
+config_path = Path.cwd() / "bot" / "resources" / "wonder_twins.yaml"
+with config_path.open("r", encoding="utf-8") as f:
     info = yaml.load(f, Loader=yaml.FullLoader)
-    WATER_TYPES, OBJECTS, ADJECTIVES = info['water_types'], info['objects'], info["adjectives"]
+    WATER_TYPES, OBJECTS, ADJECTIVES = info["water_types"], info["objects"], info["adjectives"]
 
 
 class WonderTwins(Cog):
@@ -23,8 +24,8 @@ class WonderTwins(Cog):
             del phrase[0]
             phrase = " ".join(phrase)
 
-        insert_word = insert_word.split()[-1]
-        return " ".join([phrase, insert_word])
+        insert_word = insert_word.rsplit(maxsplit=1)[-1]
+        return f"{phrase} {insert_word}"
 
     def format_phrase(self) -> str:
         """Creates a transformation phrase from available words."""
@@ -44,7 +45,7 @@ class WonderTwins(Cog):
         brief="Get a Wonder Twins inspired phrase.",
         usage=".wondertwins",
         description="Shows a random Wonder Twins cartoon transformation phrase,"
-                    "\nExample output- `Form of a beast of water`",
+        "\nExample output- `Form of a beast of water`",
     )
     async def form_of(self, ctx: Context) -> None:
         """Command to send a Wonder Twins inspired phrase to the user invoking the command."""

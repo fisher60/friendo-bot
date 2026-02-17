@@ -1,8 +1,10 @@
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, TYPE_CHECKING
 
-from bot.bot import Friendo
 from bot.settings import EVENT_API_KEY
+
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +17,7 @@ class Event:
     def __init__(self, bot: Friendo) -> None:
         self.bot = bot
 
-    async def show_events(self, artist: str) -> Optional[Dict[Any, Any]]:
+    async def show_events(self, artist: str) -> dict[Any, Any] | None:
         """Show an event by requesting from it's webpage."""
         artist_find = "-".join(artist.split(" "))
 
@@ -25,3 +27,4 @@ class Event:
             if res.status == 200:
                 event_json = await res.json()
                 return event_json
+        return None

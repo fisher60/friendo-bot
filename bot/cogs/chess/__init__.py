@@ -1,7 +1,10 @@
 import logging
+from typing import TYPE_CHECKING
 
-from bot.bot import Friendo
 from ._cog import Chess
+
+if TYPE_CHECKING:
+    from bot.bot import Friendo
 
 logger = logging.getLogger("chess")
 

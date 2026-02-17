@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 import discord
 
 
-class Player(str, Enum):
+class Player(StrEnum):
     """Represents a player using notation to match chess.com urls."""
 
     White = "w"
@@ -16,11 +16,10 @@ class Player(str, Enum):
         """Convert a player to a valid discord.py colour."""
         if p is Player.White:
             return discord.Colour.from_rgb(r=254, g=255, b=255)
-        else:
-            return discord.Colour.from_rgb(r=1, g=0, b=0)
+        return discord.Colour.from_rgb(r=1, g=0, b=0)
 
 
-class Piece(str, Enum):
+class Piece(StrEnum):
     """Represents a piece using notation to match chess.com urls."""
 
     Pawn = "p"

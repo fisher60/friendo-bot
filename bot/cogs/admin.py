@@ -2,13 +2,16 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import Callable, Optional
+from typing import TYPE_CHECKING
 
 import aiofiles
-from discord import Member
+from discord import Member  # noqa: TC002
 from discord.ext.commands import Cog, Context, check, command
 
-from bot.bot import Friendo
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from bot.bot import Friendo
 
 SAVE_DATA_FILE = Path.cwd() / "bot" / "save_data.JSON"
 log = logging.getLogger(__name__)
@@ -19,7 +22,7 @@ def is_bot_admin() -> Callable:
 
     async def predicate(ctx: Context) -> bool:
         """Opening the admin json config file."""
-        async with aiofiles.open(SAVE_DATA_FILE, "r") as file:
+        async with aiofiles.open(SAVE_DATA_FILE) as file:
             save_data = json.loads(await file.read())
 
         return str(ctx.message.author.id) in save_data["admins"]
@@ -27,12 +30,13 @@ def is_bot_admin() -> Callable:
     return check(predicate)
 
 
-def id_from_mention(message_content: str) -> Optional[int]:
+def id_from_mention(message_content: str) -> int | None:
     """Return a user id from an @mention in a message."""
     get_id = re.search(r"\d{18}", message_content)
 
     if get_id is not None:
         return int(get_id.group())
+    return None
 
 
 class Administration(Cog):
@@ -57,7 +61,7 @@ class Administration(Cog):
         """Adds a new user id to the list of admins."""
         msg = f"Could not create admin from {member.name}"
 
-        async with aiofiles.open(SAVE_DATA_FILE, "r") as file:
+        async with aiofiles.open(SAVE_DATA_FILE) as file:
             save_data = json.loads(await file.read())
 
         if str(member.id) not in save_data["admins"]:
