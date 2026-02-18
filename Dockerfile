@@ -33,7 +33,7 @@ ENV PATH="/build/.venv/bin:$PATH"
 
 # Copy the source code in last to optimize rebuilding the image
 WORKDIR /app
-COPY bot .
+COPY . .
 
 ENTRYPOINT ["python", "-m"]
 CMD ["bot"]
