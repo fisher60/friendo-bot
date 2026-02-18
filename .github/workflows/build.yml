@@ -1,30 +1,18 @@
 name: Build and deploy a Docker image
 
 on:
-  workflow_run:
-    workflows: ["Linting"]
-    branches:
-      - master
-    types:
-      - completed
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
+  workflow_call:
+    inputs:
+      sha-tag:
+        description: "A short-form SHA tag for the commit that triggered this workflow"
+        required: true
+        type: string
 
 jobs:
   build:
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
     name: Build & Push to GHCR
     runs-on: ubuntu-latest
     steps:
-      - name: Create a short SHA tag
-        id: sha_tag
-        run: |
-          tag=$(cut -c 1-7 <<< $GITHUB_SHA)
-          echo "::set-output name=tag::$tag"
-
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -43,11 +31,11 @@ jobs:
         with:
           context: .
           file: Dockerfile
-          push: true
+          push: ${{ github.ref == 'refs/heads/master' }}
           cache-from: type=registry,ref=ghcr.io/fisher60/friendo-bot:latest
           cache-to: type=inline
           tags: |
             ghcr.io/fisher60/friendo-bot:latest
-            ghcr.io/fisher60/friendo-bot:${{ steps.sha_tag.outputs.tag }}
+            ghcr.io/fisher60/friendo-bot:${{ inputs.sha-tag }}
           build-args: |
             git_sha=${{ github.sha }}

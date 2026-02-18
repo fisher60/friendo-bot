@@ -293,7 +293,7 @@ wheels = [
 
 [[package]]
 name = "friendo-bot"
-version = "0.0.1"
+version = "1.2"
 source = { virtual = "." }
 dependencies = [
     { name = "aiodns" },
