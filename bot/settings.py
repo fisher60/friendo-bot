@@ -1,5 +1,7 @@
 import logging
+import tomllib
 from os import environ
+from pathlib import Path
 
 log = logging.getLogger(__name__)
 
@@ -34,7 +36,10 @@ GIT_SHA = environ.get("GIT_SHA", "development")
 
 log.info("Using %s for backend...", FRIENDO_API_URL)
 
-VERSION = "1.2"
+with Path("pyproject.toml").open("rb") as f:
+    pyproject = tomllib.load(f)
+
+VERSION = pyproject["project"]["version"]
 
 GITHUB_REPO = "https://github.com/fisher60/friendo-bot"
 
