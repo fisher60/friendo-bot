@@ -2,5 +2,5 @@ services:
   bot:
     image: ghcr.io/fisher60/friendo-bot:latest
     tty: true
-    env_file: bot.env
+    env_file: .env
     restart: unless-stopped

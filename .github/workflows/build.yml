@@ -27,8 +27,6 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v6
-        with:
-          path: friendo-bot
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -43,8 +41,8 @@ jobs:
       - name: Build and Push to ghcr
         uses: docker/build-push-action@v6
         with:
-          context: friendo-bot/
-          file: friendo-bot/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           cache-from: type=registry,ref=ghcr.io/fisher60/friendo-bot:latest
           cache-to: type=inline
